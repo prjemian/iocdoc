@@ -18,10 +18,9 @@ class TextFile(object):
         self.absolute_filename = os.path.abspath(filename)
         self.absolute_directory = os.path.dirname(self.absolute_filename)
         self.cwd = os.getcwd()
-        self.file_cache = file_cache
         
         if filename in file_cache:
-            self.text = file_cache[filename]
+            self.file_text = file_cache[filename]
         else:
-            self.text = open(filename, 'r').read()
-            file_cache[filename] = self.text
+            self.file_text = open(filename, 'r').read()
+            file_cache[filename] = self.file_text

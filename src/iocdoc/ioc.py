@@ -37,10 +37,15 @@ class Ioc(object):
     
     def report(self):
         '''describe what was discovered'''
+        # TODO: this is the development version
+        for key in sorted(self.file_cache.keys()):
+            print key
+        print '-'*20
         print 'cwd', self.commands.cwd
         print 'filename', self.commands.filename
         print '|filename|', self.commands.absolute_filename
         print '|dir|', self.commands.absolute_directory
+        print 'len(file)[lines, chars]', len(self.commands.file_text.splitlines()), len(self.commands.file_text)
 
 
 def process_command_line():

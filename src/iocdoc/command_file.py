@@ -33,3 +33,7 @@ class CommandFile(file_support.TextFile):
         self.env = {}
         self.symbols = {}
         self.commands = []
+    
+    def parse(self):
+        '''analyze this command file'''
+        pass
