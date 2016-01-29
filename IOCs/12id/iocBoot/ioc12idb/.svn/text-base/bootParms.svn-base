@@ -1,0 +1,17 @@
+
+EPICS processor: mv5100
+=======================
+
+boot device          : fei0
+processor number     : 0 
+host name            : s12dserv
+file name            : /APSshare/vw/T222/mv5100-asd2-debug
+inet on ethernet (e) : 164.54.122.??:ffffff00
+inet on backplane (b): 
+host inet (h)        : 164.54.122.205
+user (u)             : 
+ftp password (pw)    : 
+flags (f)            : 0x0 
+target name (tn)     : ioc12idb
+startup script (s)   : /xorApps/epics/synApps_5_4_2/ioc/12id/iocBoot/ioc12idb/st.cmd
+

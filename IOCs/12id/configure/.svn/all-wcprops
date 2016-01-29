@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/configure
+END
+RELEASE
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/configure/RELEASE
+END
+RULES.ioc
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/configure/RULES.ioc
+END
+RELEASE.win32-x86
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/configure/RELEASE.win32-x86
+END
+CONFIG
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/configure/CONFIG
+END
+CONFIG_SITE
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/configure/CONFIG_SITE
+END
+RULES
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/configure/RULES
+END
+RULES_DIRS
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/configure/RULES_DIRS
+END
+RULES_TOP
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/configure/RULES_TOP
+END
+.cvsignore
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/configure/.cvsignore
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/configure/Makefile
+END

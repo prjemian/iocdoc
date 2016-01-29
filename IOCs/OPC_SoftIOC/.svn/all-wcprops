@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/OPC_SoftIOC
+END
+RunSoftIOC.bat
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/OPC_SoftIOC/RunSoftIOC.bat
+END
+readme.html
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/OPC_SoftIOC/readme.html
+END
+unins000.dat
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/OPC_SoftIOC/unins000.dat
+END
+unins000.exe
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/OPC_SoftIOC/unins000.exe
+END

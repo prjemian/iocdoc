@@ -1,0 +1,323 @@
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb
+END
+auto_3mca_settings.req
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/auto_3mca_settings.req
+END
+serial.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/serial.cmd
+END
+autoShutter.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/autoShutter.substitutions
+END
+scanParms.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/scanParms.substitutions
+END
+standardScans.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/standardScans.substitutions
+END
+modbus.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/modbus.substitutions
+END
+pf4common.req
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/pf4common.req
+END
+st.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/st.cmd
+END
+modbus.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/modbus.cmd
+END
+apsst.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/apsst.cmd
+END
+asynRecord.req
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/asynRecord.req
+END
+ip330.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/ip330.cmd
+END
+femto.req
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/femto.req
+END
+ip330Scan.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/ip330Scan.substitutions
+END
+auto_13mca_settings.req
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/auto_13mca_settings.req
+END
+dac128V.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/dac128V.substitutions
+END
+bootParms
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/bootParms
+END
+ip330PIDFast.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/ip330PIDFast.substitutions
+END
+dac128V.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/dac128V.cmd
+END
+.cvsignore
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/.cvsignore
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/Makefile
+END
+SIS3820_32.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/SIS3820_32.substitutions
+END
+canberra_13.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/canberra_13.substitutions
+END
+pid_slow.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/pid_slow.substitutions
+END
+quadEM.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/quadEM.cmd
+END
+saveData.req
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/saveData.req
+END
+industryPack.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/industryPack.cmd
+END
+canberra_13.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/canberra_13.cmd
+END
+gpib.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/gpib.cmd
+END
+picMot.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/picMot.substitutions
+END
+vme.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/vme.cmd
+END
+softMotor.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/softMotor.substitutions
+END
+canberra_3.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/canberra_3.substitutions
+END
+motor.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/motor.substitutions
+END
+basic_motor.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/basic_motor.substitutions
+END
+canberra_1.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/canberra_1.cmd
+END
+canberra_3.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/canberra_3.cmd
+END
+save_restore.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/save_restore.cmd
+END
+auto_positions.req
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/auto_positions.req
+END
+ipUnidig.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/ipUnidig.substitutions
+END
+camac.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/camac.cmd
+END
+quadEM_pid.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/quadEM_pid.substitutions
+END
+asynRecord.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/asynRecord.substitutions
+END
+cdCommands
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/cdCommands
+END
+ip_serial.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/ip_serial.cmd
+END
+orient_xtals.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/orient_xtals.substitutions
+END
+ipUnidig.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/ipUnidig.cmd
+END
+st.cmd.aps
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/st.cmd.aps
+END
+vxStats.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/vxStats.substitutions
+END
+pf4bank.req
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/pf4bank.req
+END
+IpUnidig_settings.req
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/IpUnidig_settings.req
+END
+auto_settings.req
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/auto_settings.req
+END
+pseudoMotor.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/iocBoot/ioc12idb/pseudoMotor.substitutions
+END

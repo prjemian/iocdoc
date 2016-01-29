@@ -1,0 +1,15 @@
+record(ai,"TEST:sinus") {
+        field(DESC,"my sinus")
+        field(SCAN,"I/O Intr")
+        field(DTYP,"opc")
+        field(INP,"@Simulator.SinDouble")
+        field(TSE,"0")
+#       TSE=0  => EPICSTIME=SYSTEMTIME
+#       TSE=-2 => EPICSTIME=OPC-SERVER-TIME
+#       field(TSE,"-2")
+        field(PREC,"6")
+        field(EGU,"rad")
+#       PINI=0 UDF INVALID until OPC server updates value
+#       PINI=1 value will be read and UDF gets VALID
+        field(PINI,"1")
+}

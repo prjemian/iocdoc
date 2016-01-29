@@ -1,0 +1,52 @@
+MAXv array base address
+-----------------------
+- defined the by 3rd argument to the MAXvSetup() call.
+- must be both a valid address and on a valid address boundry for the selected
+VME Address Space.  A valid address for an A16 address must be 4 hex digits;
+A24 - 6 hex digits; A32 - 8 hex digits.
+
+Each MAXv occupies the following space for the selected VME address space.
+
+VME space |   A16  |     A24   |      A32    |
+----------|--------|-----------|-------------|
+MAXv size | 0x1000 | 0x01 0000 | 0x0100 0000 |
+----------|--------|-----------|-------------|
+valid MAXv| 0x0000 | 0x10 0000 | 0x1000 0000 |
+addresses | 0x1000 | 0x11 0000 | 0x1100 0000 |
+          | 0x2000 | 0x12 0000 | 0x1200 0000 |
+          |   ...  |    ...    |      ...    |
+          | 0xF000 | 0x1F 0000 | 0x1F00 0000 |
+          |        | 0x20 0000 | 0x2000 0000 |
+          |        |    ...    |      ...    |
+          |        | 0xFF 0000 | 0xFF00 0000 |
+----------|--------|-----------|-------------|
+
+EXAMPLE
+-------
+
+3 MAXv boards, A24 address space, base address = 0xA0 0000.
+1st board's address - 0xA0 0000
+2nd board's address - 0xA1 0000
+3rd board's address - 0xA2 0000
+MAXvSetup(3, 24, 0xA00000, 190, 5, 10)
+
+
+NOTES:
+- Unlike the other OMS models, the MAXv VME Address Modifiers (AM) do not
+  respond to both supervisory and non-privileged access.  Hence, the MAXv's
+  AM's must match the CPU board's AM's exactly.
+
+
+  For PPC CPU: the BSP sets AM to supervisory so that set MAXV AM to 0x2d for A16
+  For 68K CPU(mv177 ): BSP uses AM as no-previlege, so we need to set MAXV to 0x29 for A16.
+
+ The folllowing  URL is the AM code table:
+
+http://www.vita.com/vme-faq/vmeamcod.html
+
+or see VMEAMcode.ps at this directory.
+
+
+##########Settings on Crate ioc12ida1#######
+
+Card1: A16: 0x1000   all open loop steppers

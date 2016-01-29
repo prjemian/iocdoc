@@ -1,0 +1,241 @@
+# Note: the macro P must have been supplied to the routine that parses
+# this file.  Normally, this means a command like the following is in st.cmd
+# create_monitor_set("auto_settings.req",30,"P=12ida2:")
+# This requires save_restore v2.8 or later.
+
+file motor_settings.req P=$(P),M=m1
+file motor_settings.req P=$(P),M=m2
+file motor_settings.req P=$(P),M=m3
+file motor_settings.req P=$(P),M=m4
+file motor_settings.req P=$(P),M=m5
+file motor_settings.req P=$(P),M=m6
+file motor_settings.req P=$(P),M=m7
+file motor_settings.req P=$(P),M=m8
+file motor_settings.req P=$(P),M=m9
+file motor_settings.req P=$(P),M=m10
+file motor_settings.req P=$(P),M=m11
+file motor_settings.req P=$(P),M=m12
+file motor_settings.req P=$(P),M=m13
+file motor_settings.req P=$(P),M=m14
+file motor_settings.req P=$(P),M=m15
+file motor_settings.req P=$(P),M=m16
+file motor_settings.req P=$(P),M=m17
+file motor_settings.req P=$(P),M=m18
+file motor_settings.req P=$(P),M=m19
+file motor_settings.req P=$(P),M=m20
+file motor_settings.req P=$(P),M=m21
+file motor_settings.req P=$(P),M=m22
+file motor_settings.req P=$(P),M=m23
+file motor_settings.req P=$(P),M=m24
+file motor_settings.req P=$(P),M=m25
+file motor_settings.req P=$(P),M=m26
+file motor_settings.req P=$(P),M=m27
+file motor_settings.req P=$(P),M=m28
+file motor_settings.req P=$(P),M=m29
+file motor_settings.req P=$(P),M=m30
+file motor_settings.req P=$(P),M=m31
+file motor_settings.req P=$(P),M=m32
+file motor_settings.req P=$(P),M=m33
+file motor_settings.req P=$(P),M=m34
+file motor_settings.req P=$(P),M=m35
+file motor_settings.req P=$(P),M=m36
+file motor_settings.req P=$(P),M=m37
+file motor_settings.req P=$(P),M=m38
+file motor_settings.req P=$(P),M=m39
+file motor_settings.req P=$(P),M=m40
+
+file softMotor_settings.req P=$(P),SM=SM1
+file softMotor_settings.req P=$(P),SM=SM2
+file softMotor_settings.req P=$(P),SM=SM3
+file softMotor_settings.req P=$(P),SM=SM4
+file softMotor_settings.req P=$(P),SM=SM5
+file softMotor_settings.req P=$(P),SM=SM6
+file softMotor_settings.req P=$(P),SM=SM7
+file softMotor_settings.req P=$(P),SM=SM8
+file softMotor_settings.req P=$(P),SM=SM9
+file softMotor_settings.req P=$(P),SM=SM10
+
+file scanParms_settings.req P=$(P),M=m1
+file scanParms_settings.req P=$(P),M=m2
+file scanParms_settings.req P=$(P),M=m3
+file scanParms_settings.req P=$(P),M=m4
+file scanParms_settings.req P=$(P),M=m5
+file scanParms_settings.req P=$(P),M=m6
+file scanParms_settings.req P=$(P),M=m7
+file scanParms_settings.req P=$(P),M=m8
+file scanParms_settings.req P=$(P),M=m9
+file scanParms_settings.req P=$(P),M=m10
+file scanParms_settings.req P=$(P),M=m11
+file scanParms_settings.req P=$(P),M=m12
+file scanParms_settings.req P=$(P),M=m13
+file scanParms_settings.req P=$(P),M=m14
+file scanParms_settings.req P=$(P),M=m15
+file scanParms_settings.req P=$(P),M=m16
+file scanParms_settings.req P=$(P),M=m17
+file scanParms_settings.req P=$(P),M=m18
+file scanParms_settings.req P=$(P),M=m19
+file scanParms_settings.req P=$(P),M=m20
+file scanParms_settings.req P=$(P),M=m21
+file scanParms_settings.req P=$(P),M=m22
+file scanParms_settings.req P=$(P),M=m23
+file scanParms_settings.req P=$(P),M=m24
+file scanParms_settings.req P=$(P),M=m25
+file scanParms_settings.req P=$(P),M=m26
+file scanParms_settings.req P=$(P),M=m27
+file scanParms_settings.req P=$(P),M=m28
+file scanParms_settings.req P=$(P),M=m29
+file scanParms_settings.req P=$(P),M=m30
+file scanParms_settings.req P=$(P),M=m31
+file scanParms_settings.req P=$(P),M=m32
+file scanParms_settings.req P=$(P),M=m33
+file scanParms_settings.req P=$(P),M=m34
+file scanParms_settings.req P=$(P),M=m35
+file scanParms_settings.req P=$(P),M=m36
+file scanParms_settings.req P=$(P),M=m37
+file scanParms_settings.req P=$(P),M=m38
+file scanParms_settings.req P=$(P),M=m39
+file scanParms_settings.req P=$(P),M=m40
+
+file scanParms_settings.req P=$(P),M=SM1
+file scanParms_settings.req P=$(P),M=SM2
+file scanParms_settings.req P=$(P),M=SM3
+file scanParms_settings.req P=$(P),M=SM4
+file scanParms_settings.req P=$(P),M=SM5
+file scanParms_settings.req P=$(P),M=SM6
+file scanParms_settings.req P=$(P),M=SM7
+file scanParms_settings.req P=$(P),M=SM8
+file scanParms_settings.req P=$(P),M=SM9
+file scanParms_settings.req P=$(P),M=SM10
+
+file table_settings.req P=$(P),T=table1,Q=Table1
+file table_settings.req P=$(P),T=table2,Q=Table2
+file table_settings.req P=$(P),T=table3,Q=Table3
+file table_settings.req P=$(P),T=table4,Q=Table4
+
+#file scaler16m_settings.req P=$(P),S=scaler1
+#file scaler_8ch_settings.req P=$(P),S=scaler2
+#file scaler_64ch_settings.req P=$(P),S=scaler3
+
+file standardScans_settings.req P=$(P)
+file saveData_settings.req P=$(P)
+
+# Kohzu monochromator
+#file kohzuSeq_settings.req P=$(P)
+
+# High resolution monochromator
+#file hrSeq_settings.req P=$(P),N=1
+
+# Io calc
+#file Io_settings.req P=12ida2:Io:
+
+#$(P)fltr1:name5.VAL
+#$(P)fltr1:name4.VAL
+#$(P)fltr1:name3.VAL
+#$(P)fltr1:name2.VAL
+#$(P)fltr1:name1.VAL
+#$(P)fltr1:nameHome.VAL
+#$(P)fltr1:pos5.VAL
+#$(P)fltr1:pos4.VAL
+#$(P)fltr1:pos3.VAL
+#$(P)fltr1:pos2.VAL
+#$(P)fltr1:pos1.VAL
+#$(P)fltr1:posHome.VAL
+#$(P)fltr1:motorOut.OUTN
+#$(P)fltr2:name5.VAL
+#$(P)fltr2:name4.VAL
+#$(P)fltr2:name3.VAL
+#$(P)fltr2:name2.VAL
+#$(P)fltr2:name1.VAL
+#$(P)fltr2:nameHome.VAL
+#$(P)fltr2:pos5.VAL
+#$(P)fltr2:pos4.VAL
+#$(P)fltr2:pos3.VAL
+#$(P)fltr2:pos2.VAL
+#$(P)fltr2:pos1.VAL
+#$(P)fltr2:posHome.VAL
+#$(P)fltr2:motorOut.OUTN
+#$(P)fltr_1_2:lockOut.OUTN
+
+
+file userCalcs10_settings.req P=$(P)
+$(P)userCalcEnable.VAL
+
+file userTransforms10_settings.req P=$(P)
+$(P)userTranEnable.VAL
+
+file userStringCalcs10_settings.req P=$(P)
+$(P)userStringCalcEnable.VAL
+
+file userStringSeqs10_settings.req P=$(P)
+$(P)userStringSeqEnable
+
+file userArrayCalcs10_settings.req P=$(P)
+$(P)userArrayCalcEnable.VAL
+
+file saveData_settings.req P=$(P)
+
+# 4-step measurement
+#file auto_4step_settings.req P=$(P),Q=4step
+
+file userAve10_settings.req P=$(P)
+$(P)userAveEnable.VAL
+
+#file interp_settings.req P=$(P)
+
+# MCA
+#file mca_settings.req P=$(P),M=aim_adc1
+#file icb_adc_settings.req P=$(P),ADC=adc1
+#file icb_amp_settings.req P=$(P),AMP=amp1
+#file icb_hvps_settings.req P=$(P),HVPS=hvps1
+#file icb_tca_settings.req P=$(P),TCA=tca1
+#file icbDsp_settings.req P=$(P),DSP=dsp1
+
+# PVs loaded by vxStats.substitutions
+$(P):R_CA
+$(P):R_FD
+$(P):R_Load
+$(P):R_Mem
+
+# pvHistory
+#file pvHistory.req P=$(P),N=1
+
+#file CoarseFineMotor_settings.req P=12ida2:cf1:
+
+# XIA slit
+#$(P)hsc1:hID
+#$(P)hsc1:vID
+#$(P)hsc1:enable
+#$(P)hsc1:debug
+
+## Femto amplifier  
+#file femto.req P=$(P),H=fem01:,F=seq01:
+
+## PF4 dual filter
+#file pf4common.req P=$(P),H=pf4:
+#file pf4bank.req   P=$(P),H=pf4:,B=A
+#file pf4bank.req   P=$(P),H=pf4:,B=B
+
+## 
+#file deviceCmdReply_settings.req P=$(P),N=1
+#file deviceCmdReply_settings.req P=$(P),N=2
+#file deviceCmdReply_settings.req P=$(P),N=3
+$(P)asyn_1.DESC
+$(P)asyn_2.DESC
+$(P)asyn_3.DESC
+$(P)asyn_4.DESC
+$(P)asyn_5.DESC
+$(P)asyn_6.DESC
+$(P)asyn_7.DESC
+$(P)asyn_8.DESC
+$(P)asyn_9.DESC
+$(P)asyn_10.DESC
+$(P)asyn_11.DESC
+$(P)asyn_12.DESC
+$(P)asyn_13.DESC
+$(P)asyn_14.DESC
+$(P)asyn_15.DESC
+$(P)asyn_16.DESC
+
+#file timer.req P=$(P),N=1
+
+#file ramp_tweak_settings.req P=$(P),Q=rt1

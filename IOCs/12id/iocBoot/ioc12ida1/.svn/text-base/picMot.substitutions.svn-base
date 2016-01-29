@@ -1,0 +1,37 @@
+file "$(IP)/ipApp/Db/picos.db"
+{
+pattern
+{P,      pChan,       DESC,          serChan }
+{12ida1:, 	 111,         pMotor111,        1    }
+{12ida1:, 	 112,         pMotor112,        1    }
+{12ida1:, 	 113,         pMotor113,        1    }
+
+{12ida1:, 	 121,         pMotor121,        1    }
+{12ida1:, 	 122,         pMotor122,        1    }
+{12ida1:, 	 123,         pMotor123,        1    }
+
+{12ida1:, 	 131,         pMotor131,        1    }
+{12ida1:, 	 132,         pMotor132,        1    }
+{12ida1:, 	 133,         pMotor133,        1    }
+
+{12ida1:, 	 141,         pMotor141,        1    }
+{12ida1:, 	 142,         pMotor142,        1    }
+{12ida1:, 	 143,         pMotor143,        1    }
+
+{12ida1:, 	 211,         pMotor211,        1    }
+{12ida1:, 	 212,         pMotor212,        1    }
+{12ida1:, 	 213,         pMotor213,        1    }
+
+{12ida1:, 	 221,         pMotor221,        1    }
+{12ida1:, 	 222,         pMotor222,        1    }
+{12ida1:, 	 223,         pMotor223,        1    }
+
+{12ida1:, 	 231,         pMotor231,        1    }
+{12ida1:, 	 232,         pMotor232,        1    }
+{12ida1:, 	 233,         pMotor233,        1    }
+
+{12ida1:, 	 241,         pMotor241,        1    }
+{12ida1:, 	 242,         pMotor242,        1    }
+{12ida1:, 	 243,         pMotor243,        1    } 
+ 
+}

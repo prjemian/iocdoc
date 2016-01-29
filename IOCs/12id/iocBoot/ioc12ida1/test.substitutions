@@ -1,0 +1,15 @@
+# this is a test of the parser
+
+file "$(STD)/stdApp/Db/scaler32.db"
+{
+pattern
+{P,           S,          DTYP,           OUT,                     FREQ}
+{test:3820:  scaler1,  "Asyn Scaler",  "@asyn(mcaSIS3820/1 0)",  50000000}
+}
+
+file "$(MOTOR)/db/motor.db"
+{
+pattern
+{P,		N,	M,		DTYP,			C,	S,	DESC,			EGU,		DIR,	VELO,	VBAS,	ACCL,	BDST,	BVEL,	BACC,	MRES,	PREC,	DHLM,	DLLM,	INIT}
+{30idb:,	1,	m$(N),	"OMS VME58",	0,	0,	"motor $(N)",	degrees,	Pos,	1,		.1,		.2,		0,		1,		.2,		2.5e-4,	5,		100,	-100,	""}
+}

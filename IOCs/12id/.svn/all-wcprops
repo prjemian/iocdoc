@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/bcdaext/!svn/ver/1491/topdoc/trunk/IOCs/12id
+END
+start_epics_12ida1
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/start_epics_12ida1
+END
+start_epics_12idb
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/start_epics_12idb
+END
+start_epics_12ida2
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/start_epics_12ida2
+END
+start_epics_12idc
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/start_epics_12idc
+END
+start_epics_12idd
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/start_epics_12idd
+END
+release.pl
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/release.pl
+END
+setup_epics_common
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/setup_epics_common
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/README
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/Makefile
+END
+.cvsignore
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/.cvsignore
+END

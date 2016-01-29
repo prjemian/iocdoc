@@ -1,0 +1,116 @@
+# asyn record for the underlying asyn octet port
+file "$(ASYN)/db/asynRecord.db" { pattern  
+{P,           R,       PORT,      ADDR,   IMAX,    OMAX}
+{12ida1:    OctetAsyn,    DL06,     0,      80,      80}
+}
+
+# These are the Xn inputs done with bit access 
+file "bi_bit.template" { pattern
+{P,           R,       PORT,          OFFSET,   ZNAM,   ONAM,  ZSV,       OSV,    SCAN, DESC}
+{12ida1:,    X0B,     K1_Xn_Bit,     0,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vac Zone #1"}
+{12ida1:,    X1B,     K1_Xn_Bit,     1,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vac Zone #2"}
+{12ida1:,    X2B,     K1_Xn_Bit,     2,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vac Zone #3"}
+{12ida1:,    X3B,     K1_Xn_Bit,     3,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vac Zone #4"}
+{12ida1:,    X4B,     K1_Xn_Bit,     4,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vac Zone #5"}
+{12ida1:,    X5B,     K1_Xn_Bit,     5,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vac Zone #6"}
+
+{12ida1:,    X6B,      K1_Xn_Bit,     6,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vat1 Open Sensor"}
+{12ida1:,    X7B,      K1_Xn_Bit,     7,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vat1 Closed Sensor"}
+{12ida1:,    X10B,     K1_Xn_Bit,     010,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vat3 Open Sensor"}
+{12ida1:,    X11B,     K1_Xn_Bit,     011,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vat3 Closed Sensor"}
+{12ida1:,    X12B,     K1_Xn_Bit,     012,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vat4 Open Sensor"}
+{12ida1:,    X13B,     K1_Xn_Bit,     013,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vat4 Closed Sensor"}
+{12ida1:,    X14B,     K1_Xn_Bit,     014,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vat5 Open Sensor"}
+{12ida1:,    X15B,     K1_Xn_Bit,     015,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vat5 Closed Sensor"}
+{12ida1:,    X17B,     K1_Xn_Bit,     016,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vat2 Open Sensor"}
+{12ida1:,    X22B,     K1_Xn_Bit,     017,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vat2 Closed Sensor"}
+
+{12ida1:,    X23B,     K1_Xn_Bit,     020,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Flowmeter1"}
+{12ida1:,    X23B,     K1_Xn_Bit,     021,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Flowmeter2"}
+{12ida1:,    X23B,     K1_Xn_Bit,     022,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Flowmeter3"}
+{12ida1:,    X23B,     K1_Xn_Bit,     023,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Flowmeter4"}
+{12ida1:,    X23B,     K1_Xn_Bit,     024,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Flowmeter5"}
+{12ida1:,    X23B,     K1_Xn_Bit,     025,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Flowmeter6"}
+
+
+}
+#word inputs from v2000 for temperatures
+file "modbus_temp_ai.template" { pattern
+{P,         R,      PORT,               OFFSET, BITS,  ASLO,  AOFF,   PREC,  EGU, SCAN,  DESC}
+{12ida1:,    PLCTemp1,   K1_V2000_In_Word,   0,      16,   0.1,    0.,    2,      degC, "I/O Intr","temp1"}
+{12ida1:,    PLCTemp2,   K1_V2000_In_Word,   2,      16,   0.1,    0.,    2,      degC, "I/O Intr","temp2"}
+{12ida1:,    PLCTemp3,   K1_V2000_In_Word,   4,      16,   0.1,    0.,    2,      degC, "I/O Intr","temp3"}
+{12ida1:,    PLCTemp4,   K1_V2000_In_Word,   6,      16,   0.1,    0.,    2,      degC, "I/O Intr","temp4"}
+}
+
+file "$(MODBUS)/db/asynRecord.template" { pattern
+{P,           R,       PORT,          ADDR,     TMOD,  IFACE}
+{12ida1:,    XnBAsyn, K1_Xn_Bit,     0,        Read,  asynUInt32Digital}
+}
+file "$(MODBUS)/db/statistics.template" { pattern
+{P,           R,       PORT,       SCAN}
+{12ida1:,    XnB,     K1_Xn_Bit,  "10 second"}
+} 
+file "$(MODBUS)/db/poll_delay.template" { pattern
+{P,           R,            PORT}
+{12ida1:,    XnBPollDelay, K1_Xn_Bit}
+}
+
+
+## Since these are inputs, listing the vat Control bits is meaningless
+
+# These are the Yn inputs done with bit access Y0-Y7
+file "bi_bit.template" { pattern
+{P,           R,         PORT,             OFFSET,   ZNAM,   ONAM,  ZSV,       OSV,    SCAN, DESC}
+{12ida1:,    Y0InB,     K1_Yn_In_Bit,     0,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "EPS OK"}
+{12ida1:,    Y1InB,     K1_Yn_In_Bit,     1,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "EPS VAC OK"}
+}
+
+
+file "$(MODBUS)/db/asynRecord.template" { pattern
+{P,           R,         PORT,             ADDR,     TMOD,  IFACE}
+{12ida1:,    YnInBAsyn, K1_Yn_In_Bit,     0,        Read,  asynUInt32Digital}
+}
+file "$(MODBUS)/db/statistics.template" { pattern
+{P,           R,         PORT,          SCAN}
+{12ida1:,    YnInB,     K1_Yn_In_Bit,  "10 second"}
+}
+file "$(MODBUS)/db/poll_delay.template" { pattern
+{P,           R,              PORT}
+{12ida1:,    YnInBPollDelay, K1_Yn_In_Bit}
+}
+
+file "$(MODBUS)/db/asynRecord.template" { pattern
+{P,           R,         PORT,             ADDR,     TMOD,  IFACE}
+{12ida1:,    CnInBAsyn, K1_Cn_In_Bit,     0,        Read,  asynUInt32Digital}
+}
+file "$(MODBUS)/db/statistics.template" { pattern
+{P,           R,         PORT,          SCAN}
+{12ida1:,    CnInB,     K1_Cn_In_Bit,  "10 second"}
+}
+file "$(MODBUS)/db/poll_delay.template" { pattern
+{P,           R,              PORT}
+{12ida1:,    CnInBPollDelay, K1_Cn_In_Bit}
+}
+
+file "$(MODBUS)/db/asynRecord.template" { pattern
+{P,           R,         PORT,             ADDR,     TMOD,  IFACE}
+{12ida1:,    K1InWAsyn, K1_V2000_In_Word,    0,        Read,  asynInt32}
+}
+file "$(MODBUS)/db/statistics.template" { pattern
+{P,           R,         PORT,          SCAN}
+{12ida1:,    K1InW,     K1_V2000_In_Word, "10 second"}
+}
+file "$(MODBUS)/db/poll_delay.template" { pattern
+{P,           R,               PORT}
+{12ida1:,    K1InWPollDelay, K1_V2000_In_Word}
+}
+
+
+
+
+
+
+
+
+

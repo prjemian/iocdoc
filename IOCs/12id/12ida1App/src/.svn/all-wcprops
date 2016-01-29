@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/12ida1App/src
+END
+ioc12ida1_solarisInclude.dbd
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/12ida1App/src/ioc12ida1_solarisInclude.dbd
+END
+12ida1CommonInclude.dbd
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/12ida1App/src/12ida1CommonInclude.dbd
+END
+ioc12ida1VXInclude.dbd
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/12ida1App/src/ioc12ida1VXInclude.dbd
+END
+12ida1Main.c
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/12ida1App/src/12ida1Main.c
+END
+ioc12ida1Include.dbd
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/12ida1App/src/ioc12ida1Include.dbd
+END
+ioc12ida1LinuxInclude.dbd
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/12ida1App/src/ioc12ida1LinuxInclude.dbd
+END
+ioc12ida1CygwinInclude.dbd
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/12ida1App/src/ioc12ida1CygwinInclude.dbd
+END
+ioc12ida1Win32Include.dbd
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/12ida1App/src/ioc12ida1Win32Include.dbd
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/bcdaext/!svn/ver/1479/topdoc/trunk/IOCs/12id/12ida1App/src/Makefile
+END
