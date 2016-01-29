@@ -1,0 +1,4660 @@
+# Folgende Recordnamen können benutzt werden:
+# c1wps:SINUS -> Waveform
+# c1wps:RAMP_rnd1 nis c1wps:RAMP_rnd499  --> skalare Werte
+
+# Records für das Testen der EPICs-Initialisierung des Barchcharts
+
+record(ai,"c1wps:Barchart:MIN") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(INP,"50")
+        field(HOPR,"10000")       
+}
+
+record(ai,"c1wps:Barchart:MAX") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(INP,"100")
+        field(HOPR,"10000")       
+}
+
+record(ai,"c1wps:Barchart:LOLO") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(INP,"55")
+        field(HOPR,"10000")       
+}
+
+record(ai,"c1wps:Barchart:LO") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(INP,"65")
+        field(HOPR,"10000")       
+}
+
+record(ai,"c1wps:Barchart:M") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(INP,"75")
+        field(HOPR,"10000")       
+}
+
+record(ai,"c1wps:Barchart:HI") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(INP,"85")
+        field(HOPR,"10000")       
+}
+
+record(ai,"c1wps:Barchart:HIHI") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(INP,"95")
+        field(HOPR,"10000")       
+}
+
+record(ai,"c1wps:Barchart:VAL") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(INP,"80")
+        field(HOPR,"10000")       
+}
+
+
+# Records für die Erzeugung einer Sinuskurve als Waveform
+
+record(calc,"Winkel_calc") {
+	field(DESC,"Winkel")
+	field(SCAN,".1 second")
+	field(CALC,"A>6.28-B?0:A+B")
+	field(INPA,"Winkel_calc.VAL NPP NMS")
+	field(INPB,"0.01")
+	field(PREC,"3")
+	field(HOPR,"6.28")
+	field(LOPR,"0")
+	field(FLNK,"Sinus_calc")
+}
+record(calc,"Sinus_calc") {
+	field(DESC,"Sinus")
+	field(CALC,"SIN(A)")
+	field(INPA,"Winkel_calc.VAL NPP MS")
+	field(PREC,"4")
+	field(HOPR,"1")
+	field(LOPR,"-1")
+	field(FLNK,"c1wps:SINUS")
+}
+record(compress,"c1wps:SINUS") {
+	field(DESC,"Array")
+	field(INP,"Sinus_calc.VAL NPP MS")
+	field(NSAM,"1024")
+	field(ALG,"Circular Buffer")
+	field(PREC,"4")
+	field(HOPR,"1")
+	field(LOPR,"-1")
+}
+
+# Werte für Barcharts
+
+record(ai,"c1wps:BC1_lolo") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(INP,"10")
+        field(HOPR,"10000")       
+}
+
+record(ai,"c1wps:BC1_hihi") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(INP,"90")
+        field(HOPR,"10000")       
+}
+
+record(ai,"c1wps:BC1_value") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(INP,"50")
+        field(HOPR,"10000")       
+}
+
+record(ai,"c1wps:BC2_lolo") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(INP,"20")
+        field(HOPR,"10000")       
+}
+
+record(ai,"c1wps:BC2_hihi") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(INP,"80")
+        field(HOPR,"10000")       
+}
+
+record(ai,"c1wps:BC2_value") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(INP,"25")
+        field(HOPR,"10000")       
+}
+
+record(ai,"c1wps:BC3_lolo") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(INP,"30")
+        field(HOPR,"10000")       
+}
+
+record(ai,"c1wps:BC3_hihi") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(INP,"70")
+        field(HOPR,"10000")       
+}
+
+record(ai,"c1wps:BC3_value") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(INP,"90")
+        field(HOPR,"10000")       
+}
+
+# Zufällig skalare Records
+
+record(ai,"c1wps:RAMP_rnd0") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(INP,"1")
+        field(HOPR,"10000")       
+}
+
+record(calc,"c1wps:RAMP_rnd1") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd2") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd3") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd4") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd5") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd6") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd7") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd8") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd9") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd10") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd11") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd12") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd13") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd14") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd15") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd16") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd17") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd18") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd19") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd20") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd21") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd22") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd23") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd24") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd25") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd26") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd27") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd28") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd29") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd30") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd31") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd32") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd33") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd34") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd35") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd36") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd37") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd38") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd39") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd40") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd41") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd42") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd43") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd44") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd45") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd46") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd47") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd48") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd49") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd50") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd51") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd52") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd53") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd54") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd55") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd56") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd57") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd58") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd59") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd60") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd61") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd62") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd63") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd64") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd65") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd66") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd67") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd68") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd69") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd70") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd71") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd72") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd73") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd74") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd75") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd76") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd77") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd78") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd79") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd80") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd81") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd82") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd83") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd84") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd85") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd86") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd87") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd88") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd89") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd90") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd91") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd92") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd93") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd94") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd95") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd96") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd97") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd98") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd99") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd100") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd101") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd102") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd103") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd104") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd105") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd106") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd107") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd108") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd109") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd110") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd111") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd112") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd113") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd114") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd115") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd116") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd117") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd118") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd119") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd120") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd121") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd122") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd123") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd124") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd125") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd126") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd127") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd128") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd129") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd130") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd131") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd132") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd133") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd134") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd135") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd136") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd137") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd138") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd139") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd140") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd141") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd142") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd143") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd144") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd145") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd146") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd147") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd148") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd149") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd150") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd151") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd152") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd153") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd154") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd155") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd156") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd157") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd158") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd159") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd160") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd161") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd162") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd163") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd164") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd165") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd166") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd167") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd168") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd169") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd170") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd171") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd172") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd173") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd174") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd175") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd176") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd177") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd178") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd179") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd180") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd181") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd182") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd183") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd184") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd185") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd186") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd187") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd188") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd189") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd190") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd191") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd192") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd193") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd194") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd195") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd196") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd197") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd198") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd199") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd200") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd201") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd202") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd203") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd204") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd205") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd206") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd207") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd208") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd209") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd210") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd211") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd212") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd213") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd214") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd215") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd216") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd217") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd218") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd219") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd220") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd221") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd222") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd223") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd224") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd225") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd226") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd227") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd228") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd229") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd230") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd231") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd232") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd233") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd234") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd235") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd236") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd237") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd238") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd239") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd240") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd241") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd242") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd243") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd244") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd245") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd246") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd247") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd248") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd249") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd250") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd251") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd252") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd253") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd254") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd255") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd256") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd257") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd258") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd259") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd260") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd261") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd262") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd263") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd264") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd265") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd266") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd267") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd268") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd269") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd270") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd271") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd272") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd273") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd274") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd275") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd276") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd277") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd278") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd279") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd280") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd281") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd282") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd283") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd284") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd285") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd286") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd287") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd288") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd289") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd290") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd291") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd292") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd293") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd294") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd295") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd296") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd297") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd298") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd299") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd300") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd301") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd302") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd303") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd304") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd305") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd306") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd307") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd308") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd309") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd310") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd311") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd312") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd313") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd314") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd315") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd316") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd317") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd318") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd319") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd320") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd321") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd322") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd323") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd324") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd325") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd326") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd327") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd328") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd329") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd330") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd331") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd332") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd333") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd334") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd335") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd336") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd337") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd338") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd339") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd340") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd341") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd342") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd343") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd344") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd345") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd346") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd347") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd348") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd349") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd350") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd351") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd352") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd353") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd354") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd355") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd356") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd357") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd358") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd359") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd360") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd361") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd362") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd363") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd364") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd365") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd366") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd367") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd368") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd369") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd370") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd371") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd372") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd373") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd374") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd375") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd376") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd377") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd378") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd379") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd380") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd381") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd382") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd383") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd384") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd385") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd386") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd387") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd388") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd389") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd390") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd391") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd392") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd393") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd394") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd395") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd396") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd397") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd398") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd399") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd400") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd401") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd402") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd403") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd404") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd405") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd406") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd407") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd408") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd409") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd410") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd411") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd412") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd413") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd414") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd415") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd416") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd417") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd418") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd419") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd420") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd421") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd422") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd423") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd424") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd425") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd426") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd427") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd428") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd429") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd430") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd431") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd432") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd433") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd434") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd435") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd436") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd437") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd438") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd439") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd440") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd441") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd442") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd443") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd444") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd445") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd446") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd447") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd448") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd449") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd450") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd451") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd452") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd453") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd454") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd455") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd456") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd457") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd458") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd459") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd460") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd461") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd462") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd463") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd464") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd465") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd466") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd467") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd468") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd469") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd470") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd471") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd472") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd473") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd474") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd475") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd476") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd477") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd478") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd479") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd480") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd481") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd482") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd483") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd484") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd485") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd486") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd487") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd488") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd489") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd490") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd491") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd492") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd493") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd494") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd495") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd496") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd497") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd498") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+
+record(calc,"c1wps:RAMP_rnd499") {
+        field(DESC,"DEMO")
+        field(SCAN,".1 second")
+        field(PHAS,"1")
+        field(CALC,"RNDM * 100")
+        field(EGU, "Counts")
+        field(HOPR,"10000")
+}
+

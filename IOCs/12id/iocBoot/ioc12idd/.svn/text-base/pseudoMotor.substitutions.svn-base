@@ -1,0 +1,25 @@
+# Pseudo-motors
+# Note: This databases will be in the next release of motor, not in 12iddApp
+
+# This is a simple example using the sumDiff2D database.  This takes 2 real motors and makes 2 soft motors,
+# SUM which moves both motors together, and DIFF which moves them in opposite directions.
+# It can be used for slits, for K/B mirror benders, etc.
+
+file "$(TOP)/12iddApp/Db/pseudoMotor.db"
+{
+pattern
+{P,       M,           DINP,                        OUT,                     RDBL,                          STOO,     DESC, EGU, DIR, VELO, VBAS, ACCL, BDST, BVEL,                    BACC, MRES,   RRES, PREC,  DHLM, DLLM}
+{12idd:,  pm1, "12idd:KBV:Done NPP NMS", "12idd:pm1DVAL.VAL PP MS", "12idd:KBV:Readback.G NPP NMS", "12idd:KBV:Stop PP MS",    "Vert. curvature",          mm,  Pos,   1,    .1,   .1,    0,    1,   .1, .1,     1.0,  3,    10000, -10000}
+{12idd:,  pm2, "12idd:KBV:Done NPP NMS", "12idd:pm2DVAL.VAL PP MS", "12idd:KBV:Readback.H NPP NMS", "12idd:KBV:Stop PP MS",    "Vert. Ellipticity",        mm,  Pos,   1,    .1,   .1,    0,    1,   .1, .1,     1.0,  3,    10000, -10000}
+{12idd:,  pm3, "12idd:KBH:Done NPP NMS", "12idd:pm3DVAL.VAL PP MS", "12idd:KBH:Readback.G NPP NMS", "12idd:KBH:Stop PP MS",    "Hor. curvature",          mm,  Pos,   1,    .1,   .1,    0,    1,   .1, .1,     1.0,  3,    10000, -10000}
+{12idd:,  pm4, "12idd:KBH:Done NPP NMS", "12idd:pm4DVAL.VAL PP MS", "12idd:KBH:Readback.H NPP NMS", "12idd:KBH:Stop PP MS",    "Hor. ellipticity",        mm,  Pos,   1,    .1,   .1,    0,    1,   .1, .1,     1.0,  3,    10000, -10000}
+}
+
+file "$(TOP)/12iddApp/Db/sumDiff2D.db"
+{
+pattern
+{P,      T,   SUM, DIFF,      M1DRV,     M1RBV,    M2DRV,    M2RBV,    M1STOP,    M1DONE,    M2STOP,    M2DONE,  PREC}
+{12idd:, KBV:,  pm1,  pm2,    m17.VAL,   m17.RBV,  m18.VAL,  m18.RBV,  m17.STOP,  m17.DMOV,  m18.STOP,  m18.DMOV,    1}
+{12idd:, KBH:,  pm3,  pm4,    m19.VAL,   m19.RBV,  m20.VAL,  m20.RBV,  m19.STOP,  m19.DMOV,  m20.STOP,  m20.DMOV,    1}
+}
+

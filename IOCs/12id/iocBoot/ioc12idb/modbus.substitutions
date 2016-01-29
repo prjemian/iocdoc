@@ -1,0 +1,150 @@
+# asyn record for the underlying asyn octet port
+file "$(ASYN)/db/asynRecord.db" { pattern
+{P,           R,       PORT,      ADDR,   IMAX,    OMAX}
+{12idb:    OctetAsyn,    440,     0,      80,      80}
+}
+
+# These are the Xn inputs done with bit access 
+file "bi_bit.template" { pattern
+{P,           R,       PORT,          OFFSET,   ZNAM,   ONAM,  ZSV,       OSV,    SCAN, DESC}
+{12idb:,    X0B,     K1_Xn_Bit,     0,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vac Zone #1"}
+{12idb:,    X1B,     K1_Xn_Bit,     1,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vac Zone #2"}
+{12idb:,    X2B,     K1_Xn_Bit,     2,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vac Zone #3"}
+{12idb:,    X3B,     K1_Xn_Bit,     3,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vac Zone #4"}
+{12idb:,    X4B,     K1_Xn_Bit,     4,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vac Zone #5"}
+{12idb:,    X5B,     K1_Xn_Bit,     5,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vac Zone #6"}
+
+{12idb:,    X6B,      K1_Xn_Bit,     6,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vat1 Open Sensor"}
+{12idb:,    X7B,      K1_Xn_Bit,     7,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vat1 Closed Sensor"}
+{12idb:,    X10B,     K1_Xn_Bit,     010,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vat3 Open Sensor"}
+{12idb:,    X11B,     K1_Xn_Bit,     011,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vat3 Closed Sensor"}
+{12idb:,    X12B,     K1_Xn_Bit,     012,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vat4 Open Sensor"}
+{12idb:,    X13B,     K1_Xn_Bit,     013,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vat4 Closed Sensor"}
+{12idb:,    X14B,     K1_Xn_Bit,     014,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vat5 Open Sensor"}
+{12idb:,    X15B,     K1_Xn_Bit,     015,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vat5 Closed Sensor"}
+{12idb:,    X17B,     K1_Xn_Bit,     016,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vat2 Open Sensor"}
+{12idb:,    X22B,     K1_Xn_Bit,     017,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vat2 Closed Sensor"}
+
+{12idb:,    X23B,     K1_Xn_Bit,     020,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Flowmeter1"}
+{12idb:,    X23B,     K1_Xn_Bit,     021,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Flowmeter2"}
+{12idb:,    X23B,     K1_Xn_Bit,     022,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Flowmeter3"}
+{12idb:,    X23B,     K1_Xn_Bit,     023,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Flowmeter4"}
+{12idb:,    X23B,     K1_Xn_Bit,     024,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Flowmeter5"}
+{12idb:,    X23B,     K1_Xn_Bit,     025,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Flowmeter6"}
+
+
+}
+
+file "$(MODBUS)/db/asynRecord.template" { pattern
+{P,           R,       PORT,          ADDR,     TMOD,  IFACE}
+{12idb:,    XnBAsyn, K1_Xn_Bit,     0,        Read,  asynUInt32Digital}
+}
+file "$(MODBUS)/db/statistics.template" { pattern
+{P,           R,       PORT,       SCAN}
+{12idb:,    XnB,     K1_Xn_Bit,  "10 second"}
+} 
+file "$(MODBUS)/db/poll_delay.template" { pattern
+{P,           R,            PORT}
+{12idb:,    XnBPollDelay, K1_Xn_Bit}
+}
+
+
+## Since these are inputs, listing the vat Control bits is meaningless
+
+# These are the Yn inputs done with bit access Y0-Y7
+file "bi_bit.template" { pattern
+{P,           R,         PORT,             OFFSET,   ZNAM,   ONAM,  ZSV,       OSV,    SCAN, DESC}
+{12idb:,    Y0InB,     K1_Yn_In_Bit,     0,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "EPS OK"}
+{12idb:,    Y1InB,     K1_Yn_In_Bit,     1,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "EPS VAC OK"}
+}
+
+
+file "$(MODBUS)/db/asynRecord.template" { pattern
+{P,           R,         PORT,             ADDR,     TMOD,  IFACE}
+{12idb:,    YnInBAsyn, K1_Yn_In_Bit,     0,        Read,  asynUInt32Digital}
+}
+file "$(MODBUS)/db/statistics.template" { pattern
+{P,           R,         PORT,          SCAN}
+{12idb:,    YnInB,     K1_Yn_In_Bit,  "10 second"}
+}
+file "$(MODBUS)/db/poll_delay.template" { pattern
+{P,           R,              PORT}
+{12idb:,    YnInBPollDelay, K1_Yn_In_Bit}
+}
+
+
+## these are all crap at the instant . . . appear lifted out of BM11 Getting a new EPS Not sure if these will work on a 440
+
+# These are the Cn inputs done with bit access C0-C7
+file "bi_bit.template" { pattern
+{P,           R,         PORT,             OFFSET,   ZNAM,   ONAM,  ZSV,       OSV,    SCAN, DESC}
+{12idb:,    C300InB,     K1_Cn_In_Bit,     0300,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "GP1 Fault"}
+{12idb:,    C301InB,     K1_Cn_In_Bit,     0301,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "GP2 Fault"}
+{12idb:,    C302InB,     K1_Cn_In_Bit,     0302,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "GP3 Fault"}
+{12idb:,    C303InB,     K1_Cn_In_Bit,     0303,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "GP4 Fault"}
+{12idb:,    C304InB,     K1_Cn_In_Bit,     0304,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "GP5 Fault"}
+{12idb:,    C305InB,     K1_Cn_In_Bit,     0305,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "GP6 Fault"}
+{12idb:,    C306InB,     K1_Cn_In_Bit,     0306,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "GP7 Fault"}
+
+{12idb:,    C307InB,     K1_Cn_In_Bit,     0307,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "IP1 Fault"}
+{12idb:,    C310InB,     K1_Cn_In_Bit,     0310,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "IP2 Fault"}
+{12idb:,    C311InB,     K1_Cn_In_Bit,     0311,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "IP3 Fault"}
+{12idb:,    C312InB,     K1_Cn_In_Bit,     0312,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "IP4 Fault"}
+{12idb:,    C313InB,     K1_Cn_In_Bit,     0313,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "IP5 Fault"}
+{12idb:,    C314InB,     K1_Cn_In_Bit,     0314,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "IP6 Fault"}
+{12idb:,    C315InB,     K1_Cn_In_Bit,     0315,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "IP7 Fault"}
+
+{12idb:,    C316InB,     K1_Cn_In_Bit,     0316,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vat1 Fault"}
+{12idb:,    C317InB,     K1_Cn_In_Bit,     0317,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vat2 Fault"}
+{12idb:,    C320InB,     K1_Cn_In_Bit,     0320,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vat3 Fault"}
+{12idb:,    C321InB,     K1_Cn_In_Bit,     0321,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Vat4 Fault"}
+{12idb:,    C322InB,     K1_Cn_In_Bit,     0322,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Flow1 Fault"}
+{12idb:,    C323InB,     K1_Cn_In_Bit,     0323,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Flow2 Fault"}
+
+{12idb:,    C324InB,     K1_Cn_In_Bit,     0324,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Temp1 Fault"}
+{12idb:,    C325InB,     K1_Cn_In_Bit,     0325,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Temp2 Fault"}
+{12idb:,    C326InB,     K1_Cn_In_Bit,     0326,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Temp3 Fault"}
+{12idb:,    C327InB,     K1_Cn_In_Bit,     0327,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Temp4 Fault"}
+{12idb:,    C330InB,     K1_Cn_In_Bit,     0330,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Temp5 Fault"}
+{12idb:,    C331InB,     K1_Cn_In_Bit,     0331,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Temp6 Fault"}
+{12idb:,    C332InB,     K1_Cn_In_Bit,     0332,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Temp7 Fault"}
+{12idb:,    C333InB,     K1_Cn_In_Bit,     0333,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Temp8 Fault"}
+
+{12idb:,    C334InB,     K1_Cn_In_Bit,     0334,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Flow Value 1 Fault"}
+{12idb:,    C335InB,     K1_Cn_In_Bit,     0335,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Flow value 2 Fault"}
+{12idb:,    C336InB,     K1_Cn_In_Bit,     0336,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Flow Value 3 Fault"}
+{12idb:,    C337InB,     K1_Cn_In_Bit,     0337,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Flow Value 4 Fault"}
+
+{12idb:,    C500InB,     K1_Cn_In_Bit,     0500,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Water OK"}
+{12idb:,    C501InB,     K1_Cn_In_Bit,     0501,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "GP OK"}
+{12idb:,    C502InB,     K1_Cn_In_Bit,     0502,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "IP OK"}
+{12idb:,    C503InB,     K1_Cn_In_Bit,     0503,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "TEMPS OK"}
+{12idb:,    C504InB,     K1_Cn_In_Bit,     0504,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "VATS OK"}
+{12idb:,    C600InB,     K1_Cn_In_Bit,     0600,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Force EPS OK"}
+{12idb:,    C700InB,     K1_Cn_In_Bit,     0700,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Force EPS Fault"}
+{12idb:,    C702InB,     K1_Cn_In_Bit,     0702,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Reset All Faults"}
+{12idb:,    C703InB,     K1_Cn_In_Bit,     0703,        Low,    High,  NO_ALARM,  MAJOR,  "I/O Intr", "Reset All Timer"}
+
+}
+
+file "$(MODBUS)/db/asynRecord.template" { pattern
+{P,           R,         PORT,             ADDR,     TMOD,  IFACE}
+{12idb:,    CnInBAsyn, K1_Cn_In_Bit,     0,        Read,  asynUInt32Digital}
+}
+file "$(MODBUS)/db/statistics.template" { pattern
+{P,           R,         PORT,          SCAN}
+{12idb:,    CnInB,     K1_Cn_In_Bit,  "10 second"}
+}
+file "$(MODBUS)/db/poll_delay.template" { pattern
+{P,           R,              PORT}
+{12idb:,    CnInBPollDelay, K1_Cn_In_Bit}
+}
+
+
+
+
+
+
+
+
+

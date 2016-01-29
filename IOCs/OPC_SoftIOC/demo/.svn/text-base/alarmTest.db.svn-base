@@ -1,0 +1,28 @@
+record(ai,"TrainIoc:Alarm:TEST1$(name)_ai") {
+	field(DESC,"Increment of calc by 1")
+        field(PINI,"YES")
+        field(UDF,"0")
+        field(INP,"1")
+	field(PREC,"1")
+	field(EGU, "Counts")
+	field(HOPR,"$(hopr)")
+	field(MDEL,"0.1")
+	field(ADEL,"0.5")
+}
+record(calc,"TrainIoc:Alarm:RAMP$(name)_calc") {
+	field(DESC,"Ramp $(name) $(sec) $(max)")
+	field(SCAN,"$(sec) second")
+	field(PHAS,"1")
+#	field(SDIS,"trainIoc:valid NPP NMS")
+#	field(FLNK,"alarmTest:RAMP$(name)_calc_h")
+	field(HIGH,"$(high)")
+	field(HIHI,"$(hihi)")
+	field(HSV ,"MINOR")
+	field(HHSV,"MAJOR")
+	field(CALC,"A<C?A+B:0")
+	field(INPA,"TrainIoc:Alarm:RAMP$(name)_calc.VAL NPP MS")
+	field(INPB,"TrainIoc:Alarm:TEST1$(name)_ai.VAL NPP MS")
+	field(INPC,"$(max)")
+	field(EGU, "Counts")
+	field(HOPR,"$(hopr)")
+}

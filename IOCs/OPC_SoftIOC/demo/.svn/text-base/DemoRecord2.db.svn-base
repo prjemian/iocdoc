@@ -1,0 +1,31 @@
+record(ai,"TEST:sinusInt") {
+        field(DESC,"my sinus as integer")
+        field(SCAN,"I/O Intr")
+        field(DTYP,"opc")
+        field(INP,"@Simulator.SinInt")
+        field(TSE,"0")
+#       TSE=0  => EPICSTIME=SYSTEMTIME
+#       TSE=-2 => EPICSTIME=OPC-SERVER-TIME
+#       field(TSE,"-2")
+        field(PREC,"6")
+        field(EGU,"rad")
+#       PINI=0 UDF INVALID until OPC server updates value
+#       PINI=1 value will be read and UDF gets VALID
+        field(PINI,"1")
+}
+
+record(ai,"TEST:MemoryLoad") {
+        field(DESC,"my sinus as integer")
+        field(SCAN,"I/O Intr")
+        field(DTYP,"opc")
+        field(INP,"@SystemData.MemoryLoad(%)")
+        field(TSE,"0")
+#       TSE=0  => EPICSTIME=SYSTEMTIME
+#       TSE=-2 => EPICSTIME=OPC-SERVER-TIME
+#       field(TSE,"-2")
+        field(PREC,"6")
+        field(EGU,"%")
+#       PINI=0 UDF INVALID until OPC server updates value
+#       PINI=1 value will be read and UDF gets VALID
+        field(PINI,"1")
+}
