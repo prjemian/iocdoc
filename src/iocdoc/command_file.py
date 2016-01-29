@@ -27,8 +27,8 @@ class CommandFile(file_support.TextFile):
     '''
 
 
-    def __init__(self, parent, filename, macros={}):
-        super(CommandFile, self).__init__(parent, filename)
+    def __init__(self, parent, filename, file_cache, macros={}):
+        super(CommandFile, self).__init__(parent, filename, file_cache, macros)
 
         self.env = {}
         self.symbols = {}

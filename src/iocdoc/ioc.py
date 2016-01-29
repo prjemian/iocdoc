@@ -26,9 +26,10 @@ class Ioc(object):
     complete analysis of a single EPICS IOC
     '''
     
-    def __init__(self, filename):
-        self.commands = command_file.CommandFile(self, filename, {})
+    def __init__(self, filename, file_cache={}):
         self.ioc_name = None    # TODO: How to determine this?
+        self.file_cache = file_cache
+        self.commands = command_file.CommandFile(self, filename, self.file_cache, {})
     
     def parse(self):
         '''analyze this IOC'''
