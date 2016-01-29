@@ -23,8 +23,8 @@ long_description = open('README.rst', 'r').read()
 setup (
     name             = iocdoc.__package_name__,        # iocdoc
     license          = iocdoc.__license__,
-#    version          = versioneer.get_version(),
-#    cmdclass         = versioneer.get_cmdclass(),
+    version          = versioneer.get_version(),
+    cmdclass         = versioneer.get_cmdclass(),
     description      = iocdoc.__description__,
     long_description = long_description,
     author           = iocdoc.__author_name__,

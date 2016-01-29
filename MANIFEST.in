@@ -1,5 +1,2 @@
 include README.rst
 include CHANGES.rst
-#include src/iocdoc/LICENSE
-#include versioneer.py
-#include src/iocdoc/_version.py
