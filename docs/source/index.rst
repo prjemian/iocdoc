@@ -15,6 +15,7 @@ Contents:
    :glob:
    
    readme
+   src/*
    changes
    license
 
