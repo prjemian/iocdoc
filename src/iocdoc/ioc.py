@@ -1,5 +1,5 @@
 '''
-ioc.py - describe this IOC
+ioc.py - describe an EPICS IOC by examining its startup command file
 
 EXAMPLE COMMAND-LINE USAGE::
 
