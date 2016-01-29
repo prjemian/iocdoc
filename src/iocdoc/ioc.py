@@ -1,5 +1,18 @@
 '''
 ioc.py - describe this IOC
+
+EXAMPLE COMMAND-LINE USAGE::
+
+    iocdoc ../path/to/st.cmd
+
+
+EXAMPLE PYTHON USAGE::
+
+    import iocdoc
+    ioc = iocdoc.Ioc('../path/to/st.cmd')
+    ioc.parse()
+    ioc.report()
+
 '''
 
 
@@ -16,6 +29,17 @@ class Ioc(object):
     def __init__(self, filename):
         self.commands = command_file.CommandFile(self, filename, {})
         self.ioc_name = None    # TODO: How to determine this?
+    
+    def parse(self):
+        '''analyze this IOC'''
+        pass
+    
+    def report(self):
+        '''describe what was discovered'''
+        print 'cwd', self.commands.cwd
+        print 'filename', self.commands.filename
+        print '|filename|', self.commands.absolute_filename
+        print '|dir|', self.commands.absolute_directory
 
 
 def process_command_line():
@@ -39,10 +63,8 @@ def process_command_line():
 def main():
     cli = process_command_line()
     ioc = Ioc(cli.command_file)
-    print 'cwd', ioc.commands.cwd
-    print 'filename', ioc.commands.filename
-    print '|filename|', ioc.commands.absolute_filename
-    print '|dir|', ioc.commands.absolute_directory
+    ioc.parse()
+    ioc.report()
 
 
 def main___developer_use():
@@ -56,4 +78,5 @@ def main___developer_use():
 
 
 if __name__ == '__main__':
-    main___developer_use()
+    # main()
+    main___developer_use()  # developer-only : remove when release
