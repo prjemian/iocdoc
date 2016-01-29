@@ -36,18 +36,22 @@ def process_command_line():
     return parser.parse_args()
 
 
-def main___developer_use():
-    import sys
-    test_ioc = os.path.join('..', '..', 'IOCs', 'OPC_SoftIOC', 'demo', 'st.cmd')
-    # sys.argv.append('-h')
-    # sys.argv.append('-v')
-    sys.argv.append(test_ioc)
+def main():
     cli = process_command_line()
     ioc = Ioc(cli.command_file)
     print 'cwd', ioc.commands.cwd
     print 'filename', ioc.commands.filename
     print '|filename|', ioc.commands.absolute_filename
     print '|dir|', ioc.commands.absolute_directory
+
+
+def main___developer_use():
+    import sys
+    test_ioc = os.path.join('..', '..', 'IOCs', 'OPC_SoftIOC', 'demo', 'st.cmd')
+    # sys.argv.append('-h')
+    # sys.argv.append('-v')
+    sys.argv.append(test_ioc)
+    main()
     pass
 
 

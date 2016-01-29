@@ -41,7 +41,7 @@ setup (
     classifiers      = iocdoc.__classifiers__,
     entry_points={
        # create & install console_scripts in <python>/bin
-       #'console_scripts': ['iocdoc = iocdoc.main:main'],
-       'gui_scripts': ['iocdoc = iocdoc:main'],
+       'console_scripts': ['iocdoc = iocdoc.ioc:main'],
+       #'gui_scripts': ['iocdoc = iocdoc:main'],
        },
       )
