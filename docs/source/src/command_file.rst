@@ -1,6 +1,6 @@
-module: file_support
+module: command_file
 ====================
 
-.. automodule:: iocdoc.file_support
+.. automodule:: iocdoc.command_file
     :members:
     :show-inheritance:
