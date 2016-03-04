@@ -6,6 +6,9 @@ IOCDOC
 Overview
 ========
 
+:version: |version|
+:published: |today|
+
 IOCDOC ...
 
 Contents:
