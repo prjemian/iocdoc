@@ -11,6 +11,7 @@ EXAMPLE PYTHON USAGE::
     import iocdoc
     ioc = iocdoc.Ioc('../path/to/st.cmd')
     ioc.parse()
+    ioc.expand_macros()
     ioc.report()
 
 '''
@@ -19,6 +20,7 @@ EXAMPLE PYTHON USAGE::
 import os
 
 import command_file
+import text_file
 
 
 class Ioc(object):
@@ -26,11 +28,15 @@ class Ioc(object):
     complete analysis of a single EPICS IOC
     '''
     
-    def __init__(self, filename, file_cache={}):
+    def __init__(self, filename):
+        self.st_cmd = text_file.read(filename)
         self.ioc_name = None    # TODO: How to determine this?
-        self.file_cache = file_cache
-        self.commands = command_file.CommandFile(self, filename, self.file_cache, {})
+        self.commands = command_file.CommandFile(self, self.st_cmd, os.environ)
     
+    def expand_macros(self):
+        '''replace all known macros with their values'''
+        pass
+
     def parse(self):
         '''analyze this IOC'''
         pass
@@ -38,14 +44,14 @@ class Ioc(object):
     def report(self):
         '''describe what was discovered'''
         # TODO: this is the development version
-        for key in sorted(self.file_cache.keys()):
+        for key in sorted(text_file.keys()):
             print key
         print '-'*20
-        print 'cwd', self.commands.cwd
-        print 'filename', self.commands.filename
-        print '|filename|', self.commands.absolute_filename
-        print '|dir|', self.commands.absolute_directory
-        print 'len(file)[lines, chars]', len(self.commands.file_text.splitlines()), len(self.commands.file_text)
+        print 'cwd', self.st_cmd.cwd
+        print 'filename', self.st_cmd.filename
+        print '|filename|', self.st_cmd.absolute_filename
+        print '|dir|', self.st_cmd.absolute_directory
+        print 'len(file)[lines, chars]', self.st_cmd.number_of_lines, self.st_cmd.bytes
 
 
 def process_command_line():
@@ -80,7 +86,6 @@ def main___developer_use():
     # sys.argv.append('-v')
     sys.argv.append(test_ioc)
     main()
-    pass
 
 
 if __name__ == '__main__':

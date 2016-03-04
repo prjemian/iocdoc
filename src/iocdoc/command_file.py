@@ -5,7 +5,6 @@ EPICS IOC command file analysis
 import os
 import token
 import tokenize
-import file_support
 
 
 '''
@@ -21,19 +20,28 @@ TODO: (from topdoc.CmdReader()): refactor this code to:
 class UnhandledTokenPattern(Exception): pass
 
 
-class CommandFile(file_support.TextFile):
+class CommandFile(object):
     '''
     analysis of an EPICS IOC command file
     '''
 
 
-    def __init__(self, parent, filename, file_cache, macros={}):
-        super(CommandFile, self).__init__(parent, filename, file_cache, macros)
+    def __init__(self, parent, fobject, env={}):
+        self.parent = parent
+        self.fobject = fobject
 
-        self.env = {}
+        self.env = dict(env.items())
         self.symbols = {}
         self.commands = []
     
+    def expand_macros(self):
+        '''expand all known macros'''
+        raise NotImplementedError()
+    
     def parse(self):
         '''analyze this command file'''
-        pass
+        raise NotImplementedError()
+     
+    def report(self):
+        '''describe what was discovered'''
+        raise NotImplementedError()
