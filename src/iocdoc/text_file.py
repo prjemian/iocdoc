@@ -24,14 +24,17 @@ def read(filename):
 
 
 def items():
+    '''get the cache as a set of dictionary items'''
     return file_cache.cache.items()
 
 
 def keys():
+    '''get the names of files in the cache'''
     return file_cache.cache.keys()
 
 
 def values():
+    '''get the Python objects of items in the cache'''
     return file_cache.cache.values()
 
 
