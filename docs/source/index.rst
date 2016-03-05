@@ -1,15 +1,31 @@
 
-------
 IOCDOC
-------
+######
 
 Overview
-========
+********
 
 :version: |version|
 :published: |today|
 
-IOCDOC ...
+IOCDOC: Document the configuration of an EPICS IOC
+
+In EPICS, an IOC is the server, coordinating hardware actions 
+with software configuration, command, and control.
+
+Operation of the IOC begins with a command to a executable, compiled 
+for the host computer architecture, and a startup script, often called
+``st.cmd`` by convention.  All necessary configuration information is 
+provided in the startup script or through the environment variables
+from the host operating system when the startup script is launched.
+
+It is possible, by parsing the startup script, to document the implementation
+of the IOC and that is the goal of this package.  Reference to well-known
+IOC commands (such as ``dbLoadRecords``), packages (such as ``synApps``), 
+and the chosen EPICS base version will be provided.
+
+Output is in the form of a set of HTML pages for human consumption
+and a set of XML files for machine processing.
 
 Contents:
 
@@ -23,7 +39,7 @@ Contents:
    license
 
 Indices and tables
-==================
+******************
 
 * :ref:`genindex`
 * :ref:`modindex`
