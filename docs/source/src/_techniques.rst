@@ -1,3 +1,5 @@
+.. index:: techniques
+
 Techniques used in coding this package
 ######################################
 
