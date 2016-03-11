@@ -1,11 +1,12 @@
 '''
-Applies Python :mod:`tokenize` analysis to each line of a file.
+Applies Python :mod:`tokenize` analysis to each line of a text file.
 '''
 
 
 import token
 import tokenize
 from utils import logMessage
+import text_file
 
 
 PRINT_DIAGNOSTICS = False
@@ -111,13 +112,13 @@ class TokenLog():
         '''
         process just one file
         '''
-        # TODO: support the text_file.read() cache
-        f = open(filename)
+        f = text_file.read(filename)    # use the file cache
         try:
-            tokenize.tokenize(f.readline, self.tokenReceiver)
-        except:
+            tokenize.tokenize(f.iterator().readline, self.tokenReceiver)
+        except Exception, _exc:
             f.close()   # remember to close the file!
-            msg = "trouble with: " + filename
+            msg = 'trouble with: ' + filename
+            msg += '\n' + str(_exc)
             logMessage(msg)
             raise RuntimeError(msg)
         self.token_pointer = None

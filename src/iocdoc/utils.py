@@ -8,6 +8,7 @@ import logging
 import sys
 
 LOG_FILE = 'iocdoc.log'
+logging_started = False
 
 
 def datenow():
@@ -30,7 +31,7 @@ def logMessage(text):
 
 
 class FileRef(object):
-    '''documents filename and linumber of an object'''
+    '''associate filename and line number of an object'''
     
     def __init__(self, filename, linenumber, obj):
         self.filename = filename

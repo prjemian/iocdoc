@@ -4,6 +4,7 @@ text_file.py - describe any text file used by an EPICS IOC
 
 
 import os
+import StringIO
 
 
 class FileNotFound(Exception): pass
@@ -13,10 +14,16 @@ file_cache = None       # singleton instance of FileCache()
 
 
 def read(filename):
-    '''get a file either from the cache or from storage'''
+    '''
+    get a file either from the cache or from storage
+    
+    Always use complete filenames (no unexpanded macros), can be relative.
+    This code will use absolute filenames internally.
+    '''
     global file_cache
     if file_cache is None:
         _setup_file_cache()
+    filename = os.path.abspath(filename)
     if not file_cache.exists(filename):
         file_cache.set(filename, _IocTextFile(filename))
     return file_cache.get(filename)
@@ -94,13 +101,25 @@ class _IocTextFile(object):
         self.cwd = os.getcwd()
 
         self._read()
-        self.number_of_lines = len(self.full_text.splitlines())
+        self.number_of_lines = len(self)
     
-    def __str__(self):
-        return self.filename
+    def close(self):
+        '''some code likes to call this'''
+        pass
+    
+    def iterator(self):
+        '''iterator interface: provide str.readline for tokenizer'''
+        return StringIO.StringIO(self.full_text)
+    
+    def __len__(self):
+        '''iterator interface'''
+        return len(self.full_text.splitlines())
     
     def _read(self):
         '''read the complete file from storage'''
         if not os.path.exists(self.absolute_filename):
             raise FileNotFound(self.absolute_filename)
         self.full_text = open(self.absolute_filename, 'r').read()
+    
+    def __str__(self):
+        return self.filename
