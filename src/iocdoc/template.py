@@ -10,6 +10,9 @@ from token_support import token_key, TokenLog, getFullWord
 from utils import logMessage, FileRef
 
 
+class DatabaseTemplateException(Exception): pass
+
+
 class Template(object):
     '''
     EPICS template (substitutions) file

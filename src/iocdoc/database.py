@@ -6,6 +6,9 @@ import os
 import text_file
 
 
+class DatabaseException(Exception): pass
+
+
 class Database(object):
     '''
     EPICS template (substitutions) file

@@ -6,10 +6,10 @@
 Source code for the iocdoc package
 '''
 
-'''
-Will it be necessary to add this next line at the top of every file?
-# -*- coding: iso-8859-1 -*- 
-'''
+# '''
+# Will it be necessary to add this next line at the top of every file?
+# # -*- coding: iso-8859-1 -*- 
+# '''
 
 #from ioc import Ioc
 

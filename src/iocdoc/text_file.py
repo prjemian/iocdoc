@@ -1,5 +1,25 @@
 '''
 text_file.py - describe any text file used by an EPICS IOC
+
+======================== ====================================================
+code                     description
+======================== ====================================================
+:func:`read`             get a file either from the cache or from storage
+:func:`items`            get the cache as a set of dictionary items
+:func:`keys`             get the names of files in the cache
+:func:`values`           get the Python objects of items in the cache
+:func:`remove_comments`  strip out a C-style comment
+:class:`FileNotFound`    Exception: raised when ``filename`` does not exist
+:class:`_FileCache`      (internal) supports "load each file only once"
+:class:`_TextFile`       (internal) superclass: common handling of text file
+======================== ====================================================
+
+Example::
+
+    # filename must have all macros expanded
+    file_object = text_file.read(filename)
+
+
 '''
 
 
@@ -10,7 +30,7 @@ import StringIO
 class FileNotFound(Exception): pass
 
 
-file_cache = None       # singleton instance of FileCache()
+_file_cache_ = None       # (internal) singleton instance of FileCache()
 
 
 def read(filename):
@@ -29,50 +49,50 @@ def read(filename):
     not Ok ``$(SSCAN)/sscanApp/Db/scanParms.db``
     ====== ===========================================
     '''
-    global file_cache
-    if file_cache is None:
+    global _file_cache_
+    if _file_cache_ is None:
         _setup_file_cache()
     #filename = os.path.abspath(filename)
-    if not file_cache.exists(filename):
-        file_cache.set(filename, _IocTextFile(filename))
-    return file_cache.get(filename)
+    if not _file_cache_.exists(filename):
+        _file_cache_.set(filename, _TextFile(filename))
+    return _file_cache_.get(filename)
 
 
 def items():
     '''get the cache as a set of dictionary items'''
-    return file_cache.cache.items()
+    return _file_cache_.cache.items()
 
 
 def keys():
     '''get the names of files in the cache'''
-    return file_cache.cache.keys()
+    return _file_cache_.cache.keys()
 
 
 def values():
     '''get the Python objects of items in the cache'''
-    return file_cache.cache.values()
+    return _file_cache_.cache.values()
 
 
 # --- internal routines below --------------
 
 
 def _setup_file_cache():
-    '''define ``file_cache`` as a singleton'''
-    global file_cache
-    file_cache = _FileCache()
+    '''define ``_file_cache_`` as a singleton'''
+    global _file_cache_
+    _file_cache_ = _FileCache()
 
 
 class _FileCache(object):
     '''load each file only once'''
     
     def __init__(self):
-        global file_cache
-        if file_cache is not None:
+        global _file_cache_
+        if _file_cache_ is not None:
             msg = '_FileCache() called more than once'
-            msg += ': use text_file.file_cache object instead'
+            msg += ': use text_file._file_cache_ object instead'
             raise RuntimeError(msg)
         self.cache = {}
-        file_cache = self
+        _file_cache_ = self
     
     def exists(self, filename):
         return filename in self.cache
@@ -90,9 +110,9 @@ class _FileCache(object):
         return self.cache.get(filename, alternative)
 
 
-class _IocTextFile(object):
+class _TextFile(object):
     '''
-    superclass: description and common handling of a file used by an EPICS IOC
+    superclass: description and common handling of a text file used by this package
     
     This class should only be called by the read() method above.
     '''

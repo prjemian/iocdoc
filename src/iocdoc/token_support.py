@@ -5,7 +5,7 @@ Applies Python :mod:`tokenize` analysis to each line of a text file.
 
 import token
 import tokenize
-from utils import logMessage
+from utils import logMessage, strip_quotes
 import text_file
 
 
@@ -296,6 +296,67 @@ def getFullWord(tokenLog):
             tok = tokenLog.getCurrentToken()
         v = v[:-1]
     return v
+
+
+def tokens_to_list(tokenLog):
+    '''
+    parse an enclosed list of tokens into a list
+    
+    :param obj tokenLog: instance of TokenLog, pointing at start terminator
+    
+    examples::
+    
+        (DESC, "motor $(P)$(M)") --> ['DESC', 'motor $(P)$(M)']
+        {P,      S, BL,    T1, T2, A}  --> ['P', 'S', 'BL', 'T1', 'T2', 'A']
+        {12ida1: A  "##ID" 1   2   1}  --> ['12ida1:', 'A', '##ID', '1', '2', '1']
+        
+        TODO: alias($(IOC):IOC_CPU_LOAD,"$(IOC):load")
+
+    '''
+    # first, decide the list terminators
+    tok = tokenLog.getCurrentToken()
+    t_start = token_key(tok)
+    if t_start not in ('OP (', 'OP {'):
+        msg = 'incorrect token type'
+        raise ValueError, msg
+    t_end = {'OP (': 'OP )', 'OP {': 'OP }'}[t_start]
+    #content_names = ('NAME', 'NUMBER', 'OP', 'STRING', 'ERRORTOKEN')
+    skip_list = ('COMMENT', 'NEWLINE', 'ENDMARKER', 
+            #'ERRORTOKEN', 
+            'INDENT', 'DEDENT')
+    v = ''
+    end = tok['start'][1]
+    items = []
+    depth = 1
+    while depth>0 or token_key(tok) not in ('', t_end):
+        tok = tokenLog.nextActionable(skip_list)
+        key = token_key(tok)
+        if key == t_start:
+            depth += 1
+        elif key == t_end:
+            depth -= 1
+            if depth == 0:
+                break
+        if tok['start'][1] == end and key != 'OP ,':
+            v += tok['tokStr']
+            end = tok['end'][1]
+        else:
+            if len(v) > 0:
+                v = strip_quotes(v)
+                if len(v) == 0:  v = '""'
+                items.append(v)
+            if key not in (t_end, 'OP ,'):
+                v = tok['tokStr']
+            else:
+                v=''
+            end = tok['end'][1]
+
+    if len(v) > 0:      # last chance
+        v = strip_quotes(v)
+        if len(v) == 0:  v = '""'
+        items.append(v)
+
+    return items
 
 
 ######################################################################
