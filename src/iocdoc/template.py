@@ -68,7 +68,7 @@ class Template(object):
             # define the macros for this set
             
             line_number = tok['start'][0]
-            dbg = DatabaseGroup(dbFileName, macros)
+            dbg = DbLoadRecords(dbFileName, **macros)
             self.declarations.append(dbg)
             self.references.append(FileRef(self.filename, line_number, dbg))
     
@@ -87,20 +87,19 @@ class Template(object):
         pass
 
 
-class DatabaseGroup(object):
-    '''block of declarations in a Template file referring to one EPICS database file'''
+class DbLoadRecords(object):
+    '''call for one EPICS database file with a given environment'''
      
     def __init__(self, dbFileName, **env):
         self.dbFileName = dbFileName
         self.env = dict(env.items())
-        self.macros = {}
      
-    def parse(self):
-        '''interpret pattern sets for PV declarations'''
-        pass
+    #def parse(self):
+    #    '''interpret pattern sets for PV declarations'''
+    #    pass
      
     def substitute_macros(self):
-        '''apply macro substitutions'''
+        '''apply macro/env substitutions'''
         pass
      
     def get_pv_list(self):
