@@ -27,7 +27,7 @@ class Template(object):
         self.declarations = []
         self.references = []
 
-        # TODO: ?wait for this step?  filename might need macro expansion
+        # filename must have all macros expanded
         self.source = text_file.read(filename)
         self.parse()
     

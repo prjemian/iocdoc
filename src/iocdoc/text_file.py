@@ -17,13 +17,22 @@ def read(filename):
     '''
     get a file either from the cache or from storage
     
-    Always use complete filenames (no unexpanded macros), can be relative.
-    This code will use absolute filenames internally.
+    :param str filename: relative or absolute path to file
+    
+    Always use filenames with all macros expanded.
+    
+    ====== ===========================================
+    Ok?    filename
+    ====== ===========================================
+    Ok     ``st.cmd``
+    Ok     ``./testfiles/templates/example.template``
+    not Ok ``$(SSCAN)/sscanApp/Db/scanParms.db``
+    ====== ===========================================
     '''
     global file_cache
     if file_cache is None:
         _setup_file_cache()
-    filename = os.path.abspath(filename)
+    #filename = os.path.abspath(filename)
     if not file_cache.exists(filename):
         file_cache.set(filename, _IocTextFile(filename))
     return file_cache.get(filename)
