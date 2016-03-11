@@ -11,7 +11,8 @@ Will it be necessary to add this next line at the top of every file?
 # -*- coding: iso-8859-1 -*- 
 '''
 
-from ioc import Ioc
+#from ioc import Ioc
+
 
 __package_name__        = u'iocdoc'
 __description__         = u'Document the configuration of an EPICS IOC'

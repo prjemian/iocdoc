@@ -18,8 +18,7 @@ def read(filename):
     if file_cache is None:
         _setup_file_cache()
     if not file_cache.exists(filename):
-        obj = _IocTextFile(filename)
-        file_cache.set(filename, obj)
+        file_cache.set(filename, _IocTextFile(filename))
     return file_cache.get(filename)
 
 
@@ -84,6 +83,8 @@ class _IocTextFile(object):
     
     def __init__(self, filename):
         self.filename = filename
+        if not os.path.exists(filename):
+            raise FileNotFound(filename)
 
         self.absolute_filename = os.path.abspath(filename)
         self.absolute_directory = os.path.dirname(self.absolute_filename)

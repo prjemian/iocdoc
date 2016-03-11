@@ -21,6 +21,7 @@ import os
 
 import command_file
 import text_file
+import iocdoc
 
 
 class Ioc(object):
@@ -59,7 +60,7 @@ def process_command_line():
     support command-line options such as ```--help``` and ```--version```
     '''
     import argparse
-    import iocdoc
+    #import iocdoc
     version = iocdoc.__version__
     doc = iocdoc.__doc__
     doc = 'v' + version + ', ' + doc.strip()
