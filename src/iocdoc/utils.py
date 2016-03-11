@@ -30,9 +30,12 @@ def logMessage(text):
 
 
 class FileRef(object):
-    '''records filename and linumber of an object'''
+    '''documents filename and linumber of an object'''
     
     def __init__(self, filename, linenumber, obj):
         self.filename = filename
         self.line_number = linenumber
         self.object = obj
+    
+    def __str__(self):
+        return '(%s,%d) %s' % (self.filename, self.line_number, str(self.object))

@@ -50,10 +50,15 @@ class Template(object):
             tok = self.tokenLog.nextActionable()
     
     def _parse_file_statement(self):
-        tok = self.tokenLog.getCurrentToken()
-        print '(%s,%d,%d) %s' % (self.filename, tok['start'][0], tok['start'][1], 'file name' )
+        #tok = self.tokenLog.getCurrentToken()
+        #print '(%s,%d,%d) %s' % (self.filename, tok['start'][0], tok['start'][1], 'file name' )
+        
         tok = self.tokenLog.nextActionable()
         dbFileName = getFullWord(self.tokenLog).strip('"')
+        self.references.append(FileRef(self.filename, tok['start'][0], dbFileName))
+
+        tok = self.tokenLog.nextActionable()
+
         # TODO: expand the macros in the dbFileName using self.env
         macro_keys = []     # TODO: read these from the template
         # If there is a "pattern" statement, the macro labels are given first, then values in each declaration
@@ -66,12 +71,13 @@ class Template(object):
             dbg = DatabaseGroup(dbFileName, macros)
             self.declarations.append(dbg)
             ref = FileRef(self.filename, line_number, dbg)
-            self.references.append(ref)
+            self.references.append(FileRef(self.filename, line_number, dbg))
     
     def _parse_globals_statement(self):
         # starting with EPICS base 3.15
         tok = self.tokenLog.getCurrentToken()
-        print '(%s,%d,%d) %s' % (self.filename, tok['start'][0], tok['start'][1], 'global macros' )
+        #print '(%s,%d,%d) %s' % (self.filename, tok['start'][0], tok['start'][1], 'global macros' )
+        self.references.append(FileRef(self.filename, tok['start'][0], 'global macros'))
         # add macro definitions here to self.env
         # how to log this(self.filename, line_number)?
     
@@ -116,6 +122,8 @@ def main():
     for k in testfiles:
         if k in db:
             print db[k].source.number_of_lines, k
+            for ref in db[k].references:
+                print ' '*8, str(ref)
 
 if __name__ == '__main__':
     main()
