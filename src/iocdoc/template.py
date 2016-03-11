@@ -70,7 +70,6 @@ class Template(object):
             line_number = tok['start'][0]
             dbg = DatabaseGroup(dbFileName, macros)
             self.declarations.append(dbg)
-            ref = FileRef(self.filename, line_number, dbg)
             self.references.append(FileRef(self.filename, line_number, dbg))
     
     def _parse_globals_statement(self):
@@ -79,7 +78,6 @@ class Template(object):
         #print '(%s,%d,%d) %s' % (self.filename, tok['start'][0], tok['start'][1], 'global macros' )
         self.references.append(FileRef(self.filename, tok['start'][0], 'global macros'))
         # add macro definitions here to self.env
-        # how to log this(self.filename, line_number)?
     
     def substitute_macros(self):
         '''apply macro substitutions'''
