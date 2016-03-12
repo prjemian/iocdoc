@@ -9,7 +9,7 @@ code                     description
 :func:`keys`             get the names of files in the cache
 :func:`values`           get the Python objects of items in the cache
 :func:`remove_comments`  strip out a C-style comment
-:class:`FileNotFound`    Exception: raised when ``filename`` does not exist
+:exc:`FileNotFound`      Exception: raised when ``filename`` does not exist
 :class:`_FileCache`      (internal) supports "load each file only once"
 :class:`_TextFile`       (internal) superclass: common handling of text file
 ======================== ====================================================

@@ -9,11 +9,11 @@ support                       description
 :func:`detailedExceptionLog`  log the details of an exception
 :class:`FileRef`              associate filename and line number of an object
 :func:`logMessage`            log a message
-:func:`remove_comments`       strip out a C-style comment 
-:var:`LOG_FILE`               default log file name 
-:func:`strip_outer_pair`      remove outer symbols from text
+:func:`reip_outer_pair`       remove outer symbols from text
 :func:`strip_outer_quotes`    strip outer quotes (either single or double) from text
-:func:`strip_parentheses`     remove outer parentheses from text
+:func:`strimove_comments`     strip out a C-style comment 
+:const:`LOG_FILE`             default log file name 
+:func:`strp_parentheses`      remove outer parentheses from text
 :func:`strip_quotes`          strip outer double quotes from text
 ============================= ====================================================
 '''
