@@ -3,10 +3,29 @@ EPICS database file analysis
 '''
 
 import os
+import macros
 import text_file
 
 
 class DatabaseException(Exception): pass
+
+
+class DbLoadRecords(object):
+    '''call for one EPICS database file with a given environment'''
+     
+    def __init__(self, dbFileName, **env):
+        self.dbFileName = dbFileName
+        self.macros = macros.Macros(**env)
+    
+    def __str__(self):
+        return 'dbLoadRecords ' + self.dbFileName + '  ' + str(self.macros.db)
+     
+    #def parse(self):
+    #    '''interpret pattern sets for PV declarations'''
+    #    pass
+     
+    def get_pv_list(self):
+        pass
 
 
 class Database(object):

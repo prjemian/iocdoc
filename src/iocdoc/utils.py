@@ -80,13 +80,14 @@ def detailedExceptionLog(title='', print_traceback=True):
 class FileRef(object):
     '''associate filename and line number of an object'''
     
-    def __init__(self, filename, linenumber, obj):
+    def __init__(self, filename, linenumber, colnumber, obj):
         self.filename = filename
         self.line_number = linenumber
+        self.column_number = colnumber
         self.object = obj
     
     def __str__(self):
-        return '(%s,%d) %s' % (self.filename, self.line_number, str(self.object))
+        return '(%s,%d,%d) %s' % (self.filename, self.line_number, self.column_number, str(self.object))
 
 
 def logMessage(text):

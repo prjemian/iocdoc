@@ -5,6 +5,7 @@ EPICS template (substitutions) file analysis
 import os
 
 import database
+import macros
 import text_file
 from token_support import token_key, TokenLog, getFullWord
 from utils import logMessage, FileRef
@@ -26,12 +27,11 @@ class Template(object):
     
     def __init__(self, filename, **env):
         self.filename = filename
-        self.env = dict(env.items())
-        self.declarations = []
-        self.references = []
+        self.macros = macros.Macros(**env)
+        self.database_list = []
+        self.reference_list = []
 
-        # filename must have all macros expanded
-        self.source = text_file.read(filename)
+        self.source = text_file.read(self.macros.replace(filename))
         self.parse()
     
     def parse(self):
@@ -42,71 +42,110 @@ class Template(object):
         The TokenLog class interprets the contents according to a few simple terms
         such as NAME, OP, COMMENT, NEWLINE.
         '''
-        self.tokenLog = TokenLog()
-        self.tokenLog.processFile(self.filename)
-        tok = self.tokenLog.nextActionable()
+        tokenLog = TokenLog()
+        tokenLog.processFile(self.filename)
+        tok = tokenLog.nextActionable()
         while tok is not None:
             if token_key(tok) == 'NAME file':
-                self._parse_file_statement()
+                self._parse_file_statement(tokenLog)
             elif token_key(tok) == 'NAME global':
-                self._parse_globals_statement()
-            tok = self.tokenLog.nextActionable()
+                self._parse_globals_statement(tokenLog)
+            tok = tokenLog.nextActionable()
     
-    def _parse_file_statement(self):
-        #tok = self.tokenLog.getCurrentToken()
-        #print '(%s,%d,%d) %s' % (self.filename, tok['start'][0], tok['start'][1], 'file name' )
+    def _note_reference(self, tok, text):
+        '''
+        make a note of filename, line and column number for something
+        '''
+        line, column = tok['start']
+        self.reference_list.append(FileRef(self.filename, line, column, text))
+    
+    def _parse_file_statement(self, tokenLog):
+        '''
+        support the *file* statement in a template file
         
-        tok = self.tokenLog.nextActionable()
-        dbFileName = getFullWord(self.tokenLog).strip('"')
-        self.references.append(FileRef(self.filename, tok['start'][0], dbFileName))
+        example::
+        
+            file "$(SSCAN)/sscanApp/Db/scanParms.db"
+        
+        '''
+        self._note_reference(tokenLog.getCurrentToken(), 'database file')
+        
+        tok = tokenLog.nextActionable()
+        dbFileName = getFullWord(tokenLog).strip('"')
+        fname = self.macros.replace(dbFileName)
+        self._note_reference(tok, dbFileName + ' -> ' + fname)
 
-        tok = self.tokenLog.nextActionable()
+        tok = tokenLog.nextActionable()
 
-        # TODO: expand the macros in the dbFileName using self.env
-        macro_keys = []     # TODO: read these from the template
         # If there is a "pattern" statement, the macro labels are given first, then values in each declaration
-        # Otherwise, the macro labels are defined with the values
-        for _ in []:  # iterate through the patterns for this dbFileName
-            macros = dict(**self.env)       # start with the environment variables
+        pattern_keys = []
+        if token_key(tok) == 'NAME pattern':
+            tok = tokenLog.nextActionable()
+            while token_key(tok) != 'OP }':
+                tok = tokenLog.nextActionable()
+                if tok['tokName'] == 'NAME':
+                    pattern_keys.append(tok['tokStr'])
+            tok = tokenLog.nextActionable()     # skip past the closing }
+
+        
+        while token_key(tok) != 'OP }':
+            pattern_macros = macros.Macros(**dict(self.macros.getAll()))
             # define the macros for this set
+            tok = tokenLog.nextActionable()
+            tok_dbLoadRecords = tok
+            if len(pattern_keys) > 0:
+                # The macro labels were defined in a pattern statement
+                for k in pattern_keys:      # TODO: what if #patterns and #values do not match?
+                    v = getFullWord(tokenLog).strip('{').strip('}').strip('"')
+                    pattern_macros.set(k, v)
+                tok = tokenLog.getCurrentToken()
+            else:
+                # The macro labels are defined with the values
+                text = tok['tokLine'].strip().strip('{').strip('}')
+                for definition in text.split(','):
+                    k, v = [_.strip() for _ in definition.split('=')]
+                    pattern_macros.set(k, v.strip('"'))
+                while token_key(tok) != 'OP }':
+                    tok = tokenLog.nextActionable()
+                tok = tokenLog.nextActionable()
             
-            line_number = tok['start'][0]
-            dbg = DbLoadRecords(dbFileName, **macros)
-            self.declarations.append(dbg)
-            self.references.append(FileRef(self.filename, line_number, dbg))
+            dbg = database.DbLoadRecords(fname, **dict(pattern_macros.getAll()))
+            self.database_list.append(dbg)
+            self._note_reference(tok_dbLoadRecords, dbg)
     
-    def _parse_globals_statement(self):
-        # starting with EPICS base 3.15
-        tok = self.tokenLog.getCurrentToken()
-        #print '(%s,%d,%d) %s' % (self.filename, tok['start'][0], tok['start'][1], 'global macros' )
-        self.references.append(FileRef(self.filename, tok['start'][0], 'global macros'))
-        # add macro definitions here to self.env
-    
-    def substitute_macros(self):
-        '''apply macro substitutions'''
-        pass
+    def _parse_globals_statement(self, tokenLog):
+        '''
+        support the *globals* statement in a template file
+        
+        This statement was new starting with EPICS base 3.15
+        
+        example::
+        
+            global { P=12ida1:,SCANREC=12ida1:scan1 }
+        
+        '''
+        self._note_reference(tokenLog.getCurrentToken(), 'global macros')
+        tok = tokenLog.nextActionable()
+        if token_key(tok) == 'OP {':
+            tok = tokenLog.nextActionable()
+            for definition in getFullWord(tokenLog).strip('"').split(','):
+                k, v = [_.strip() for _ in definition.split('=')]
+                self.macros.set(k, v)
+                self._note_reference(tokenLog.getCurrentToken(), k + '=' + v)
+        else:
+            msg = '(%s,%d,%d) ' % (self.filename, tok['start'][0], tok['start'][1])
+            msg += 'missing "{" in globals statement'
+            raise DatabaseTemplateException(msg)
     
     def get_pv_list(self):
+        # TODO: get the PV list from each database
         pass
-
-
-class DbLoadRecords(object):
-    '''call for one EPICS database file with a given environment'''
-     
-    def __init__(self, dbFileName, **env):
-        self.dbFileName = dbFileName
-        self.env = dict(env.items())
-     
-    #def parse(self):
-    #    '''interpret pattern sets for PV declarations'''
-    #    pass
-     
-    def substitute_macros(self):
-        '''apply macro/env substitutions'''
-        pass
-     
-    def get_pv_list(self):
-        pass
+    
+    def get_databases(self):
+        return self.database_list
+    
+    def get_references(self):
+        return self.reference_list
 
 
 def main():
@@ -114,16 +153,18 @@ def main():
     db = {}
     testfiles.append(os.path.join('.', 'testfiles', 'templates', 'example.template'))
     testfiles.append(os.path.join('.', 'testfiles', 'templates', 'omsMotors'))
+    macros = dict(STD="/synApps/std", SSCAN="/synApps/sscan")
     for tf in testfiles:
         try:
-            db[tf] = Template(tf)
+            db[tf] = Template(tf, **macros)
         except text_file.FileNotFound, _exc:
             print 'file not found: ' + tf
     for k in testfiles:
         if k in db:
             print db[k].source.number_of_lines, k
-            for ref in db[k].references:
+            for ref in db[k].get_references():
                 print ' '*8, str(ref)
+
 
 if __name__ == '__main__':
     main()

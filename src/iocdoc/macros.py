@@ -28,7 +28,43 @@ EPICS_MACRO_SPECIFICATION_BD_PATTERN = re.compile(EPICS_MACRO_SPECIFICATION_BD_R
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
-def replace(source, **macros):
+class Macros(object):
+    '''manage a set of macros (keys, substitutions)'''
+     
+    def __init__(self, **env):
+        self.db = {}
+        self.setMany(**env)
+    
+    def exists(self, key):
+        '''is there such a *key*?'''
+        return key in self.db
+    
+    def get(self, key, missing=None):
+        '''find the *key* macro, if not found, return *missing*'''
+        return self.db.get(key, missing)
+    
+    def set(self, key, value):
+        '''define the *key* macro'''
+        self.db[key] = value
+    
+    def setMany(self, **env):
+        '''define several macros'''
+        self.db = dict(self.db.items() + env.items())
+    
+    def keys(self):
+        '''get the list of macros'''
+        return self.db.keys()
+    
+    def getAll(self):
+        '''return the full database'''
+        return self.db
+    
+    def replace(self, text):
+        '''Replace macro parameters in source string'''
+        return _replace_(text, **self.db)
+
+
+def _replace_(source, **macros):
     '''
     Replace macro parameters in source string.
     Search through the list of macros since there 
