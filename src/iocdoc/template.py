@@ -104,6 +104,7 @@ class Template(object):
                 text = tok['tokLine'].strip().strip('{').strip('}')
                 for definition in text.split(','):
                     k, v = [_.strip() for _ in definition.split('=')]
+                    v = v.strip(',').strip('"')
                     pattern_macros.set(k, v.strip('"'))
                 while token_key(tok) != 'OP }':
                     tok = tokenLog.nextActionable()
