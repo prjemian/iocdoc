@@ -18,9 +18,9 @@ class Database(object):
     call for one EPICS database file with a given environment
     '''
      
-    def __init__(self, dbFileName, **env):
+    def __init__(self, dbFileName, env):
         self.filename = dbFileName
-        self.macros = macros.Macros(**env)
+        self.macros = macros.Macros(env)
         self.reference_list = []
 
         try:
@@ -30,7 +30,7 @@ class Database(object):
             pass
     
     def __str__(self):
-        return 'dbLoadRecords ' + self.filename + '  ' + str(self.macros.db)
+        return 'dbLoadRecords ' + self.filename + '  ' + str(self.macros.getAll())
     
     def _note_reference(self, tok, text):
         '''
@@ -78,7 +78,7 @@ def main():
     macros = dict(TEST="./testfiles")
     for tf in testfiles:
         try:
-            db[tf] = Database(tf, **macros)
+            db[tf] = Database(tf, macros)
         except text_file.FileNotFound, _exc:
             print 'file not found: ' + tf
         print db[tf]

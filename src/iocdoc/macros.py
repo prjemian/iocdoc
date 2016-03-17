@@ -31,9 +31,9 @@ EPICS_MACRO_SPECIFICATION_BD_PATTERN = re.compile(EPICS_MACRO_SPECIFICATION_BD_R
 class Macros(object):
     '''manage a set of macros (keys, substitutions)'''
      
-    def __init__(self, **env):
+    def __init__(self, env):
         self.db = {}
-        self.setMany(**env)
+        self.setMany(env)
     
     def exists(self, key):
         '''is there such a *key*?'''
@@ -47,7 +47,7 @@ class Macros(object):
         '''define the *key* macro'''
         self.db[key] = value
     
-    def setMany(self, **env):
+    def setMany(self, env):
         '''define several macros'''
         self.db = dict(self.db.items() + env.items())
     
@@ -61,10 +61,10 @@ class Macros(object):
     
     def replace(self, text):
         '''Replace macro parameters in source string'''
-        return _replace_(text, **self.db)
+        return _replace_(text, self.db)
 
 
-def _replace_(source, **macros):
+def _replace_(source, macros):
     '''
     Replace macro parameters in source string.
     Search through the list of macros since there 

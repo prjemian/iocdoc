@@ -25,9 +25,9 @@ class Template(object):
     in the database group header.
     '''
     
-    def __init__(self, filename, **env):
+    def __init__(self, filename, env):
         self.filename = filename
-        self.macros = macros.Macros(**env)
+        self.macros = macros.Macros(env)
         self.database_list = []
         self.reference_list = []
 
@@ -94,20 +94,20 @@ class Template(object):
             tok_ref = tok
 
             # define the macros for this set
-            pattern_macros = macros.Macros(**dict(self.macros.getAll()))
+            pattern_macros = macros.Macros(self.macros.getAll())
             if len(pattern_keys) > 0:
                 # The macro labels were defined in a pattern statement
                 value_list = tokenLog.tokens_to_list()
                 kv = dict(zip(pattern_keys, value_list))
-                pattern_macros.setMany(**kv)
+                pattern_macros.setMany(kv)
                 tok = tokenLog.nextActionable()
             else:
                 # No pattern statement, the macro labels are defined with the values
                 kv = self._getKeyValueSet(tokenLog)
-                pattern_macros.setMany(**kv)
+                pattern_macros.setMany(kv)
                 tok = tokenLog.nextActionable()
             
-            dbg = database.Database(fname, **dict(pattern_macros.getAll()))
+            dbg = database.Database(fname, pattern_macros.getAll())
             self.database_list.append(dbg)
             self._note_reference(tok_ref, dbg)
     
@@ -128,7 +128,7 @@ class Template(object):
             tok_ref = tok
             kv = self._getKeyValueSet(tokenLog)
             self._note_reference(tok_ref, str(kv))
-            self.macros.setMany(**kv)
+            self.macros.setMany(kv)
         else:
             msg = '(%s,%d,%d) ' % (self.filename, tok['start'][0], tok['start'][1])
             msg += 'missing "{" in globals statement'
@@ -166,10 +166,10 @@ def main():
     db = {}
     testfiles.append(os.path.join('.', 'testfiles', 'templates', 'example.template'))
     testfiles.append(os.path.join('.', 'testfiles', 'templates', 'omsMotors'))
-    macros = dict(TEST="./testfiles")
+    env = dict(TEST="./testfiles")
     for tf in testfiles:
         try:
-            db[tf] = Template(tf, **macros)
+            db[tf] = Template(tf, env)
         except text_file.FileNotFound, _exc:
             print 'file not found: ' + tf
     for k in testfiles:
