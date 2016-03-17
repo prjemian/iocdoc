@@ -40,6 +40,12 @@ class TokenLog():
         if PRINT_DIAGNOSTICS:
             print "\n".join( sorted(self.nameTable.values()) )
 
+    def get(self, index):
+        '''
+        retrieve the indexed token from the list
+        '''
+        return self.tokenList[index]
+
     def tokenName(self, tokType):
         '''
         convert token number to a useful string
