@@ -183,6 +183,7 @@ class TokenLog():
             if position >= len(self.tokenList):
                 raise Exception, "position cannot be greater than or equal to number of tokens"
         self.token_pointer = position
+        return self.tokenList[position]
     
     def getCurrentToken(self):
         return self.tokenList[self.token_pointer]
@@ -236,29 +237,98 @@ class TokenLog():
                 found = True
         return token
 
-    def old_next(self, ptr = -1):
-        '''
-        walk through the tokens and find the next actionable token
-
-        :param ptr: current buffer pointer, integer [0 .. len(self.tokenList)-1]
-        :return: tuple (ptr, self.tokenList[ptr]), where ptr points to an actionable token or (None, None)
-        '''
-        skip_these_tokens = ('COMMENT', 'NEWLINE', 'ENDMARKER', 
-                             'ERRORTOKEN', 'INDENT', 'DEDENT')
-        ptr += 1
-        while ptr < len(self.tokenList):
-            tkn = self.tokenList[ptr]
-            if tkn['tokName'] not in skip_these_tokens:
-                return ptr, tkn
-            ptr += 1
-        return None, None
-
     def print_token(self, tkn):
         '''developer use'''
         print '%3d,%3d' % tkn['start'], 
         print '%10s' % tkn['tokName'], 
         print '|%15s|' % tkn['tokStr'].strip(), 
         print '|%s|' % tkn['tokLine'].strip()
+    
+    def tokens_to_list(self):
+        '''
+        parse an enclosed list of tokens into a list
+        
+        Assume ``token_pointer`` is pointing at start terminator
+        
+        examples::
+        
+            (DESC, "motor $(P)$(M)") --> ['DESC', 'motor $(P)$(M)']
+            {P,      S, BL,    T1, T2, A}  --> ['P', 'S', 'BL', 'T1', 'T2', 'A']
+            {12ida1: A  "##ID" 1   2   1}  --> ['12ida1:', 'A', '##ID', '1', '2', '1']
+            
+            TODO: alias($(IOC):IOC_CPU_LOAD,"$(IOC):load")
+    
+        '''
+        # first, decide the list terminators
+        tok = self.getCurrentToken()
+        t_start = token_key(tok)
+        if t_start not in ('OP (', 'OP {'):
+            msg = 'incorrect token type'
+            raise ValueError, msg
+        t_end = {'OP (': 'OP )', 'OP {': 'OP }'}[t_start]
+        #content_names = ('NAME', 'NUMBER', 'OP', 'STRING', 'ERRORTOKEN')
+        skip_list = ('COMMENT', 'NEWLINE', 'ENDMARKER', 
+                #'ERRORTOKEN', 
+                'INDENT', 'DEDENT')
+        v = ''
+        end = tok['start'][1]
+        items = []
+        depth = 1
+        while depth>0 or token_key(tok) not in ('', t_end):
+            tok = self.nextActionable(skip_list)
+            key = token_key(tok)
+            if key == t_start:
+                depth += 1
+            elif key == t_end:
+                depth -= 1
+                if depth == 0:
+                    break
+            if tok['start'][1] == end and key != 'OP ,':
+                v += tok['tokStr']
+                end = tok['end'][1]
+            else:
+                if len(v) > 0:
+                    v = strip_quotes(v)
+                    if len(v) == 0:  v = '""'
+                    items.append(v)
+                if key not in (t_end, 'OP ,'):
+                    v = tok['tokStr']
+                else:
+                    v=''
+                end = tok['end'][1]
+    
+        if len(v) > 0:      # last chance
+            v = strip_quotes(v)
+            if len(v) == 0:  v = '""'
+            items.append(v)
+    
+        return items
+    
+    def getFullWord(self):
+        '''
+        parse the token stream for a contiguous word and return it as str
+        
+        Some words in template files might not be enclosed in quotes
+        and thus the whole word is broken into several tokens.
+        This command rebuilds the word, without stripping quotes (if provided).
+        '''
+        tok = self.getCurrentToken()
+        end = tok['start'][1]
+        v = ''
+        while tok is not None:
+            if tok['start'][1] == end:
+                v += tok['tokStr']
+                end = tok['end'][1]
+            else:
+                break
+            tok = self.nextActionable()
+        if v.endswith('{'):     # moved from template.py
+            # watch for patterns such as this: "../../33iddApp/Db/filterDrive.db"{
+            v = v[:-1]
+            tok = self.setTokenPointer(self.token_pointer-1)    # undo last nextActionable()
+            while token_key(tok) != 'OP {':
+                tok = self.setTokenPointer(self.token_pointer-1)    # back up
+        return v
 
 
 def token_key(tkn):
@@ -268,95 +338,6 @@ def token_key(tkn):
     else:
         m = tkn['tokName'] + ' ' + tkn['tokStr']
     return m
-
-
-def getFullWord(tokenLog):
-    '''
-    parse the token stream for a contiguous word and return it as str
-    
-    Some words in template files might not be enclosed in quotes
-    and thus the whole word is broken into several tokens.
-    This command rebuilds the word, without stripping quotes (if provided).
-    '''
-    tok = tokenLog.getCurrentToken()
-    end = tok['start'][1]
-    v = ''
-    while tok is not None:
-        if tok['start'][1] == end:
-            v += tok['tokStr']
-            end = tok['end'][1]
-        else:
-            break
-        tok = tokenLog.nextActionable()
-    if v.endswith('{'):     # moved from template.py
-        # watch for patterns such as this: "../../33iddApp/Db/filterDrive.db"{
-        while tok['tokStr'] != '{':
-            # walk the pointer back
-            tokenLog.setTokenPointer(tokenLog.token_pointer-1)
-            tok = tokenLog.getCurrentToken()
-        v = v[:-1]
-    return v
-
-
-def tokens_to_list(tokenLog):
-    '''
-    parse an enclosed list of tokens into a list
-    
-    :param obj tokenLog: instance of TokenLog, pointing at start terminator
-    
-    examples::
-    
-        (DESC, "motor $(P)$(M)") --> ['DESC', 'motor $(P)$(M)']
-        {P,      S, BL,    T1, T2, A}  --> ['P', 'S', 'BL', 'T1', 'T2', 'A']
-        {12ida1: A  "##ID" 1   2   1}  --> ['12ida1:', 'A', '##ID', '1', '2', '1']
-        
-        TODO: alias($(IOC):IOC_CPU_LOAD,"$(IOC):load")
-
-    '''
-    # first, decide the list terminators
-    tok = tokenLog.getCurrentToken()
-    t_start = token_key(tok)
-    if t_start not in ('OP (', 'OP {'):
-        msg = 'incorrect token type'
-        raise ValueError, msg
-    t_end = {'OP (': 'OP )', 'OP {': 'OP }'}[t_start]
-    #content_names = ('NAME', 'NUMBER', 'OP', 'STRING', 'ERRORTOKEN')
-    skip_list = ('COMMENT', 'NEWLINE', 'ENDMARKER', 
-            #'ERRORTOKEN', 
-            'INDENT', 'DEDENT')
-    v = ''
-    end = tok['start'][1]
-    items = []
-    depth = 1
-    while depth>0 or token_key(tok) not in ('', t_end):
-        tok = tokenLog.nextActionable(skip_list)
-        key = token_key(tok)
-        if key == t_start:
-            depth += 1
-        elif key == t_end:
-            depth -= 1
-            if depth == 0:
-                break
-        if tok['start'][1] == end and key != 'OP ,':
-            v += tok['tokStr']
-            end = tok['end'][1]
-        else:
-            if len(v) > 0:
-                v = strip_quotes(v)
-                if len(v) == 0:  v = '""'
-                items.append(v)
-            if key not in (t_end, 'OP ,'):
-                v = tok['tokStr']
-            else:
-                v=''
-            end = tok['end'][1]
-
-    if len(v) > 0:      # last chance
-        v = strip_quotes(v)
-        if len(v) == 0:  v = '""'
-        items.append(v)
-
-    return items
 
 
 ######################################################################
