@@ -4,6 +4,7 @@ EPICS database file analysis
 
 import os
 import macros
+import record
 import text_file
 
 
@@ -51,9 +52,16 @@ class Database(object):
         '''interpret the source for pattern sets'''
         pass
     
-    def substitute_macros(self):
-        '''apply macro substitutions'''
-        pass
-    
     def get_pv_list(self):
         pass
+
+
+def main():
+    testfiles = []
+    # testfiles.append(os.path.join('.', 'testfiles', 'templates', 'example.template'))
+    # testfiles.append(os.path.join('.', 'testfiles', 'templates', 'omsMotors'))
+    # macros = dict(STD="/synApps/std", SSCAN="/synApps/sscan")
+
+
+if __name__ == '__main__':
+    main()
