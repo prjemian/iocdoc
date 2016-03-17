@@ -45,11 +45,14 @@ class Template(object):
         tokenLog = TokenLog()
         tokenLog.processFile(self.filename)
         tok = tokenLog.nextActionable()
+        actions = {
+                   'NAME file': self._parse_file_statement,
+                   'NAME global': self._parse_globals_statement,
+                   }
         while tok is not None:
-            if token_key(tok) == 'NAME file':
-                self._parse_file_statement(tokenLog)
-            elif token_key(tok) == 'NAME global':
-                self._parse_globals_statement(tokenLog)
+            tk = token_key(tok)
+            if tk in actions:
+                actions[tk](tokenLog)
             tok = tokenLog.nextActionable()
     
     def _note_reference(self, tok, text):
@@ -88,7 +91,7 @@ class Template(object):
             tok = tokenLog.nextActionable()     # skip past the closing }
         
         while token_key(tok) != 'OP }':
-            tok_dbLoadRecords = tok
+            tok_ref = tok
 
             # define the macros for this set
             pattern_macros = macros.Macros(**dict(self.macros.getAll()))
@@ -104,9 +107,9 @@ class Template(object):
                 pattern_macros.setMany(**kv)
                 tok = tokenLog.nextActionable()
             
-            dbg = database.DbLoadRecords(fname, **dict(pattern_macros.getAll()))
+            dbg = database.Database(fname, **dict(pattern_macros.getAll()))
             self.database_list.append(dbg)
-            self._note_reference(tok_dbLoadRecords, dbg)
+            self._note_reference(tok_ref, dbg)
     
     def _parse_globals_statement(self, tokenLog):
         '''

@@ -6,61 +6,72 @@ import os
 import macros
 import record
 import text_file
+from token_support import token_key, TokenLog
+from utils import logMessage, FileRef
 
 
 class DatabaseException(Exception): pass
 
 
-class DbLoadRecords(object):
-    '''call for one EPICS database file with a given environment'''
-     
-    def __init__(self, dbFileName, **env):
-        self.dbFileName = dbFileName
-        self.macros = macros.Macros(**env)
-    
-    def __str__(self):
-        return 'dbLoadRecords ' + self.dbFileName + '  ' + str(self.macros.db)
-     
-    #def parse(self):
-    #    '''interpret pattern sets for PV declarations'''
-    #    pass
-     
-    def get_pv_list(self):
-        pass
-
-
 class Database(object):
     '''
-    EPICS template (substitutions) file
-    
-    Template files contain one or more pattern sets, 
-    each containing one or more EPICS PV declarations.
-    It is implied that each PV declaration is a call to 
-    ``dbLoadRecords`` where the database is specified 
-    in the pattern set header.
+    call for one EPICS database file with a given environment
     '''
-    
-    def __init__(self, filename, **env):
-        self.filename = filename
-        self.env = dict(env.items())
+     
+    def __init__(self, dbFileName, **env):
+        self.filename = dbFileName
+        self.macros = macros.Macros(**env)
 
-        # TODO: ?wait for this step?  filename might need macro expansion
-        #self.source = text_file.read(filename)
-        #self.parse()
+        try:
+            self.source = text_file.read(self.macros.replace(dbFileName))
+            self.parse()
+        except Exception, _exc:
+            pass
     
+    def __str__(self):
+        return 'dbLoadRecords ' + self.filename + '  ' + str(self.macros.db)
+     
     def parse(self):
-        '''interpret the source for pattern sets'''
-        pass
+        '''interpret records for PV declarations'''
+        tokenLog = TokenLog()
+        tokenLog.processFile(self.filename)
+        tok = tokenLog.nextActionable()
+        actions = {
+                   'NAME record': self._parse_record,
+                   'NAME grecord': self._parse_record,
+                   'NAME alias': self._parse_alias,
+                   }
+        while tok is not None:
+            tk = token_key(tok)
+            if tk in actions:
+                actions[tk](tokenLog)
+            tok = tokenLog.nextActionable()
     
+    def _parse_record(self, tokenLog):
+        tok = tokenLog.nextActionable()
+        _l = tokenLog.tokens_to_list()
+    
+    def _parse_alias(self, tokenLog):
+        tok = tokenLog.nextActionable()
+        _l = tokenLog.tokens_to_list()
+        # TODO: finish this
+     
     def get_pv_list(self):
         pass
 
 
 def main():
+    db = {}
     testfiles = []
-    # testfiles.append(os.path.join('.', 'testfiles', 'templates', 'example.template'))
+    testfiles.append(os.path.join('.', 'testfiles', 'databases', 'pseudoMotor.db'))
     # testfiles.append(os.path.join('.', 'testfiles', 'templates', 'omsMotors'))
-    # macros = dict(STD="/synApps/std", SSCAN="/synApps/sscan")
+    macros = dict(STD="/synApps/std", SSCAN="/synApps/sscan")
+    for tf in testfiles:
+        try:
+            db[tf] = Database(tf, **macros)
+        except text_file.FileNotFound, _exc:
+            print 'file not found: ' + tf
+        print db[tf]
 
 
 if __name__ == '__main__':
