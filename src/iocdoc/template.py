@@ -166,7 +166,7 @@ def main():
     db = {}
     testfiles.append(os.path.join('.', 'testfiles', 'templates', 'example.template'))
     testfiles.append(os.path.join('.', 'testfiles', 'templates', 'omsMotors'))
-    macros = dict(STD="/synApps/std", SSCAN="/synApps/sscan")
+    macros = dict(TEST="./testfiles")
     for tf in testfiles:
         try:
             db[tf] = Template(tf, **macros)
