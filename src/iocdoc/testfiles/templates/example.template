@@ -1,5 +1,14 @@
 # this file is a melange of several template files
 
+file "./testfiles/databases/pseudoMotor.db" {
+  pattern
+  {P,      M,     Q,   DESC}
+  {prj:,   m$(Q), 5,   "Filter 5"}
+  {prj:,   m$(Q), 6,   "Filter 6"}
+  {prj:,   m$(Q), 7,   "Filter 7"}
+  {prj:,   m$(Q), 8,   "Filter 8"}
+}
+
 #-----------------------------------------------------------
 # substitution with one pattern set
 file "$(STD)/stdApp/Db/autoShutter.vdb"
