@@ -27,7 +27,7 @@ file "$(SSCAN)/sscanApp/Db/scanParms.db"
     {P=12ida1:,SCANREC=12ida1:scan1,Q=m2,POS="$(Q).VAL",RDBK="$(Q).RBV"}
     {P=12ida1:,SCANREC=12ida1:scan1,Q=m3,POS="$(Q).VAL",RDBK="$(Q).RBV"}
     {P=12ida1:,SCANREC=12ida1:scan1,Q=m4,POS="$(Q).VAL",RDBK="$(Q).RBV"}
-    {P=12ida1:,SCANREC=12ida1:scan1,Q=m5,POS="$(Q).VAL",RDBK="$(Q).RBV"}
+    {P=12ida1:, SCANREC=12ida1:scan1,Q=m5, POS="$(Q).VAL", RDBK="$(Q).RBV"}
 }
 
 #-----------------------------------------------------------
