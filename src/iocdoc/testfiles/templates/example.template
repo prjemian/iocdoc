@@ -11,14 +11,16 @@ file "./testfiles/databases/pseudoMotor.db" {
 
 #-----------------------------------------------------------
 # substitution with one pattern set
-file "$(STD)/stdApp/Db/autoShutter.vdb"
+#file "$(STD)/stdApp/Db/autoShutter.vdb"
+file "$(TEST)/databases/autoShutter.vdb"
 {
     pattern
     {P           S       BL           T1      T2     A}
     {12ida1:     A      "##ID"         1       2     1}
 }
 
-file "../../33iddApp/Db/filterBladeNoSensor.db" {
+#file "../../33iddApp/Db/filterBladeNoSensor.db" {
+file "$(TEST)/databases/filterBladeNoSensor.db" {
   pattern
   {P,        R,        N,   DESC,           OUT}
   {33idd:,   filter:,  5,   "Filter 5",     "33idd:9440:c1:Out8"}
@@ -30,7 +32,8 @@ file "../../33iddApp/Db/filterBladeNoSensor.db" {
 #-----------------------------------------------------------
 # substitution with five pattern sets
 # and pattern macros named on each row
-file "$(SSCAN)/sscanApp/Db/scanParms.db"
+#file "$(SSCAN)/sscanApp/Db/scanParms.db"
+file "$(TEST)/databases/scanParms.db"
 {
     {P=12ida1:,SCANREC=12ida1:scan1,Q=m1,POS="$(Q).VAL",RDBK="$(Q).RBV"}
     {P=12ida1:,SCANREC=12ida1:scan1,Q=m2,POS="$(Q).VAL",RDBK="$(Q).RBV"}
@@ -42,7 +45,8 @@ file "$(SSCAN)/sscanApp/Db/scanParms.db"
 #-----------------------------------------------------------
 # TODO: or (starting with base 3.15)
 global { P=12ida1:,SCANREC=12ida1:scan1 }
-file "$(SSCAN)/sscanApp/Db/scanParms.db"
+#file "$(SSCAN)/sscanApp/Db/scanParms.db"
+file "$(TEST)/databases/scanParms.db"
 {
     {Q=m1,POS="$(Q).VAL",RDBK="$(Q).RBV"}
     {Q=m2,POS="$(Q).VAL",RDBK="$(Q).RBV"}
@@ -51,8 +55,19 @@ file "$(SSCAN)/sscanApp/Db/scanParms.db"
     {Q=m5,POS="$(Q).VAL",RDBK="$(Q).RBV"}
 }
 
+file "$(TEST)/databases/saveData.db"
+{
+    {P=$(P)}
+}
+
+file "$(TEST)/databases/scan.db"
+{
+    {P=$(P)}
+}
+
 #-----------------------------------------------------------
 # no whitespace between closing quote and open curly brace
-file "../../33iddApp/Db/filterDrive.db"{
+#file "../../33iddApp/Db/filterDrive.db"{
+file "$(TEST)/databases/filterDrive.db"{
   {P="33idd:", R="filter:", DESC="33-ID-D Filters", KEV="33ida:energy"}
 }
