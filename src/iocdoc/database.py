@@ -21,6 +21,7 @@ class Database(object):
     def __init__(self, dbFileName, **env):
         self.filename = dbFileName
         self.macros = macros.Macros(**env)
+        self.reference_list = []
 
         try:
             self.source = text_file.read(self.macros.replace(dbFileName))
@@ -30,6 +31,13 @@ class Database(object):
     
     def __str__(self):
         return 'dbLoadRecords ' + self.filename + '  ' + str(self.macros.db)
+    
+    def _note_reference(self, tok, text):
+        '''
+        make a note of filename, line and column number for something
+        '''
+        line, column = tok['start']
+        self.reference_list.append(FileRef(self.filename, line, column, text))
      
     def parse(self):
         '''interpret records for PV declarations'''
@@ -50,6 +58,8 @@ class Database(object):
     def _parse_record(self, tokenLog):
         tok = tokenLog.nextActionable()
         _l = tokenLog.tokens_to_list()
+        self._note_reference(tokenLog.getCurrentToken(), '  record: ' + str(_l))
+        print self.filename, str(_l), str(self.macros.getAll())
     
     def _parse_alias(self, tokenLog):
         tok = tokenLog.nextActionable()
@@ -65,7 +75,7 @@ def main():
     testfiles = []
     testfiles.append(os.path.join('.', 'testfiles', 'databases', 'pseudoMotor.db'))
     # testfiles.append(os.path.join('.', 'testfiles', 'templates', 'omsMotors'))
-    macros = dict(STD="/synApps/std", SSCAN="/synApps/sscan")
+    macros = dict(TEST="./testfiles")
     for tf in testfiles:
         try:
             db[tf] = Database(tf, **macros)
