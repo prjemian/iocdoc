@@ -74,7 +74,13 @@ def main():
     db = {}
     testfiles = []
     testfiles.append(os.path.join('.', 'testfiles', 'databases', 'pseudoMotor.db'))
-    # testfiles.append(os.path.join('.', 'testfiles', 'templates', 'omsMotors'))
+    testfiles.append(os.path.join('.', 'testfiles', 'databases', 'autoShutter.db'))
+    testfiles.append(os.path.join('.', 'testfiles', 'databases', 'filterBladeNoSensor.db'))
+    testfiles.append(os.path.join('.', 'testfiles', 'databases', 'filterDrive.db'))
+    testfiles.append(os.path.join('.', 'testfiles', 'databases', 'saveData.db'))
+    testfiles.append(os.path.join('.', 'testfiles', 'databases', 'scan_settings.req'))
+    testfiles.append(os.path.join('.', 'testfiles', 'databases', 'scan.db'))
+    testfiles.append(os.path.join('.', 'testfiles', 'databases', 'scanParms.db'))
     macros = dict(TEST="./testfiles")
     for tf in testfiles:
         try:
