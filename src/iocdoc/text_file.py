@@ -120,6 +120,7 @@ class _TextFile(object):
     def __init__(self, filename):
         self.filename = filename
         if not os.path.exists(filename):
+            pwd = os.getcwd()
             raise FileNotFound(filename)
 
         self.absolute_filename = os.path.abspath(filename)
