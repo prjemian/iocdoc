@@ -7,7 +7,7 @@ import os
 import database
 import macros
 import text_file
-from token_support import token_key, TokenLog
+from token_support import token_key, TokenLog, parse_bracketed_macro_definitions
 from utils import logMessage, FileRef
 
 
@@ -103,7 +103,10 @@ class Template(object):
                 tok = tokenLog.nextActionable()
             else:
                 # No pattern statement, the macro labels are defined with the values
+                tok = tokenLog.getCurrentToken()
                 kv = self._getKeyValueSet(tokenLog)
+                # FIXME: 2nd pattern: tok set to P
+                # kv = parse_bracketed_macro_definitions(tokenLog)
                 pattern_macros.setMany(kv)
                 tok = tokenLog.nextActionable()
             
@@ -126,7 +129,8 @@ class Template(object):
         tok = tokenLog.nextActionable()
         if token_key(tok) == 'OP {':
             tok_ref = tok
-            kv = self._getKeyValueSet(tokenLog)
+            #kv = self._getKeyValueSet(tokenLog)
+            kv = parse_bracketed_macro_definitions(tokenLog)
             self._note_reference(tok_ref, str(kv))
             self.macros.setMany(kv)
         else:
