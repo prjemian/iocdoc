@@ -48,7 +48,7 @@ global { P=12ida1:,SCANREC=12ida1:scan1 }
 #file "$(SSCAN)/sscanApp/Db/scanParms.db"
 file "$(TEST)/databases/scanParms.db"
 {
-    {Q=m1,POS="$(Q).VAL",RDBK="$(Q).RBV"}
+    {Q=m1,POS="$(Q=testing:).VAL",RDBK="$(Q).RBV"}
     {Q=m2,POS="$(Q).VAL",RDBK="$(Q).RBV"}
     {Q=m3,POS="$(Q).VAL",RDBK="$(Q).RBV"}
     {Q=m4,POS="$(Q).VAL",RDBK="$(Q).RBV"}
