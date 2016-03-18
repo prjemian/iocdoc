@@ -1,5 +1,76 @@
 '''
 support for macro substitutions
+
+From the EPICS Application Developer's Guide
+
+:see: http://www.aps.anl.gov/epics/base/R3-14/12-docs/AppDevGuide/node7.html
+
+    6.3.2 Unquoted Strings
+    
+    In the summary section, some values are shown as quoted strings and some unquoted. 
+    The actual rule is that any string consisting of only the following characters 
+    does not have to be quoted unless it contains one of the above keywords:
+    
+    ::
+
+        a-z A-Z 0-9 _ -- : . [ ] < > ;
+    
+    ::
+
+        my regexp:  [\w_\-:.[\]<>;]+([.][A-Z0-9]+)?
+    
+    These are also the legal characters for process variable names. 
+    Thus in many cases quotes are not needed.
+    
+    6.3.3 Quoted Strings
+    
+    A quoted string can contain any ascii character except the quote character ". 
+    The quote character itself can given by using \ as an escape. 
+    For example "\"" is a quoted string containing the single character ".
+    
+    6.3.4 Macro Substitution
+    
+    Macro substitutions are permitted inside quoted strings.
+    Macro instances take the form:
+    
+    ::
+
+        $(name)
+    
+    or
+    
+    ::
+
+        ${name}
+    
+    There is no distinction between the use of parentheses or braces 
+    for delimiters, although the two must match for a given macro instance. 
+    The macro name can be made up from other macros, for example:
+    
+    ::
+
+        $(name_$(sel))
+    
+    A macro instance can also provide a default value that is used when no 
+    macro with the given name is defined. The default value can be defined 
+    in terms of other macros if desired, but cannot contain any unescaped 
+    comma characters. The syntax for specifying a default value is as follows:
+    
+    ::
+
+        $(name=default)
+    
+    Finally macro instances can also contain definitions of other macros, 
+    which can (temporarily) override any existing values for those macros 
+    but are in scope only for the duration of the expansion of this macro 
+    instance. These definitions consist of name=value sequences separated 
+    by commas, for example:
+    
+    ::
+    
+        $(abcd=$(a)$(b)$(c)$(d),a=A,b=B,c=C,d=D)
+
+
 '''
 
 import re
