@@ -13,20 +13,18 @@ import os
 from token_support import token_key, TokenLog
 
 
-def parse_bracketed(tokenLog):
+def parse_bracketed_macro_definitions(tokenLog):
     '''
     walk through a bracketed string, keeping track of delimiters
     
     verify we start on an opening delimiter
     '''
-    #print '-'*20
     analysis = _find_sections(tokenLog)
 
     token_dividers = [analysis['start'], analysis['end']]
     for key in 'commas equals'.split():
         token_dividers += analysis[key]
     token_dividers.sort()
-    #print token_dividers
     
     if len(analysis['commas']) == 0 and len(analysis['equals']) == 0:
         # No delimiters found: either no macro, 1 macro, or space-delimited.
@@ -65,30 +63,6 @@ def parse_bracketed(tokenLog):
         # if text_list = ['a', 'b', 'c', 'd']
         # this returns dict(a='b', c='d')
         return dict(zip(text_list[::2], text_list[1::2]))
-
-
-def print_token(tok):
-    print '(%d,%d)-(%d,%d) %s: %s' % (
-         tok['start'][0],
-         tok['start'][1],
-         tok['end'][0],
-         tok['end'][1],
-         tok['tokName'],
-         tok['tokStr'],
-     )
-
-
-def _rebuild_text(token_list):
-    '''
-    reconstruct the text from the list of tokens
-    '''
-    text = ''
-    for tok in token_list:
-        # TODO: what if tok['tokName'] is a COMMENT or other undesirable?
-        # TODO: what about line number or column number gaps between tokens?
-        text += tok['tokStr']
-        # print_token(tok)
-    return text
 
 
 def _find_sections(tokenLog):
@@ -146,12 +120,45 @@ def _find_sections(tokenLog):
                 equals = equals,
                 )
 
-def showSeq(token_list):
+
+def __print_token__(tok):
+    '''developer use'''
+    print '(%d,%d)-(%d,%d) %s: %s' % (
+         tok['start'][0],
+         tok['start'][1],
+         tok['end'][0],
+         tok['end'][1],
+         tok['tokName'],
+         tok['tokStr'],
+     )
+
+
+def __print_token_sequence__(token_list):
+    '''developer use'''
     for tok in token_list:
-        print_token(tok)
+        __print_token__(tok)
+
+
+def _rebuild_text(token_list):
+    '''
+    reconstruct the text from the list of tokens
+    '''
+    text = ''
+    for tok in token_list:
+        # Q: What if tok['tokName'] is a COMMENT or other undesirable?
+        # A: not common in macro definitions, fix code if this is seen
+        # Q: what about line number or column number gaps between tokens?
+        # A: addressed above, do not mix comma delimited and whitespace delimited
+        text += tok['tokStr']
+        # __print_token__(tok)
+    return text
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
 def parse_macro_definition_block(tokenLog):
+    '''demo purposes only'''
     tok = tokenLog.getCurrentToken()
     while token_key(tok) != 'NAME file':
         tok = tokenLog.nextActionable()
@@ -165,17 +172,17 @@ def parse_macro_definition_block(tokenLog):
     labels = []
     if token_key(tok) == 'NAME pattern':
         tok = tokenLog.nextActionable()     # {
-        labels = parse_bracketed(tokenLog)           # labels
+        labels = parse_bracketed_macro_definitions(tokenLog)   # labels
         tok = tokenLog.getCurrentToken()
     while token_key(tok) != 'OP }':
-        thing = parse_bracketed(tokenLog)           # (labels): values
-        if isinstance(thing, list):
-            env = dict(zip(labels, thing))
+        parts = parse_bracketed_macro_definitions(tokenLog)    # (labels): values
+        if isinstance(parts, list):
+            env = dict(zip(labels, parts))
         else:
-            env = thing
+            env = parts
         tok = tokenLog.getCurrentToken()
         definitions.append(env)
-        print env
+    return definitions
 
 
 def main():
@@ -187,8 +194,11 @@ def main():
     tok = tokenLog.nextActionable()
 
     while tok is not None and tok['tokName'] != 'ENDMARKER':
-        parse_macro_definition_block(tokenLog)
+        defs = parse_macro_definition_block(tokenLog)
+        if defs is None: break
         tok = tokenLog.getCurrentToken()
+        for d in defs:
+            print d
 
 if __name__ == '__main__':
     main()
