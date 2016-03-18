@@ -192,7 +192,7 @@ def identifyEpicsMacros(source):
         ['$(S)', '$(P)']
         ['$(P)']
 
-    :note: This routine will also properly identify  command shell macro substitutions.
+    :note: This routine will also properly identify command shell macro substitutions.
 
     :param source: string with possible (EPICS) macro substitution expressions
     :return: list of macro substitutions found
