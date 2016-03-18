@@ -49,7 +49,7 @@ global { P=12ida1:,SCANREC=12ida1:scan1 }
 file "$(TEST)/databases/scanParms.db"
 {
     {Q=m1,POS="$(Q=testing:).VAL",RDBK="$(Q).RBV"}
-    {Q=m2,POS="$(Q).VAL",RDBK="$(Q).RBV"}
+    {Q=m2,POS="$(Q=$(P=plural:)).VAL",RDBK="$(Q).RBV"}
     {Q=m3,POS="$(Q).VAL",RDBK="$(Q).RBV"}
     {Q=m4,POS="$(Q).VAL",RDBK="$(Q).RBV"}
     {Q=m5,POS="$(Q).VAL",RDBK="$(Q).RBV"}
@@ -62,7 +62,12 @@ file "$(TEST)/databases/saveData.db"
 
 file "$(TEST)/databases/scan.db"
 {
-    {P=$(P)}
+    {P=$(P) unusual=$(abcd=$(a)$(b)$(c)$(d),a=A,b=B,c=C,d=D)}
+}
+
+file "$(TEST)/databases/scan.db"
+{
+    {P=$(P), unusual=$(abcd=$(a)$(b)$(c)$(d),a=A,b=B,c=C,d=D)}
 }
 
 #-----------------------------------------------------------
