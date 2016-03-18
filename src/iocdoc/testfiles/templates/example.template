@@ -62,12 +62,9 @@ file "$(TEST)/databases/saveData.db"
 
 file "$(TEST)/databases/scan.db"
 {
-    {P=$(P) unusual=$(abcd=$(a)$(b)$(c)$(d),a=A,b=B,c=C,d=D)}
-}
-
-file "$(TEST)/databases/scan.db"
-{
-    {P=$(P), unusual=$(abcd=$(a)$(b)$(c)$(d),a=A,b=B,c=C,d=D)}
+  pattern
+  {P}
+  {$(P)}
 }
 
 #-----------------------------------------------------------
