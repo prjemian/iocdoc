@@ -243,7 +243,7 @@ class TokenLog():
                 found = True
         return token
 
-    def print_token(self, tkn):
+    def _print_token_(self, tkn):
         '''developer use'''
         print '%3d,%3d' % tkn['start'], 
         print '%10s' % tkn['tokName'], 
