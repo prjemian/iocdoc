@@ -102,11 +102,9 @@ class Template(object):
                 pattern_macros.setMany(kv)
                 tok = tokenLog.nextActionable()
             else:
-                # No pattern statement, the macro labels are defined with the values
+                # No pattern statement, macro labels are defined with the values
                 tok = tokenLog.getCurrentToken()
-                kv = self._getKeyValueSet(tokenLog)
-                # FIXME: 2nd pattern: tok set to P
-                # kv = parse_bracketed_macro_definitions(tokenLog)
+                kv = tokenLog.getKeyValueSet()
                 pattern_macros.setMany(kv)
                 tok = tokenLog.nextActionable()
             
@@ -129,7 +127,6 @@ class Template(object):
         tok = tokenLog.nextActionable()
         if token_key(tok) == 'OP {':
             tok_ref = tok
-            #kv = self._getKeyValueSet(tokenLog)
             kv = parse_bracketed_macro_definitions(tokenLog)
             self._note_reference(tok_ref, str(kv))
             self.macros.setMany(kv)
@@ -137,22 +134,6 @@ class Template(object):
             msg = '(%s,%d,%d) ' % (self.filename, tok['start'][0], tok['start'][1])
             msg += 'missing "{" in globals statement'
             raise DatabaseTemplateException(msg)
-    
-    def _getKeyValueSet(self, tokenLog):
-        '''
-        parse a token sequence as a list of macro definitions into a dictionary
-        
-        example::
-        
-            { P=12ida1:,SCANREC=12ida1:scan1 }
-            {P=12ida1:,SCANREC=12ida1:scan1,Q=m1,POS="$(Q).VAL",RDBK="$(Q).RBV"}
-
-        '''
-        kv = {}
-        for definition in tokenLog.tokens_to_list():
-            k, v = [_.strip('"') for _ in definition.split('=')]
-            kv[k.strip()] = v
-        return kv
     
     def get_pv_list(self):
         # TODO: get the PV list from each database

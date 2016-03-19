@@ -335,6 +335,23 @@ class TokenLog():
             while token_key(tok) != 'OP {':
                 tok = self.setTokenPointer(self.token_pointer-1)    # back up
         return v
+    
+    def getKeyValueSet(self):
+        '''
+        parse a token sequence as a list of macro definitions into a dictionary
+        
+        example::
+        
+            { P=12ida1:,SCANREC=12ida1:scan1 }
+            {P=12ida1:,SCANREC=12ida1:scan1,Q=m1,POS="$(Q).VAL",RDBK="$(Q).RBV"}
+
+        '''
+        kv = {}
+        for definition in self.tokens_to_list():
+            k, v = [_.strip('"') for _ in definition.split('=')]
+            kv[k.strip()] = v
+        return kv
+
 
 
 def token_key(tkn):
