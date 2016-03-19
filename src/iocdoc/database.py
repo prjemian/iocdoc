@@ -60,6 +60,7 @@ class Database(object):
         _l = tokenLog.tokens_to_list()
         self._note_reference(tokenLog.getCurrentToken(), '  record: ' + str(_l))
         print self.filename, str(_l), str(self.macros.getAll())
+        # TODO: finish this
     
     def _parse_alias(self, tokenLog):
         tok = tokenLog.nextActionable()
