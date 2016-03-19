@@ -18,7 +18,8 @@ class Database(object):
     call for one EPICS database file with a given environment
     '''
      
-    def __init__(self, dbFileName, env={}):
+    def __init__(self, parent, dbFileName, env={}):
+        self.parent = parent
         self.filename = dbFileName
         self.macros = macros.Macros(env)
         self.reference_list = []
@@ -77,10 +78,9 @@ class Database(object):
     def _parse_record(self, tokenLog):
         tok = tokenLog.nextActionable()
         rtype, rname = tokenLog.tokens_to_list()
-        self._note_reference(tokenLog.getCurrentToken(), '  record: ' + rtype + ' + ' + rname)
-
-        record_object = record.Record(rtype, rname)
+        record_object = record.Record(self, rtype, rname)
         self.record_list.append(record_object)
+        self._note_reference(tokenLog.getCurrentToken(), record_object)
 
         tok = tokenLog.nextActionable()
         if token_key(tok) == 'OP {':
@@ -104,8 +104,11 @@ class Database(object):
         _l = tokenLog.tokens_to_list()
         # TODO: finish this
      
-    def get_pv_list(self):
-        pass
+    def getPVList(self):
+        return self.pv_dict.keys()
+     
+    def getPVs(self):
+        return self.pv_dict.items()
 
 
 def main():
@@ -117,16 +120,17 @@ def main():
     testfiles.append(os.path.join('.', 'testfiles', 'databases', 'filterBladeNoSensor.db'))
     testfiles.append(os.path.join('.', 'testfiles', 'databases', 'filterDrive.db'))
     testfiles.append(os.path.join('.', 'testfiles', 'databases', 'saveData.db'))
-    testfiles.append(os.path.join('.', 'testfiles', 'databases', 'scan_settings.req'))
     testfiles.append(os.path.join('.', 'testfiles', 'databases', 'scan.db'))
     testfiles.append(os.path.join('.', 'testfiles', 'databases', 'scanParms.db'))
     macros = dict(TEST="./testfiles", P='prj:', M='m11')
     for tf in testfiles:
         try:
-            db[tf] = Database(tf, macros)
+            db[tf] = Database(None, tf, macros)
         except text_file.FileNotFound, _exc:
             print 'file not found: ' + tf
         print db[tf]
+        for k, pv in sorted(db[tf].getPVs()):
+            print '\t', pv.RTYP, k
 
 
 if __name__ == '__main__':

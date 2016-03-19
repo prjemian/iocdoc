@@ -108,7 +108,7 @@ class Template(object):
                 pattern_macros.setMany(kv)
                 tok = tokenLog.nextActionable()
             
-            dbg = database.Database(fname, pattern_macros.getAll())
+            dbg = database.Database(self, fname, pattern_macros.getAll())
             self.database_list.append(dbg)
             self._note_reference(tok_ref, dbg)
     
@@ -135,9 +135,17 @@ class Template(object):
             msg += 'missing "{" in globals statement'
             raise DatabaseTemplateException(msg)
     
-    def get_pv_list(self):
-        # TODO: get the PV list from each database
-        pass
+    def getPVList(self):
+        pv_list = []
+        for db in self.database_list:
+            pv_list += db.getPVList()
+    
+    def getPVs(self):
+        pv_dict = {}
+        for db in self.database_list:
+            for k, v in db.getPVs():
+                pv_dict[k] = v
+        return pv_dict
     
     def get_databases(self):
         return self.database_list
@@ -160,8 +168,12 @@ def main():
     for k in testfiles:
         if k in db:
             print db[k].source.number_of_lines, k
-            for ref in db[k].get_references():
-                print ' '*8, str(ref)
+            #for ref in db[k].get_references():
+            #    print ' '*8, str(ref)
+            for pvname, pv in sorted(db[k].getPVs().items()):
+                print '\t%015s : %s' % (pv.RTYP, pvname)
+            # FIXME: Why wasn't P macro expanded for scan.db?
+    pass
 
 
 if __name__ == '__main__':

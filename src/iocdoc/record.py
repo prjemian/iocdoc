@@ -12,7 +12,8 @@ class RecordException(Exception): pass
 class Record(object):
     '''definition of an EPICS record'''
      
-    def __init__(self, rtype, rname, env={}):
+    def __init__(self, dbObject, rtype, rname, env={}):
+        self.database = dbObject
         self.RTYP = rtype
         self.rname = rname
         self.macros = macros.Macros(env)
@@ -27,6 +28,9 @@ class Record(object):
 
 class PV(object):
     '''single instance of an EPICS record'''
+    
+    # TODO: make ability to identify source file, line & column numbers for each PV instance
+    # includes .db file, template file / command file
      
     def __init__(self, record_object, env={}):
         self.record = record_object
