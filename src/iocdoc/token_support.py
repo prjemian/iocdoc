@@ -203,7 +203,7 @@ class TokenLog():
         
     def next(self):
         '''
-        return the next element or raise a StopIteration exception 
+        return the next token or raise a StopIteration exception 
         upon reaching the end of the sequence
 
         :return: token object
@@ -214,6 +214,20 @@ class TokenLog():
         if self.token_pointer == None:
             self.token_pointer = -1
         self.token_pointer += 1
+        return self.tokenList[self.token_pointer]
+        
+    def previous(self):
+        '''
+        return the previous token
+
+        :return: token object
+        :raise StopIteration: reached the beginning of the sequence
+        '''
+        if self.token_pointer == 0:
+            raise StopIteration
+        if self.token_pointer == None:
+            self.token_pointer = 0
+        self.token_pointer -= 1
         return self.tokenList[self.token_pointer]
         
     def nextActionable(self, skip_list=None):
@@ -346,6 +360,7 @@ class TokenLog():
             {P=12ida1:,SCANREC=12ida1:scan1,Q=m1,POS="$(Q).VAL",RDBK="$(Q).RBV"}
 
         '''
+        # TODO: what about reset definitions?  {P=,SCANREC=}
         kv = {}
         for definition in self.tokens_to_list():
             k, v = [_.strip('"') for _ in definition.split('=')]
