@@ -10,11 +10,39 @@ class RecordException(Exception): pass
 
 
 class Record(object):
-    '''single instance of an EPICS record definition'''
+    '''definition of an EPICS record'''
      
-    def __init__(self, rtyp, **env):
-        self.RTYP = rtyp
-        self.macros = macros.Macros(**env)
+    def __init__(self, rtype, rname, env={}):
+        self.RTYP = rtype
+        self.rname = rname
+        self.macros = macros.Macros(env)
+        self.fields = dict(RTYP=rtype, NAME=rname)
     
     def __str__(self):
-        return 'record ' + self.RTYP + '  ' + str(self.macros.db)
+        return 'record ' + self.RTYP + '  ' + self.rname
+    
+    def addFieldPattern(self, field, value):
+        self.fields[field] = value
+
+
+class PV(object):
+    '''single instance of an EPICS record'''
+     
+    def __init__(self, record_object, env={}):
+        self.record = record_object
+        self.macros = macros.Macros(env)
+        self.RTYP = record_object.RTYP
+        self.fields = {k: self.macros.replace(v) for k, v in self.record.fields.items()}
+        self.NAME = self.fields['NAME']
+    
+    def __str__(self):
+        return 'record ' + self.RTYP + '  ' + str(self.macros.getAll())
+    
+    def getField(self, field):
+        return self.fields[field]
+    
+    def getFields(self):
+        return self.fields.items()
+    
+    def getFieldList(self):
+        return self.fields.keys()
