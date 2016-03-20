@@ -57,14 +57,14 @@ file "$(TEST)/databases/scanParms.db"
 
 file "$(TEST)/databases/saveData.db"
 {
-    {P=$(P)}
+    {G=$(G)}
 }
 
 file "$(TEST)/databases/scan.db"
 {
   pattern
-  {P}
-  {$(P)}
+  {G}
+  {$(G)}
 }
 
 #-----------------------------------------------------------

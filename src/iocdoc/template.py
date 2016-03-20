@@ -30,6 +30,7 @@ class Template(object):
         self.macros = macros.Macros(env)
         self.database_list = []
         self.reference_list = []
+        self.file_ref = None
 
         self.source = text_file.read(self.macros.replace(filename))
         self.parse()
@@ -55,12 +56,12 @@ class Template(object):
                 actions[tk](tokenLog)
             tok = tokenLog.nextActionable()
     
-    def _note_reference(self, tok, text):
+    def _note_reference(self, tok, obj):
         '''
         make a note of filename, line and column number for something
         '''
         line, column = tok['start']
-        self.reference_list.append(FileRef(self.filename, line, column, text))
+        self.reference_list.append(FileRef(self.filename, line, column, obj))
     
     def _parse_file_statement(self, tokenLog):
         '''
@@ -111,6 +112,9 @@ class Template(object):
             dbg = database.Database(self, fname, pattern_macros.getAll())
             self.database_list.append(dbg)
             self._note_reference(tok_ref, dbg)
+            tok = tokenLog.getCurrentToken()
+            line, column = tok['start']
+            dbg.file_ref = FileRef(self.filename, line, column, self.file_ref)
     
     def _parse_globals_statement(self, tokenLog):
         '''
@@ -160,9 +164,10 @@ def main():
     testfiles.append(os.path.join('.', 'testfiles', 'templates', 'example.template'))
     testfiles.append(os.path.join('.', 'testfiles', 'templates', 'omsMotors'))
     env = dict(TEST="./testfiles")
-    for tf in testfiles:
+    for i, tf in enumerate(testfiles):
         try:
             db[tf] = Template(tf, env)
+            db[tf].file_ref = FileRef(__file__, i+1, 0, 'testing')
         except text_file.FileNotFound, _exc:
             print 'file not found: ' + tf
     for k in testfiles:
@@ -172,7 +177,6 @@ def main():
             #    print ' '*8, str(ref)
             for pvname, pv in sorted(db[k].getPVs().items()):
                 print '\t%015s : %s' % (pv.RTYP, pvname)
-            # FIXME: Why wasn't P macro expanded for scan.db?
     pass
 
 

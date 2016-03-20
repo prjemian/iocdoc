@@ -12,12 +12,13 @@ class RecordException(Exception): pass
 class Record(object):
     '''definition of an EPICS record'''
      
-    def __init__(self, dbObject, rtype, rname, env={}):
-        self.database = dbObject
+    def __init__(self, parent, rtype, rname, env={}):
+        self.parent = parent
         self.RTYP = rtype
         self.rname = rname
         self.macros = macros.Macros(env)
         self.fields = dict(RTYP=rtype, NAME=rname)
+        self.file_ref = None
     
     def __str__(self):
         return 'record ' + self.RTYP + '  ' + self.rname
@@ -38,6 +39,7 @@ class PV(object):
         self.RTYP = record_object.RTYP
         self.fields = {k: self.macros.replace(v) for k, v in self.record.fields.items()}
         self.NAME = self.fields['NAME']
+        self.file_ref = record_object.file_ref
     
     def __str__(self):
         return 'record ' + self.RTYP + '  ' + str(self.macros.getAll())

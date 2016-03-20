@@ -25,6 +25,7 @@ class Database(object):
         self.reference_list = []
         self.record_list = None
         self.pv_dict = {}
+        self.file_ref = None
 
         #  1. read the file for the first time and parsing its content
         #  2. apply supplied macros for each call to the database file
@@ -42,12 +43,12 @@ class Database(object):
     def __str__(self):
         return 'dbLoadRecords ' + self.filename + '  ' + str(self.macros.getAll())
     
-    def _note_reference(self, tok, text):
+    def _note_reference(self, tok, obj):
         '''
         make a note of filename, line and column number for something
         '''
         line, column = tok['start']
-        self.reference_list.append(FileRef(self.filename, line, column, text))
+        self.reference_list.append(FileRef(self.filename, line, column, obj))
      
     def makeProcessVariables(self):
         '''make the EPICS PVs from the record definitions'''
@@ -78,9 +79,12 @@ class Database(object):
     def _parse_record(self, tokenLog):
         tok = tokenLog.nextActionable()
         rtype, rname = tokenLog.tokens_to_list()
+        tok = tokenLog.getCurrentToken()
         record_object = record.Record(self, rtype, rname)
         self.record_list.append(record_object)
-        self._note_reference(tokenLog.getCurrentToken(), record_object)
+        self._note_reference(tok, record_object)
+        line, column = tok['start']
+        record_object.file_ref = FileRef(self.filename, line, column, self)
 
         tok = tokenLog.nextActionable()
         if token_key(tok) == 'OP {':
