@@ -163,7 +163,8 @@ def main():
         if k in db:
             print db[k].source.number_of_lines, k
             for pvname, pv in sorted(db[k].getPVs().items()):
-                print '\t%015s : %s' % (pv.RTYP, pvname)
+                ref = pv.reference
+                print '\t(%s,%d,%d)\t%015s : %s' % (ref.filename, ref.line_number, ref.column_number, pv.RTYP, pvname)
     pass
 
 

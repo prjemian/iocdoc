@@ -77,8 +77,8 @@ class Database(object):
         tok = tokenLog.nextActionable()
         ref = self._make_ref(tok)
         rtype, rname = tokenLog.tokens_to_list()
-        env = {}     # TODO: can this be correct?
-        record_object = record.Record(self, rtype, rname, env, ref)
+        # just parsing, no need for macros now
+        record_object = record.Record(self, rtype, rname, {}, ref)
         self.record_list.append(record_object)
 
         tok = tokenLog.nextActionable()
@@ -136,7 +136,7 @@ def main():
             continue
         print db[tf]
         for k, pv in sorted(db[tf].getPVs()):
-            print '\t', pv.RTYP, k
+            print '\t%015s %s' % (pv.RTYP, k)
 
 
 if __name__ == '__main__':
