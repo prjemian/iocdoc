@@ -22,12 +22,13 @@ class Database(object):
         self.parent = parent
         self.filename = dbFileName
         self.macros = macros.Macros(env)
+        self.filename_expanded = self.macros.replace(dbFileName)
         self.record_list = None
         self.pv_dict = {}
         self.reference = reference
 
         # read the file (if the first time, parse its content)
-        self.source = text_file.read(self.macros.replace(dbFileName))
+        self.source = text_file.read(self.filename_expanded)
         if not hasattr(self.source, 'record_list'):
             self.source.record_list = []
             self.record_list = self.source.record_list
@@ -38,7 +39,7 @@ class Database(object):
         self.makeProcessVariables()
     
     def __str__(self):
-        return 'dbLoadRecords ' + self.filename + '  ' + str(self.macros.getAll())
+        return 'dbLoadRecords ' + self.filename + '  ' + str(self.macros)
     
     def _make_ref(self, tok, item=None):
         '''make a FileRef() instance for this item'''
@@ -60,7 +61,7 @@ class Database(object):
     def parse(self):
         '''interpret records for PV declarations'''
         tokenLog = TokenLog()
-        tokenLog.processFile(self.filename)
+        tokenLog.processFile(self.filename_expanded)
         tok = tokenLog.nextActionable()
         actions = {
                    'NAME record': self._parse_record,
@@ -103,7 +104,8 @@ class Database(object):
         ref = self._make_ref(tok, 'database "alias" command')
         _l = tokenLog.tokens_to_list()
         # TODO: finish this
-        raise NotImplementedError(str(ref))
+        #raise NotImplementedError(str(ref))
+        print str(self.reference) + ' alias not implemented yet'
      
     def getPVList(self):
         return self.pv_dict.keys()
@@ -125,9 +127,10 @@ def main():
     testfiles.append(os.path.join('.', 'testfiles', 'databases', 'scan.db'))
     testfiles.append(os.path.join('.', 'testfiles', 'databases', 'scanParms.db'))
     macros = dict(TEST="./testfiles", P='prj:', M='m11')
-    for tf in testfiles:
+    for i, tf in enumerate(testfiles):
         try:
-            db[tf] = Database(None, tf, macros)
+            ref = FileRef(__file__, i, 0, 'testing')
+            db[tf] = Database(None, tf, macros, ref)
         except text_file.FileNotFound, _exc:
             print 'file not found: ' + tf
             continue

@@ -500,11 +500,28 @@ def _rebuild_text(token_list):
     return text
 
 
+def reconstruct_line(tokens = [], firstIndex = 1):
+    '''
+    reconstruct the line from the list of tokens presented
+    
+    :param tokens: as used throughout this module
+    :param firstIndex: first index in tokens list to use
+    :return: reconstructed line
+    '''
+    cmd = ""
+    for tkn in tokens[firstIndex:]:
+        if tkn['tokName'] not in ('NEWLINE'):
+            start = tkn['start'][1]
+            cmd += " "*(start - len(cmd))
+            cmd += tkn['tokStr']
+    return cmd
+
+
 ######################################################################
 
 
 def main():
-    filename = 'TokenLog.py'
+    filename = __file__
     obj = TokenLog()
     obj.processFile(filename)
     obj.summary(True)

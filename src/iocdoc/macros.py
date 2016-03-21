@@ -106,6 +106,10 @@ class Macros(object):
         self.db = {}
         self.setMany(env)
     
+    def __str__(self):
+        return ', '.join([k+'="'+str(v)+'"' for k, v in sorted(self.db.items())])
+            
+    
     def exists(self, key):
         '''is there such a *key*?'''
         return key in self.db

@@ -4,6 +4,7 @@ EPICS template (substitutions) file analysis
 
 import os
 
+from command_file import Command
 import database
 import macros
 import text_file
@@ -30,6 +31,7 @@ class Template(object):
         self.macros = macros.Macros(env)
         self.database_list = []
         self.reference = reference
+        self.commands = []
 
         self.source = text_file.read(self.macros.replace(filename))
         self.parse()
@@ -104,6 +106,9 @@ class Template(object):
                 tok = tokenLog.nextActionable()
             
             ref = self._make_ref(tokenLog.getCurrentToken())
+            # TODO: work out how to get the path into the next statement
+            cmd = Command(self, '(dbLoadRecords)', 'path unknown', fname, pattern_macros.getAll(), ref)
+            self.commands.append(cmd)
             dbg = database.Database(self, fname, pattern_macros.getAll(), ref)
             self.database_list.append(dbg)
     
@@ -162,6 +167,8 @@ def main():
     for k in testfiles:
         if k in db:
             print db[k].source.number_of_lines, k
+            for command in db[k].commands:
+                print str(command)
             for pvname, pv in sorted(db[k].getPVs().items()):
                 ref = pv.reference
                 print '\t(%s,%d,%d)\t%015s : %s' % (ref.filename, ref.line_number, ref.column_number, pv.RTYP, pvname)
