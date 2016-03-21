@@ -33,10 +33,10 @@ class CommandFile(object):
     '''
 
 
-    def __init__(self, parent, filename, env={}):
+    def __init__(self, parent, filename, env={}, reference=None):
         self.parent = parent
         self.filename = filename
-        self.reference = None
+        self.reference = reference
 
         self.env = dict(env.items())
         self.symbols = {}
@@ -48,29 +48,58 @@ class CommandFile(object):
 
         self.parse()
     
+    def _make_ref(self, tok, item=None):
+        '''make a FileRef() instance for this item'''
+        return FileRef(self.filename, tok['start'][0], tok['start'][1], item or self)
+    
     def parse(self):
         '''analyze this command file'''
         tokenLog = TokenLog()
         tokenLog.processFile(self.filename)
         tok = tokenLog.nextActionable()
         actions = {
-                   'NAME putenv XX': self._parse_putenv,
+                   'NAME cd':               self._parse_changeDirectory,
+                   'NAME dbLoadRecords':    self._parse_dbLoadRecords,
+                   'NAME dbLoadTemplate':   self._parse_dbLoadTemplate,
+                   'NAME epicsEnvSet':      self._parse_epicsEnvSet,
+                   'NAME iocshCmd':         self._parse_simpleCommand,
+                   'NAME load':             self._parse_simpleCommand,
+                   'NAME putenv':           self._parse_putenv,
+                   'NAME sysVmeMapShow':    self._parse_simpleCommand,
+                   'OP <':                  self._parse_includeCommandFile,
                    }
         while tok is not None:
             tk = token_key(tok)
-            if tok['tokName'] in ('NAME',):
-                ref = FileRef(self.filename, tok['start'][0], tok['start'][1], tok['tokStr'])
-                self.ref_list.append(ref)
             if tk in actions:
-                actions[tk](tokenLog)
+                ref = self._make_ref(tok, tok['tokStr'])
+                self.ref_list.append(ref)
+                actions[tk](tokenLog, ref)
             tok = tokenLog.nextActionable()
      
     def report(self):
         '''describe what was discovered'''
         raise NotImplementedError()
 
-    def _parse_putenv(self, tokenLog):
-        raise NotImplementedError
+    def _parse_changeDirectory(self, tokenLog, ref):
+        pass        # TODO: finish this
+
+    def _parse_dbLoadRecords(self, tokenLog, ref):
+        pass        # TODO: finish this
+
+    def _parse_dbLoadTemplate(self, tokenLog, ref):
+        pass        # TODO: finish this
+
+    def _parse_epicsEnvSet(self, tokenLog, ref):
+        pass        # TODO: finish this
+
+    def _parse_includeCommandFile(self, tokenLog, ref):
+        pass        # TODO: finish this
+
+    def _parse_putenv(self, tokenLog, ref):
+        pass        # TODO: finish this
+
+    def _parse_simpleCommand(self, tokenLog, ref):
+        pass        # TODO: finish this
 
 
 def main():

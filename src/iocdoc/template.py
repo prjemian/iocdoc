@@ -25,12 +25,11 @@ class Template(object):
     in the database group header.
     '''
     
-    def __init__(self, filename, env):
+    def __init__(self, filename, env={}, reference=None):
         self.filename = filename
         self.macros = macros.Macros(env)
         self.database_list = []
-        self.reference_list = []
-        self.reference = None       # TODO: Make the definition and usage of this term clearer
+        self.reference = reference
 
         self.source = text_file.read(self.macros.replace(filename))
         self.parse()
@@ -56,6 +55,11 @@ class Template(object):
                 actions[tk](tokenLog)
             tok = tokenLog.nextActionable()
     
+    def _make_ref(self, tok, item=None):
+        '''make a FileRef() instance for this item'''
+        return FileRef(self.filename, tok['start'][0], tok['start'][1], item or self)
+
+    
     def _parse_file_statement(self, tokenLog):
         '''
         support the *file* statement in a template file
@@ -65,22 +69,18 @@ class Template(object):
             file "$(SSCAN)/sscanApp/Db/scanParms.db"
         
         '''
-        tok = tokenLog.getCurrentToken()
-        ref = FileRef(self.filename, tok['start'][0], tok['start'][1], 'database file')
+        ref = self._make_ref(tokenLog.getCurrentToken(), 'database file')
         # TODO: Do something with ref
         
         tok = tokenLog.nextActionable()
         dbFileName = tokenLog.getFullWord().strip('"')
         fname = self.macros.replace(dbFileName)
-        if dbFileName == fname:
-            ref = FileRef(self.filename, tok['start'][0], tok['start'][1], dbFileName)
-        else:
-            ref = FileRef(self.filename, tok['start'][0], tok['start'][1], dbFileName + ' -> ' + fname)
-        # TODO: Do something with ref
 
         tok = tokenLog.nextActionable()
 
-        # When there is a "pattern" statement, the macro labels are given first, then values in each declaration
+        # When there is a "pattern" statement, 
+        # the macro labels are given first, 
+        # then (later) values in each declaration (usually multiple sets)
         pattern_keys = []
         if token_key(tok) == 'NAME pattern':
             tok = tokenLog.nextActionable()
@@ -88,8 +88,6 @@ class Template(object):
             tok = tokenLog.nextActionable()     # skip past the closing }
         
         while token_key(tok) != 'OP }':
-            tok_ref = tok
-
             # define the macros for this set
             pattern_macros = macros.Macros(self.macros.getAll())
             if len(pattern_keys) > 0:
@@ -105,12 +103,9 @@ class Template(object):
                 pattern_macros.setMany(kv)
                 tok = tokenLog.nextActionable()
             
-            dbg = database.Database(self, fname, pattern_macros.getAll())
+            ref = self._make_ref(tokenLog.getCurrentToken())
+            dbg = database.Database(self, fname, pattern_macros.getAll(), ref)
             self.database_list.append(dbg)
-            tok = tokenLog.getCurrentToken()
-            line, column = tok['start']
-            dbg.reference = FileRef(self.filename, line, column, self)
-            # TODO: Do something with ref
     
     def _parse_globals_statement(self, tokenLog):
         '''
@@ -123,13 +118,12 @@ class Template(object):
             global { P=12ida1:,SCANREC=12ida1:scan1 }
         
         '''
-        tok = tokenLog.getCurrentToken()
-        ref = FileRef(self.filename, tok['start'][0], tok['start'][1], 'global macros')
-        # TODO: Do something with ref
+        ref = self._make_ref(tokenLog.getCurrentToken(), 'global macros')
+        # TODO: How to remember where the globals were defined?
         tok = tokenLog.nextActionable()
         if token_key(tok) == 'OP {':
             kv = parse_bracketed_macro_definitions(tokenLog)
-            ref = FileRef(self.filename, tok['start'][0], tok['start'][1], kv)
+            ref = self._make_ref(tok, kv)
             # TODO: Do something with ref
             self.macros.setMany(kv)
         else:

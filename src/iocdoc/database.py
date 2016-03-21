@@ -18,29 +18,31 @@ class Database(object):
     call for one EPICS database file with a given environment
     '''
      
-    def __init__(self, parent, dbFileName, env={}):
+    def __init__(self, parent, dbFileName, env={}, reference=None):
         self.parent = parent
         self.filename = dbFileName
         self.macros = macros.Macros(env)
         self.record_list = None
         self.pv_dict = {}
-        self.reference = None       # TODO: Make the definition and usage of this term clearer
+        self.reference = reference
 
-        #  1. read the file for the first time and parsing its content
-        #  2. apply supplied macros for each call to the database file
-
+        # read the file (if the first time, parse its content)
         self.source = text_file.read(self.macros.replace(dbFileName))
         if not hasattr(self.source, 'record_list'):
             self.source.record_list = []
             self.record_list = self.source.record_list
             self.parse()    # step 1: parse the db file for its definitions
-        else:
-            self.record_list = self.source.record_list
+        self.record_list = self.source.record_list
 
+        # apply supplied macros for each call to the database file
         self.makeProcessVariables()
     
     def __str__(self):
         return 'dbLoadRecords ' + self.filename + '  ' + str(self.macros.getAll())
+    
+    def _make_ref(self, tok, item=None):
+        '''make a FileRef() instance for this item'''
+        return FileRef(self.filename, tok['start'][0], tok['start'][1], item or self)
     
     def makeProcessVariables(self):
         '''make the EPICS PVs from the record definitions'''
@@ -49,8 +51,10 @@ class Database(object):
             print self.filename
             print len(self.record_list)
         for rec in self.record_list:
-            pv = record.PV(rec, self.macros.getAll())
-            pv.reference = self
+            ref = rec.reference
+            ref.filename = self.filename
+            ref.object = self
+            pv = record.PV(rec, self.macros.getAll(), ref)
             self.pv_dict[pv.NAME] = pv
      
     def parse(self):
@@ -71,12 +75,11 @@ class Database(object):
     
     def _parse_record(self, tokenLog):
         tok = tokenLog.nextActionable()
+        ref = self._make_ref(tok)
         rtype, rname = tokenLog.tokens_to_list()
-        tok = tokenLog.getCurrentToken()
-        record_object = record.Record(self, rtype, rname)
+        env = {}     # TODO: can this be correct?
+        record_object = record.Record(self, rtype, rname, env, ref)
         self.record_list.append(record_object)
-        line, column = tok['start']
-        record_object.reference = FileRef(self.filename, line, column, self)
 
         tok = tokenLog.nextActionable()
         if token_key(tok) == 'OP {':
@@ -97,7 +100,7 @@ class Database(object):
     
     def _parse_alias(self, tokenLog):
         tok = tokenLog.nextActionable()
-        ref = FileRef(self.filename, tok['start'][0], tok['start'][1], 'database "alias" command')
+        ref = self._make_ref(tok, 'database "alias" command')
         _l = tokenLog.tokens_to_list()
         # TODO: finish this
         raise NotImplementedError(str(ref))
