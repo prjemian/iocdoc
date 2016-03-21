@@ -1,0 +1,17 @@
+file "$(OPTICS)/opticsApp/Db/table.db"
+{
+pattern
+{P,      Q,      T,      M0X, M0Y, M1Y, M2X, M2Y, M2Z, GEOM}
+# DET
+{495idc:, Table1, table1, m9,  m10, m11, m12, m19, m20, SRI}
+# NES
+{495idc:, Table2, table2, "",  m5,  m6,  "",  m7,  "",  SRI}
+}
+
+file "$(TOP)/495idcApp/Db/tableAliases.db"
+{
+pattern
+{P,      Q,      T,      PA,        QA,     TA}
+{495idc:, Table1, table1, 495idcDET:, Table1, table1}
+{495idc:, Table2, table2, 495idcNES:, t1:,    t1}
+}

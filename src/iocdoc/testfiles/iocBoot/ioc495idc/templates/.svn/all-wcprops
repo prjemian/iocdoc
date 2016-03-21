@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/bcdaioc/!svn/ver/8358/26idc/trunk/iocBoot/ioc26idc/templates
+END
+ip330Scan.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/bcdaioc/!svn/ver/8081/26idc/trunk/iocBoot/ioc26idc/templates/ip330Scan.substitutions
+END
+placeholders.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/bcdaioc/!svn/ver/8080/26idc/trunk/iocBoot/ioc26idc/templates/placeholders.substitutions
+END
+filter.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/bcdaioc/!svn/ver/8358/26idc/trunk/iocBoot/ioc26idc/templates/filter.substitutions
+END
+table.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/bcdaioc/!svn/ver/8210/26idc/trunk/iocBoot/ioc26idc/templates/table.substitutions
+END
+dac128V.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/bcdaioc/!svn/ver/8081/26idc/trunk/iocBoot/ioc26idc/templates/dac128V.substitutions
+END
+ipUnidig.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/bcdaioc/!svn/ver/8081/26idc/trunk/iocBoot/ioc26idc/templates/ipUnidig.substitutions
+END
+xradia_motor.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/bcdaioc/!svn/ver/8339/26idc/trunk/iocBoot/ioc26idc/templates/xradia_motor.substitutions
+END
+xradia_seamless_motion.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/bcdaioc/!svn/ver/8217/26idc/trunk/iocBoot/ioc26idc/templates/xradia_seamless_motion.substitutions
+END
+softMotor.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/bcdaioc/!svn/ver/8174/26idc/trunk/iocBoot/ioc26idc/templates/softMotor.substitutions
+END
+motor.substitutions
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/bcdaioc/!svn/ver/8339/26idc/trunk/iocBoot/ioc26idc/templates/motor.substitutions
+END

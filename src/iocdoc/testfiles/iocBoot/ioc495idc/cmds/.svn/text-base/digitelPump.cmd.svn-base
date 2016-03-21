@@ -1,0 +1,9 @@
+## Connections
+#!drvAsynIPPortConfigure("CTSRC01", "ctss26c.cnm.aps.anl.gov:7001", 0, 0, 0)
+drvAsynIPPortConfigure("CTSRC01", "164.54.128.150:7001", 0, 0, 0)
+#
+## Port 1 - GVMPC - Gamma Vaccum Digitel Multiple Pump Control
+asynOctetSetInputEos("CTSRC01", -1, "\r")
+asynOctetSetOutputEos("CTSRC01", -1, "\r")
+dbLoadRecords("$(VAC)/vacApp/Db/digitelPump.db","P=26idc:,PUMP=IP01,PORT=CTSRC01,ADDR=5,DEV=MPC,STN=1")
+dbLoadRecords("$(VAC)/vacApp/Db/digitelPump.db","P=26idc:,PUMP=IP02,PORT=CTSRC01,ADDR=5,DEV=MPC,STN=2")

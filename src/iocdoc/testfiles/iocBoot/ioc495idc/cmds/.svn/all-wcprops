@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/bcdaioc/!svn/ver/8342/26idc/trunk/iocBoot/ioc26idc/cmds
+END
+user.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/bcdaioc/!svn/ver/8080/26idc/trunk/iocBoot/ioc26idc/cmds/user.cmd
+END
+ip330.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/bcdaioc/!svn/ver/8174/26idc/trunk/iocBoot/ioc26idc/cmds/ip330.cmd
+END
+slits.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/bcdaioc/!svn/ver/8206/26idc/trunk/iocBoot/ioc26idc/cmds/slits.cmd
+END
+industryPack.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/bcdaioc/!svn/ver/8339/26idc/trunk/iocBoot/ioc26idc/cmds/industryPack.cmd
+END
+save_restore.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/bcdaioc/!svn/ver/6417/26idc/trunk/iocBoot/ioc26idc/cmds/save_restore.cmd
+END
+IAI.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/bcdaioc/!svn/ver/8342/26idc/trunk/iocBoot/ioc26idc/cmds/IAI.cmd
+END
+st_SIS3820.iocsh
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/bcdaioc/!svn/ver/8079/26idc/trunk/iocBoot/ioc26idc/cmds/st_SIS3820.iocsh
+END
+digitelPump.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/bcdaioc/!svn/ver/8339/26idc/trunk/iocBoot/ioc26idc/cmds/digitelPump.cmd
+END
+vme.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/bcdaioc/!svn/ver/8230/26idc/trunk/iocBoot/ioc26idc/cmds/vme.cmd
+END
+dac128V.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/bcdaioc/!svn/ver/8174/26idc/trunk/iocBoot/ioc26idc/cmds/dac128V.cmd
+END
+ipUnidig.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/bcdaioc/!svn/ver/8081/26idc/trunk/iocBoot/ioc26idc/cmds/ipUnidig.cmd
+END
+softGlue.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/bcdaioc/!svn/ver/8174/26idc/trunk/iocBoot/ioc26idc/cmds/softGlue.cmd
+END
+xradia.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/bcdaioc/!svn/ver/8217/26idc/trunk/iocBoot/ioc26idc/cmds/xradia.cmd
+END

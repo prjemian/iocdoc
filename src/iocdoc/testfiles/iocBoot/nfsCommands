@@ -1,0 +1,21 @@
+routeShow
+
+# The following lines are examples of what might be required to use NFS,
+# rather than FTP, for booting the VME crate, and generally for reading
+# and writing files on the server.
+#
+nfsMount("s495dserv","/xorApps","/xorApps")
+nfsMount("s495dserv","/xorApps","/net/s495dserv/xorApps")
+nfsMount("s495dserv","/APSshare","/APSshare")
+
+# The following line eliminates "cksum: out of data" messages due to DHCP
+#proxyPortFwdOff(67)
+
+  # authorize this crate to write NFS files on its boot server
+  # uid:gid  9838:462
+nfsAuthUnixSet "s495dserv", 9838, 462, 0
+
+#
+hostAdd("mozart","1.2.3.4")
+#!nfsMount("mozart","/Volumes/Stuff","/Stuff")
+hostAdd("nas", "4.3.2.1")

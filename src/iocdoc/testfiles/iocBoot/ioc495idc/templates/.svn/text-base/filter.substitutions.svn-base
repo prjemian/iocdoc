@@ -1,0 +1,14 @@
+# filter.substitutions
+
+file "$(OPTICS)/opticsApp/Db/filterBladeNoSensor.db" {
+  pattern
+  {P,      R,        N,   DESC,           OUT                  OUT_STRING,  IN_STRING}
+  {26idc:,   filter:,  1,   "Filter 1",     "26idc:9440:1:bo_12.VAL",   "0",       "1"}
+  {26idc:,   filter:,  2,   "Filter 2",     "26idc:9440:1:bo_13.VAL",   "0",       "1"}
+  {26idc:,   filter:,  3,   "Filter 3",     "26idc:9440:1:bo_14.VAL",   "0",       "1"}
+  {26idc:,   filter:,  4,   "Filter 4",     "26idc:9440:1:bo_15.VAL",   "0",       "1"}
+}
+
+file "$(OPTICS)/opticsApp/Db/filterDrive.db" {
+  {P="26idc:", R="filter:", DESC="Filters", KEV="ID26us:Energy"}
+}

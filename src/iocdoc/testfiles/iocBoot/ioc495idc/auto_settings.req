@@ -1,0 +1,156 @@
+# Note: the macro P must have been supplied to the routine that parses
+# this file.  Normally, this means a command like the following is in st.cmd
+# create_monitor_set("auto_settings.req",30,"P=495idc:")
+# This requires save_restore v2.8 or later.
+
+file motor_settings.req P=$(P),M=m1
+file motor_settings.req P=$(P),M=m2
+file motor_settings.req P=$(P),M=m3
+file motor_settings.req P=$(P),M=m4
+file motor_settings.req P=$(P),M=m5
+file motor_settings.req P=$(P),M=m6
+file motor_settings.req P=$(P),M=m7
+file motor_settings.req P=$(P),M=m8
+file motor_settings.req P=$(P),M=m9
+file motor_settings.req P=$(P),M=m10
+file motor_settings.req P=$(P),M=m11
+file motor_settings.req P=$(P),M=m12
+file motor_settings.req P=$(P),M=m13
+file motor_settings.req P=$(P),M=m14
+file motor_settings.req P=$(P),M=m15
+file motor_settings.req P=$(P),M=m16
+file motor_settings.req P=$(P),M=m19
+file motor_settings.req P=$(P),M=m20
+
+file softMotor_settings.req P=$(P),SM=sm1
+file softMotor_settings.req P=$(P),SM=sm2
+file softMotor_settings.req P=$(P),SM=sm3
+file softMotor_settings.req P=$(P),SM=sm4
+file softMotor_settings.req P=$(P),SM=sm5
+file softMotor_settings.req P=$(P),SM=sm6
+file softMotor_settings.req P=$(P),SM=sm7
+file softMotor_settings.req P=$(P),SM=sm8
+file softMotor_settings.req P=$(P),SM=sm9
+file softMotor_settings.req P=$(P),SM=sm10
+file softMotor_settings.req P=$(P),SM=sm11
+file softMotor_settings.req P=$(P),SM=sm12
+file softMotor_settings.req P=$(P),SM=sm13
+file softMotor_settings.req P=$(P),SM=sm14
+file softMotor_settings.req P=$(P),SM=sm15
+file softMotor_settings.req P=$(P),SM=sm16
+file softMotor_settings.req P=$(P),SM=sm17
+file softMotor_settings.req P=$(P),SM=sm18
+file softMotor_settings.req P=$(P),SM=sm19
+file softMotor_settings.req P=$(P),SM=sm20
+file softMotor_settings.req P=$(P),SM=sm20
+file softMotor_settings.req P=$(P),SM=sm21
+file softMotor_settings.req P=$(P),SM=sm22
+file softMotor_settings.req P=$(P),SM=sm23
+file softMotor_settings.req P=$(P),SM=sm24
+file softMotor_settings.req P=$(P),SM=sm25
+file softMotor_settings.req P=$(P),SM=sm26
+file softMotor_settings.req P=$(P),SM=sm27
+file softMotor_settings.req P=$(P),SM=sm28
+file softMotor_settings.req P=$(P),SM=sm29
+file softMotor_settings.req P=$(P),SM=sm30
+file softMotor_settings.req P=$(P),SM=sm30
+file softMotor_settings.req P=$(P),SM=sm31
+file softMotor_settings.req P=$(P),SM=sm32
+file softMotor_settings.req P=$(P),SM=sm33
+file softMotor_settings.req P=$(P),SM=sm34
+file softMotor_settings.req P=$(P),SM=sm35
+file softMotor_settings.req P=$(P),SM=sm36
+file softMotor_settings.req P=$(P),SM=sm37
+file softMotor_settings.req P=$(P),SM=sm38
+file softMotor_settings.req P=$(P),SM=sm39
+file softMotor_settings.req P=$(P),SM=sm40
+file softMotor_settings.req P=$(P),SM=sm40
+file softMotor_settings.req P=$(P),SM=sm41
+file softMotor_settings.req P=$(P),SM=sm42
+file softMotor_settings.req P=$(P),SM=sm43
+file softMotor_settings.req P=$(P),SM=sm44
+file softMotor_settings.req P=$(P),SM=sm45
+file softMotor_settings.req P=$(P),SM=sm46
+file softMotor_settings.req P=$(P),SM=sm47
+file softMotor_settings.req P=$(P),SM=sm48
+file softMotor_settings.req P=$(P),SM=sm49
+file softMotor_settings.req P=$(P),SM=sm50
+
+# Detector motors
+file detBase.req P=$(P),H=base:
+file detRobot.req P=$(P),H=robot:
+
+## Xradia motor settings
+file xradia_seamless_motion.req P=495idcnpi:,XY=X
+file xradia_seamless_motion.req P=495idcnpi:,XY=Y
+file xradia_seamless_motion_tweak.req P=495idcnpi:,XY=X
+file xradia_seamless_motion_tweak.req P=495idcnpi:,XY=Y
+
+#file scaler_8ch_settings.req P=$(P),S=scaler2
+#file scaler16m_settings.req P=$(P),S=scaler1
+#file scaler16m_settings.req P=495idsclr1:,S=scaler1
+
+file userCalcs10_settings.req P=$(P)1:
+$(P)1:userCalcEnable.VAL
+file userCalcs10_settings.req P=$(P)2:
+$(P)2:userCalcEnable.VAL
+file userCalcs10_settings.req P=$(P)3:
+$(P)3:userCalcEnable.VAL
+
+file userCalcOuts10_settings.req P=$(P)
+$(P)userCalcOutEnable.VAL
+
+file userTransforms10_settings.req P=$(P)1:
+$(P)1:userTranEnable.VAL
+file userTransforms10_settings.req P=$(P)2:
+$(P)2:userTranEnable.VAL
+
+file userStringCalcs10_settings.req P=$(P)1:
+$(P)1:userStringCalcEnable.VAL
+file userStringCalcs10_settings.req P=$(P)2:
+$(P)2:userStringCalcEnable.VAL
+
+file userStringSeqs10_settings.req P=$(P)
+$(P)userStringSeqEnable
+
+file userArrayCalcs10_settings.req P=$(P)
+$(P)userArrayCalcEnable.VAL
+
+file userAve10_settings.req P=$(P)
+$(P)userAveEnable.VAL
+
+file placeholder20_settings.req P=$(P),H=sft01:,F=ph01:,D=ao
+file placeholder20_settings.req P=$(P),H=sft01:,F=ph02:,D=ao
+file placeholder20_settings.req P=$(P),H=sft01:,F=ph03:,D=ao
+file placeholder20_settings.req P=$(P),H=sft01:,F=ph01:,D=bo
+file placeholder20_settings.req P=$(P),H=sft01:,F=ph01:,D=lo
+file placeholder20_settings.req P=$(P),H=sft01:,F=ph01:,D=so
+
+file singleDAC_settings.req P=$(P),D=1,N=1
+file singleDAC_settings.req P=$(P),D=1,N=2
+file singleDAC_settings.req P=$(P),D=1,N=3
+file singleDAC_settings.req P=$(P),D=1,N=4
+file singleDAC_settings.req P=$(P),D=1,N=5
+file singleDAC_settings.req P=$(P),D=1,N=6
+file singleDAC_settings.req P=$(P),D=1,N=7
+file singleDAC_settings.req P=$(P),D=1,N=8
+
+# Acromag AVME9440
+file Acromag_16IO_settings.req P=$(P),A=1
+
+# softGlue
+#!file softGlue_settings.req  P=$(P) H=softGlue:
+# Menu of softGlue circuits
+#!file configMenu_settings.req P=$(P),CONFIG=SG
+
+#!file SIS38XX_settings.req P=xxx:3820:
+
+file filterDrive.req "P=495idc:,R=filter:"
+file filterBladeNoSensor.req "P=495idc:,R=filter:,N=1"
+file filterBladeNoSensor.req "P=495idc:,R=filter:,N=2"
+file filterBladeNoSensor.req "P=495idc:,R=filter:,N=3"
+file filterBladeNoSensor.req "P=495idc:,R=filter:,N=4"
+#!file filterBladeNoSensor.req "P=495idc:,R=filter:,N=5"
+#!file filterBladeNoSensor.req "P=495idc:,R=filter:,N=6"
+#!file filterBladeNoSensor.req "P=495idc:,R=filter:,N=7"
+#!file filterBladeNoSensor.req "P=495idc:,R=filter:,N=8"
