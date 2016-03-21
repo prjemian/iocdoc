@@ -22,10 +22,9 @@ class Database(object):
         self.parent = parent
         self.filename = dbFileName
         self.macros = macros.Macros(env)
-        self.reference_list = []
         self.record_list = None
         self.pv_dict = {}
-        self.file_ref = None
+        self.reference = None       # TODO: Make the definition and usage of this term clearer
 
         #  1. read the file for the first time and parsing its content
         #  2. apply supplied macros for each call to the database file
@@ -43,13 +42,6 @@ class Database(object):
     def __str__(self):
         return 'dbLoadRecords ' + self.filename + '  ' + str(self.macros.getAll())
     
-    def _note_reference(self, tok, obj):
-        '''
-        make a note of filename, line and column number for something
-        '''
-        line, column = tok['start']
-        self.reference_list.append(FileRef(self.filename, line, column, obj))
-     
     def makeProcessVariables(self):
         '''make the EPICS PVs from the record definitions'''
         # build self.pv_dict from self.record_list and self.macros
@@ -58,6 +50,7 @@ class Database(object):
             print len(self.record_list)
         for rec in self.record_list:
             pv = record.PV(rec, self.macros.getAll())
+            pv.reference = self
             self.pv_dict[pv.NAME] = pv
      
     def parse(self):
@@ -82,9 +75,8 @@ class Database(object):
         tok = tokenLog.getCurrentToken()
         record_object = record.Record(self, rtype, rname)
         self.record_list.append(record_object)
-        self._note_reference(tok, record_object)
         line, column = tok['start']
-        record_object.file_ref = FileRef(self.filename, line, column, self)
+        record_object.reference = FileRef(self.filename, line, column, self)
 
         tok = tokenLog.nextActionable()
         if token_key(tok) == 'OP {':
@@ -105,8 +97,10 @@ class Database(object):
     
     def _parse_alias(self, tokenLog):
         tok = tokenLog.nextActionable()
+        ref = FileRef(self.filename, tok['start'][0], tok['start'][1], 'database "alias" command')
         _l = tokenLog.tokens_to_list()
         # TODO: finish this
+        raise NotImplementedError(str(ref))
      
     def getPVList(self):
         return self.pv_dict.keys()
@@ -119,7 +113,8 @@ def main():
     db = {}
     testfiles = []
     testfiles.append(os.path.join('.', 'testfiles', 'databases', 'pseudoMotor.db'))
-    testfiles.append(os.path.join('.', 'testfiles', 'databases', 'pseudoMotor.db'))
+    testfiles.append(os.path.join('.', 'testfiles', 'databases', 'Charlie'))
+    testfiles.append(os.path.join('.', 'testfiles', 'databases', 'asynRecordAliases.db'))
     testfiles.append(os.path.join('.', 'testfiles', 'databases', 'autoShutter.vdb'))
     testfiles.append(os.path.join('.', 'testfiles', 'databases', 'filterBladeNoSensor.db'))
     testfiles.append(os.path.join('.', 'testfiles', 'databases', 'filterDrive.db'))
@@ -132,6 +127,10 @@ def main():
             db[tf] = Database(None, tf, macros)
         except text_file.FileNotFound, _exc:
             print 'file not found: ' + tf
+            continue
+        except NotImplementedError, _exc:
+            print 'Not implemented yet: ' + str(_exc)
+            continue
         print db[tf]
         for k, pv in sorted(db[tf].getPVs()):
             print '\t', pv.RTYP, k

@@ -30,7 +30,7 @@ class Template(object):
         self.macros = macros.Macros(env)
         self.database_list = []
         self.reference_list = []
-        self.file_ref = None
+        self.reference = None       # TODO: Make the definition and usage of this term clearer
 
         self.source = text_file.read(self.macros.replace(filename))
         self.parse()
@@ -56,13 +56,6 @@ class Template(object):
                 actions[tk](tokenLog)
             tok = tokenLog.nextActionable()
     
-    def _note_reference(self, tok, obj):
-        '''
-        make a note of filename, line and column number for something
-        '''
-        line, column = tok['start']
-        self.reference_list.append(FileRef(self.filename, line, column, obj))
-    
     def _parse_file_statement(self, tokenLog):
         '''
         support the *file* statement in a template file
@@ -72,15 +65,18 @@ class Template(object):
             file "$(SSCAN)/sscanApp/Db/scanParms.db"
         
         '''
-        self._note_reference(tokenLog.getCurrentToken(), 'database file')
+        tok = tokenLog.getCurrentToken()
+        ref = FileRef(self.filename, tok['start'][0], tok['start'][1], 'database file')
+        # TODO: Do something with ref
         
         tok = tokenLog.nextActionable()
         dbFileName = tokenLog.getFullWord().strip('"')
         fname = self.macros.replace(dbFileName)
         if dbFileName == fname:
-            self._note_reference(tok, dbFileName)
+            ref = FileRef(self.filename, tok['start'][0], tok['start'][1], dbFileName)
         else:
-            self._note_reference(tok, dbFileName + ' -> ' + fname)
+            ref = FileRef(self.filename, tok['start'][0], tok['start'][1], dbFileName + ' -> ' + fname)
+        # TODO: Do something with ref
 
         tok = tokenLog.nextActionable()
 
@@ -111,10 +107,10 @@ class Template(object):
             
             dbg = database.Database(self, fname, pattern_macros.getAll())
             self.database_list.append(dbg)
-            self._note_reference(tok_ref, dbg)
             tok = tokenLog.getCurrentToken()
             line, column = tok['start']
-            dbg.file_ref = FileRef(self.filename, line, column, self.file_ref)
+            dbg.reference = FileRef(self.filename, line, column, self)
+            # TODO: Do something with ref
     
     def _parse_globals_statement(self, tokenLog):
         '''
@@ -127,12 +123,14 @@ class Template(object):
             global { P=12ida1:,SCANREC=12ida1:scan1 }
         
         '''
-        self._note_reference(tokenLog.getCurrentToken(), 'global macros')
+        tok = tokenLog.getCurrentToken()
+        ref = FileRef(self.filename, tok['start'][0], tok['start'][1], 'global macros')
+        # TODO: Do something with ref
         tok = tokenLog.nextActionable()
         if token_key(tok) == 'OP {':
-            tok_ref = tok
             kv = parse_bracketed_macro_definitions(tokenLog)
-            self._note_reference(tok_ref, str(kv))
+            ref = FileRef(self.filename, tok['start'][0], tok['start'][1], kv)
+            # TODO: Do something with ref
             self.macros.setMany(kv)
         else:
             msg = '(%s,%d,%d) ' % (self.filename, tok['start'][0], tok['start'][1])
@@ -153,9 +151,6 @@ class Template(object):
     
     def get_databases(self):
         return self.database_list
-    
-    def get_references(self):
-        return self.reference_list
 
 
 def main():
@@ -167,14 +162,12 @@ def main():
     for i, tf in enumerate(testfiles):
         try:
             db[tf] = Template(tf, env)
-            db[tf].file_ref = FileRef(__file__, i+1, 0, 'testing')
+            db[tf].reference = FileRef(__file__, i+1, 0, 'testing')
         except text_file.FileNotFound, _exc:
             print 'file not found: ' + tf
     for k in testfiles:
         if k in db:
             print db[k].source.number_of_lines, k
-            #for ref in db[k].get_references():
-            #    print ' '*8, str(ref)
             for pvname, pv in sorted(db[k].getPVs().items()):
                 print '\t%015s : %s' % (pv.RTYP, pvname)
     pass
