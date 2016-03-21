@@ -10,7 +10,7 @@ class RecordException(Exception): pass
 
 
 class Record(object):
-    '''definition of an EPICS record'''
+    '''definition of an EPICS record, macros are not expanded'''
      
     def __init__(self, parent, rtype, rname, env={}, reference=None):
         self.parent = parent
@@ -28,15 +28,17 @@ class Record(object):
 
 
 class PV(object):
-    '''single instance of an EPICS record'''
+    '''single instance of an EPICS record, will expand all macros as provided'''
      
     def __init__(self, record_object, env={}, reference=None):
         self.record = record_object
-        self.macros = macros.Macros(env)
         self.RTYP = record_object.RTYP
-        self.fields = {k: self.macros.replace(v) for k, v in self.record.fields.items()}
-        self.NAME = self.fields['NAME']
+        self.macros = macros.Macros(env)
         self.reference = reference
+
+        self.fields = {k: self.macros.replace(v) for k, v in self.record.fields.items()}
+        
+        self.NAME = self.fields['NAME']
     
     def __str__(self):
         return 'record ' + self.RTYP + '  ' + str(self.macros.getAll())
