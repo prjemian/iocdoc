@@ -160,8 +160,8 @@ def main():
     env = dict(TEST="./testfiles")
     for i, tf in enumerate(testfiles):
         try:
-            db[tf] = Template(tf, env)
-            db[tf].reference = FileRef(__file__, i+1, 0, 'testing')
+            ref = FileRef(__file__, i+1, 0, 'testing')
+            db[tf] = Template(tf, env, ref)
         except text_file.FileNotFound, _exc:
             print 'file not found: ' + tf
     for k in testfiles:

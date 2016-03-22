@@ -8,7 +8,7 @@ import tokenize
 
 import database
 import macros
-#import template
+import template
 import text_file
 from token_support import token_key, TokenLog, parse_bracketed_macro_definitions, reconstruct_line
 from utils import logMessage, FileRef, strip_quotes
@@ -82,7 +82,7 @@ class CommandFile(object):
             # 'cd': self.kh_cd,
             # 'dbLoadDatabase': self.kh_dbLoadDatabase,
             'dbLoadRecords': self.kh_dbLoadRecords,
-            # 'dbLoadTemplate': self.kh_dbLoadTemplate,
+            'dbLoadTemplate': self.kh_dbLoadTemplate,
             'epicsEnvSet': self.kh_epicsEnvSet,
             'putenv': self.kh_putenv,
             # 'seq': self.kh_seq,
@@ -159,7 +159,12 @@ class CommandFile(object):
             print 'File Not Found: ' + _exc[0]
 
     def kh_dbLoadTemplate(self, arg0, tokens, ref):
-        pass        # TODO: finish this
+        local_macros = macros.Macros(self.env.getAll())
+        tfile = reconstruct_line(tokens).strip().strip('(').strip(')').strip('"')
+        obj = template.Template(tfile, local_macros.getAll(), ref)
+        self.template_list.append(obj)
+        # TODO: anything else to be done?
+        self._parse_command(arg0, tokens, ref)
 
     def kh_epicsEnvSet(self, arg0, tokens, ref):
         '''symbol assignment'''
