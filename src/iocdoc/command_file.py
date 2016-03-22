@@ -87,7 +87,7 @@ class CommandFile(object):
             'epicsEnvSet': self.kh_epicsEnvSet,
             'putenv': self.kh_putenv,
             # 'seq': self.kh_seq,
-            # 'strcpy': self.kh_strcpy,
+            'strcpy': self.kh_strcpy,
             # 'nfsMount': self.kh_nfsMount,
             # 'nfs2Mount': self.kh_nfsMount,
         }
