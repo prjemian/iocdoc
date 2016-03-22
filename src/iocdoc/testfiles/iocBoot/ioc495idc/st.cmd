@@ -14,6 +14,11 @@ cd ""
 < cdCommands
 
 putenv("TOP=./testfiles")
+putenv("MOTOR=$(TOP)")
+putenv("SSCAN=$(TOP)")
+putenv("STD=$(TOP)")
+putenv("DEVIOCSTATS=$(TOP)")
+putenv("ALIVE=$(TOP)")
 
 # How to set and get the clock rate (in Hz.  Default is 60 Hz)
 #sysClkRateSet(100)
@@ -66,25 +71,21 @@ ioc495idcVX_registerRecordDeviceDriver(pdbbase)
 # IAI X-Sel support - ONLY UNCOMMENT WHEN DET EBRICK IS OFFLINE
 < cmds/IAI.cmd
 dbLoadRecords("$(TOP)/databases/asynRecordAliases.db","P=495idc:,R=port09,PA=495idcDET:,RA=port09")
-#dbLoadRecords("$(TOP)/databases/iai_controlsAliases.db","P=495idc:,R=IAI:,PA=495idcDET:,RA=IAI:")
-#dbLoadRecords("$(TOP)/databases/detBaseAliases.db","P=495idc:,H=base:,PA=495idcDET:,HA=base:")
-#dbLoadRecords("$(TOP)/databases/detRobotAliases.db","P=495idc:,H=robot:,PA=495idcDET:,HA=robot:")
+dbLoadRecords("$(TOP)/databases/iai_controlsAliases.db","P=495idc:,R=IAI:,PA=495idcDET:,RA=IAI:")
+dbLoadRecords("$(TOP)/databases/detBaseAliases.db","P=495idc:,H=base:,PA=495idcDET:,HA=base:")
+dbLoadRecords("$(TOP)/databases/detRobotAliases.db","P=495idc:,H=robot:,PA=495idcDET:,HA=robot:")
 
 # Motors
 dbLoadTemplate("templates/motor.substitutions")
 iocshCmd "epicsThreadSleep(5.0)"
 dbLoadTemplate("templates/softMotor.substitutions")
 # Create PV aliases so old medm screens can be used
-#dbLoadRecords("$(TOP)/databases/motorAliases.db")
-
-# Xradia
-< cmds/xradia.cmd
-# No aliases currently implemented; motors reside in Windows IOC
+dbLoadRecords("$(TOP)/databases/motorAliases.db")
 
 # Slits
 < cmds/slits.cmd
 # Create PV aliases so old medm screens can be used
-#dbLoadRecords("$(TOP)/databases/slitAliases.db")
+dbLoadRecords("$(TOP)/databases/slitAliases.db")
 
 # pf4 filters
 dbLoadTemplate("templates/filter.substitutions")
@@ -92,8 +93,8 @@ dbLoadTemplate("templates/filter.substitutions")
 # digitelPump support - ONLY UNCOMMENT WHEN NES EBRICK IS OFFLINE
 < cmds/digitelPump.cmd
 # Create PV aliases so old medm screens can be used
-#dbLoadRecords("$(TOP)/databases/digitelPumpAliases.db","P=495idc:,PUMP=IP01,PA=495idcNES:,PUMPA=IP01")
-#dbLoadRecords("$(TOP)/databases/digitelPumpAliases.db","P=495idc:,PUMP=IP02,PA=495idcNES:,PUMPA=IP02")
+dbLoadRecords("$(TOP)/databases/digitelPumpAliases.db","P=495idc:,PUMP=IP01,PA=495idcNES:,PUMPA=IP01")
+dbLoadRecords("$(TOP)/databases/digitelPumpAliases.db","P=495idc:,PUMP=IP02,PA=495idcNES:,PUMPA=IP02")
 
 # table records
 dbLoadTemplate("templates/table.substitutions")
@@ -104,33 +105,33 @@ dbLoadTemplate("templates/table.substitutions")
 #!dbLoadRecords("$(TOP)/databases/femtoAliases.db","P=495idc:,H=fem01:,F=seq01:,PA=495idcnpi:,HA=fem01:,FA=seq01:")
 
 ### Allstop, alldone
-dbLoadRecords("$(MOTOR)/db/motorUtil.db", "P=495idc:")
+dbLoadRecords("$(MOTOR)/databases/motorUtil.db", "P=495idc:")
 # Create PV aliases so old medm screens can be used
-#dbLoadRecords("$(TOP)/databases/allstopAliases.db")
+dbLoadRecords("$(TOP)/databases/allstopAliases.db")
 
 ### Scan-support software
 # crate-resident scan.  This executes 1D, 2D, 3D, and 4D scans, and caches
 # 1D data, but it doesn't store anything to disk.  (See 'saveData' below for that.)
-putenv "SDB=$(SSCAN)/sscanApp/Db/standardScans.db"
+putenv "SDB=$(SSCAN)/databases/standardScans.db"
 dbLoadRecords("$(SDB)","P=495idc:,MAXPTS1=8000,MAXPTS2=1000,MAXPTS3=10,MAXPTS4=10,MAXPTSH=8000")
-dbLoadRecords("$(TOP)/databases//saveData.db","P=495idc:")
-dbLoadRecords("$(TOP)/databases//scanProgress.db","P=495idc:scanProgress:")
+dbLoadRecords("$(TOP)/databases/saveData.db","P=495idc:")
+dbLoadRecords("$(TOP)/databases/scanProgress.db","P=495idc:scanProgress:")
 # Create PV aliases so old medm screens can be used
-#dbLoadRecords("$(TOP)/databases/sscanAliases.db")
+dbLoadRecords("$(TOP)/databases/sscanAliases.db")
 
 < cmds/user.cmd
 # Create PV aliases so old medm screens can be used
-#dbLoadRecords("$(TOP)/databases/userAliases.db")
-#dbLoadRecords("$(TOP)/databases/placeholderAliases.db")
+dbLoadRecords("$(TOP)/databases/userAliases.db")
+dbLoadRecords("$(TOP)/databases/placeholderAliases.db")
 
 # Miscellaneous PV's, such as burtResult
-dbLoadRecords("$(STD)/stdApp/Db/misc.db","P=495idc:")
+dbLoadRecords("$(STD)/databases/misc.db","P=495idc:")
 
 # devIocStats
-dbLoadRecords("$(DEVIOCSTATS)/db/iocAdminVxWorks.db","IOC=495idc")
+dbLoadRecords("$(DEVIOCSTATS)/databases/iocAdminVxWorks.db","IOC=495idc")
 
 # alive
-dbLoadRecords("$(ALIVE)/aliveApp/Db/alive.db", "P=495idc:,RHOST=10.10.10.10")
+dbLoadRecords("$(ALIVE)/databases/alive.db", "P=495idc:,RHOST=10.10.10.10")
 
 ###############################################################################
 # Set shell prompt (otherwise it is left at mv167 or mv162)
