@@ -1,4 +1,4 @@
-file "$(STD)/stdApp/Db/softMotor.db"
+file "$(STD)/databases/softMotor.db"
 {
 pattern
 {P,       SM}

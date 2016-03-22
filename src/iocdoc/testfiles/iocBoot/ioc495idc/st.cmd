@@ -19,6 +19,7 @@ putenv("SSCAN=$(TOP)")
 putenv("STD=$(TOP)")
 putenv("DEVIOCSTATS=$(TOP)")
 putenv("ALIVE=$(TOP)")
+putenv("OPTICS=$(TOP)")
 putenv("STARTUP=$(TOP)/iocBoot/ioc495idc")
 
 # How to set and get the clock rate (in Hz.  Default is 60 Hz)

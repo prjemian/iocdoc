@@ -1,6 +1,6 @@
 # filter.substitutions
 
-file "$(OPTICS)/opticsApp/Db/filterBladeNoSensor.db" {
+file "$(OPTICS)/databases/filterBladeNoSensor.db" {
   pattern
   {P,      R,        N,   DESC,           OUT                  OUT_STRING,  IN_STRING}
   {495idc:,   filter:,  1,   "Filter 1",     "495idc:9440:1:bo_12.VAL",   "0",       "1"}
@@ -9,6 +9,6 @@ file "$(OPTICS)/opticsApp/Db/filterBladeNoSensor.db" {
   {495idc:,   filter:,  4,   "Filter 4",     "495idc:9440:1:bo_15.VAL",   "0",       "1"}
 }
 
-file "$(OPTICS)/opticsApp/Db/filterDrive.db" {
-  {P="495idc:", R="filter:", DESC="Filters", KEV="ID26us:Energy"}
+file "$(OPTICS)/databases/filterDrive.db" {
+  {P="495idc:", R="filter:", DESC="Filters", KEV="IDus:Energy"}
 }

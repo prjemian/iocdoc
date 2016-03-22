@@ -1,4 +1,4 @@
-file "$(OPTICS)/opticsApp/Db/table.db"
+file "$(OPTICS)/databases/table.db"
 {
 pattern
 {P,      Q,      T,      M0X, M0Y, M1Y, M2X, M2Y, M2Z, GEOM}
@@ -8,7 +8,7 @@ pattern
 {495idc:, Table2, table2, "",  m5,  m6,  "",  m7,  "",  SRI}
 }
 
-file "$(TOP)/495idcApp/Db/tableAliases.db"
+file "$(TOP)/databases/tableAliases.db"
 {
 pattern
 {P,      Q,      T,      PA,        QA,     TA}

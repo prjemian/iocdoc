@@ -74,6 +74,7 @@ class CommandFile(object):
         self.symbols = macros.Macros({})
         self.database_list = []
         self.commands = []
+        self.template_list = []
 
         # filename is a relative or absolute path to command file, no macros in the name
         self.source = text_file.read(filename)
