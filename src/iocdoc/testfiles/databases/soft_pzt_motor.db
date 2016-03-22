@@ -1,0 +1,83 @@
+#
+#  file:     soft_pzt_motor.db
+#  author:   Pete Jemian
+#  date:     2006-05-19
+#  supports: PZT controllers interfaced with the soft motor record
+#
+# # USAXS soft piezo motor records
+# dbLoadRecords("../../db/soft_pzt_motor.db","P=brq:,M=m,N=1,DAC=RDAC0:AO0")
+#
+#
+# P   : PV prefix
+# M   : motor
+# N   : motor number
+# DAC : output DAC channel
+#
+record(motor,"$(P)$(M)$(N)")
+{
+	field(DESC, "motor $(N) pzt")
+	field(DTYP, "Soft Channel")
+	field(OUT,  "$(P)$(DAC).VAL PP MS")
+	field(RDBL, "$(P)$(M)$(N)_RBV.VAL NPP MS")
+	field(URIP, "1")
+	field(DINP, "$(P)$(M)$(N)_DMOV.VAL")
+	field(DIR,  "0")
+	field(OFF,  "0")
+	field(FOFF, "1")
+	field(SREV, "400")
+	field(UREV, "1.0")
+	field(VELO, "1.0")
+	field(TWV,  "0.1")
+	field(RRES, "1")
+	field(PREC, "4")
+	field(EGU,  "VDC")
+	field(DHLM, "9")
+	field(DLLM, "-2")
+}
+#
+# watch the OUT and emulate a DMOV field in the motor record
+# use a 0.1 second scan rate (minimum move time is 0.1 sec)
+record(swait,"$(P)$(M)$(N)_DMOV")
+{
+	field(DESC, "motor $(M)$(N).DMOV")
+	field(INAN, "$(P)$(DAC).VAL")
+	field(INBN, "$(P)$(M)$(N)_DMOV.A")
+	field(CALC, "!(ABS(A-B))")
+	field(SCAN, ".1 second")
+	field(PREC, "4")
+}
+# consider that the PZT readback _is_ the control value
+record(swait,"$(P)$(M)$(N)_RBV")
+{
+	field(DESC, "motor $(M)$(N).RBV")
+	field(INAN, "$(P)$(DAC).VAL CP MS")
+	field(CALC, "A")
+	field(SCAN, ".1 second")
+	field(PREC, "4")
+}
+#
+record(transform,"$(P)$(M)$(N)_ableput") {
+	field(CLCB,"a")
+	field(CLCC,"a")
+	field(OUTA,"$(P)$(M)$(N).DISA NPP NMS")
+	field(OUTB,"$(P)$(M)$(N).DISP NPP NMS")
+	field(OUTC,"$(P)$(M)$(N).DISA NPP NMS")
+}
+record(bo,"$(P)$(M)$(N)_able")
+{
+	field(DESC,"motor $(M)$(N) enable")
+	field(PINI,"YES")
+	field(OUT,"$(P)$(M)$(N)_ableput.A PP MS")
+	field(ZNAM,"Enable")
+	field(ONAM,"Disable")
+}
+record(scalcout,"$(P)$(M)$(N)_twCh")
+{
+	field(DESC, "change TWV")
+	field(INPB, "$(P)$(M)$(N).TWV")
+	field(INPC, "$(P)$(M)$(N).MRES")
+	field(INPD, "$(P)$(M)$(N).HLM")
+	field(INPE, "$(P)$(M)$(N).LLM")
+	field(CALC, "min(max(a*b,c),d-e)")
+	field(OUT,  "$(P)$(M)$(N).TWV")
+}
