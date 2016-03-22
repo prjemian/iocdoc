@@ -1,0 +1,2 @@
+alias("$(P)$(M)_ableput", "$(PA)$(MA)_ableput")
+alias("$(P)$(M)_able", "$(PA)$(MA)_able")

@@ -1,0 +1,4 @@
+alias("$(P)$(R)reset", "$(PA)$(RA)reset")
+alias("$(P)$(R)reset-state", "$(PA)$(RA)reset-state")
+alias("$(P)$(R)servo", "$(PA)$(RA)servo")
+alias("$(P)$(R)servo-state", "$(PA)$(RA)servo-state")

@@ -1,0 +1,3 @@
+alias("495idc:allstop",         "495idcnpi:allstop")
+alias("495idc:allstop",         "495idcDET:allstop")
+alias("495idc:allstop",         "495idcNES:allstop")
