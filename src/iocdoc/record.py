@@ -19,14 +19,20 @@ class Record(object):
         self.macros = macros.Macros(env)
         self.fields = dict(RTYP=rtype, NAME=rname)
         self.reference = reference
-        self.alias_dict = {}        # TODO: handle this
-        self.info_dict = {}         # TODO: handle this
+        self.alias_list = []
+        self.info_dict = {}
     
     def __str__(self):
         return 'record ' + self.RTYP + '  ' + self.rname
     
     def addFieldPattern(self, field, value):
         self.fields[field] = value
+    
+    def addAlias(self, alias):
+        self.alias_list.append(alias)
+    
+    def addInfo(self, key, field_list):
+        self.info_dict[key] = field_list
 
 
 class PV(object):

@@ -96,30 +96,37 @@ class Database(object):
                     # TODO: How to document each defined field by ref?
                     tok = tokenLog.previous()   # backup before advancing below
                 elif token_key(tok) == 'NAME alias':
-                    self._parse_alias(tokenLog, ref)
+                    self._parse_alias(tokenLog, record_object, ref)
                 elif token_key(tok) == 'NAME info':
-                    self._parse_info(tokenLog, ref)
+                    self._parse_info(tokenLog, record_object, ref)
                 else:
                     tok = tokenLog.getCurrentToken()
                     msg = str(ref) + ' unexpected content: |%s|' % str(tok['tokStr'])
                     raise RuntimeError(msg)
                 tok = tokenLog.nextActionable()
     
-    def _parse_info(self, tokenLog, ref):
+    def _parse_info(self, tokenLog, record_object, ref):
         tok = tokenLog.nextActionable()
         ref = self._make_ref(tok, 'database "info" command')
-        _l = tokenLog.tokens_to_list()
-        # TODO: finish this
-        #raise NotImplementedError(str(ref))
-        print str(ref) + ' info not implemented yet'
+        parts = tokenLog.tokens_to_list()
+        if len(parts) != 2:
+            msg = str(ref) + ' ' + str(parts)
+            raise DatabaseException, msg
+        key = parts[0]
+        field_list = parts[1].split(' ')
+        record_object.addInfo(key, field_list)
+        # TODO: document this ref
     
-    def _parse_alias(self, tokenLog, ref):
+    def _parse_alias(self, tokenLog, record_object, ref):
         tok = tokenLog.nextActionable()
         ref = self._make_ref(tok, 'database "alias" command')
-        _l = tokenLog.tokens_to_list()
-        # TODO: finish this
-        #raise NotImplementedError(str(ref))
-        print str(ref) + ' alias not implemented yet'
+        parts = tokenLog.tokens_to_list()
+        if len(parts) != 1:
+            msg = str(ref) + ' ' + str(parts)
+            raise DatabaseException, msg
+        alias = parts[0]
+        record_object.addAlias(alias)
+        # TODO: document this ref
      
     def getPVList(self):
         return self.pv_dict.keys()
@@ -131,6 +138,7 @@ class Database(object):
 def main():
     db = {}
     testfiles = []
+    testfiles.append(os.path.join('.', 'testfiles', 'databases', 'iocAdminVxWorks.db'))
     testfiles.append(os.path.join('.', 'testfiles', 'databases', 'pseudoMotor.db'))
     testfiles.append(os.path.join('.', 'testfiles', 'databases', 'Charlie'))
     testfiles.append(os.path.join('.', 'testfiles', 'databases', 'asynRecordAliases.db'))
