@@ -19,6 +19,8 @@ class Record(object):
         self.macros = macros.Macros(env)
         self.fields = dict(RTYP=rtype, NAME=rname)
         self.reference = reference
+        self.alias_dict = {}        # TODO: handle this
+        self.info_dict = {}         # TODO: handle this
     
     def __str__(self):
         return 'record ' + self.RTYP + '  ' + self.rname

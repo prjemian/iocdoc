@@ -64,9 +64,10 @@ class Database(object):
         tokenLog.processFile(self.filename_expanded)
         tok = tokenLog.nextActionable()
         actions = {
-                   'NAME record': self._parse_record,
+                   #'NAME alias': self._parse_alias,
+                   #'NAME info': self._parse_info,
                    'NAME grecord': self._parse_record,
-                   'NAME alias': self._parse_alias,
+                   'NAME record': self._parse_record,
                    }
         while tok is not None:
             tk = token_key(tok)
@@ -87,25 +88,38 @@ class Database(object):
             tok = tokenLog.nextActionable()
             # get record's field definitions
             while token_key(tok) != 'OP }':
+                ref = self._make_ref(tok, tok['tokStr'])
                 if token_key(tok) == 'NAME field':
                     tok = tokenLog.nextActionable()
                     field, value = parse_bracketed_macro_definitions(tokenLog)
                     record_object.addFieldPattern(field, value.strip('"'))
+                    # TODO: How to document each defined field by ref?
                     tok = tokenLog.previous()   # backup before advancing below
+                elif token_key(tok) == 'NAME alias':
+                    self._parse_alias(tokenLog, ref)
+                elif token_key(tok) == 'NAME info':
+                    self._parse_info(tokenLog, ref)
                 else:
                     tok = tokenLog.getCurrentToken()
-                    msg = '(%s,%d,%d): ' % (self.filename, tok['start'][0], tok['start'][1])
-                    msg += ' unexpected content: |%s|' % str(tok['tokStr'])
+                    msg = str(ref) + ' unexpected content: |%s|' % str(tok['tokStr'])
                     raise RuntimeError(msg)
                 tok = tokenLog.nextActionable()
     
-    def _parse_alias(self, tokenLog):
+    def _parse_info(self, tokenLog, ref):
+        tok = tokenLog.nextActionable()
+        ref = self._make_ref(tok, 'database "info" command')
+        _l = tokenLog.tokens_to_list()
+        # TODO: finish this
+        #raise NotImplementedError(str(ref))
+        print str(ref) + ' info not implemented yet'
+    
+    def _parse_alias(self, tokenLog, ref):
         tok = tokenLog.nextActionable()
         ref = self._make_ref(tok, 'database "alias" command')
         _l = tokenLog.tokens_to_list()
         # TODO: finish this
         #raise NotImplementedError(str(ref))
-        print str(self.reference) + ' alias not implemented yet'
+        print str(ref) + ' alias not implemented yet'
      
     def getPVList(self):
         return self.pv_dict.keys()
