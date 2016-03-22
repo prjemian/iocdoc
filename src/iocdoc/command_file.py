@@ -5,6 +5,7 @@ EPICS IOC command file analysis
 import os
 import token
 import tokenize
+import traceback
 
 import database
 import macros
@@ -80,7 +81,7 @@ class CommandFile(object):
         self.source = text_file.read(filename)
 
         self.knownHandlers = {
-            # 'cd': self.kh_cd,
+            'cd': self.kh_cd,
             # 'dbLoadDatabase': self.kh_dbLoadDatabase,
             'dbLoadRecords': self.kh_dbLoadRecords,
             'dbLoadTemplate': self.kh_dbLoadTemplate,
@@ -90,6 +91,11 @@ class CommandFile(object):
             'strcpy': self.kh_strcpy,
             # 'nfsMount': self.kh_nfsMount,
             # 'nfs2Mount': self.kh_nfsMount,
+            #------ overrides -----------
+            'dbLoadDatabase': self.kh_shell_command,
+            'seq': self.kh_shell_command,
+            'nfsMount': self.kh_shell_command,
+            'nfs2Mount': self.kh_shell_command,
         }
         self.parse()
     
@@ -121,14 +127,16 @@ class CommandFile(object):
                     handler = self.knownHandlers[arg0]
                     handler(arg0, line['tokens'], ref)
                 else:
-                    self._parse_command(arg0, line['tokens'], ref)
+                    self.kh_shell_command(arg0, line['tokens'], ref)
      
     def report(self):
         '''describe what was discovered'''
         raise NotImplementedError()
 
     def kh_cd(self, arg0, tokens, ref):
-        pass        # TODO: finish this
+        arg = reconstruct_line(tokens).strip()
+        print str(ref), arg     # TODO: finish this
+        self.kh_shell_command(arg0, tokens, ref)
 
     def kh_dbLoadRecords(self, arg0, tokens, ref):
         local_macros = macros.Macros(self.env.getAll())
@@ -154,10 +162,10 @@ class CommandFile(object):
         try:
             obj = database.Database(self, dbFileName, local_macros.getAll(), ref)
             self.database_list.append(obj)
-            self._parse_command(arg0, tokens, ref)
+            self.kh_shell_command(arg0, tokens, ref)
         except text_file.FileNotFound, _exc:
             # TODO: what to do at this point?  Need report and continue mechanism
-            print 'File Not Found: ' + _exc[0]
+            traceback.print_exc()
 
     def kh_dbLoadTemplate(self, arg0, tokens, ref):
         local_macros = macros.Macros(self.env.getAll())
@@ -165,14 +173,14 @@ class CommandFile(object):
         obj = template.Template(tfile, local_macros.getAll(), ref)
         self.template_list.append(obj)
         # TODO: anything else to be done?
-        self._parse_command(arg0, tokens, ref)
+        self.kh_shell_command(arg0, tokens, ref)
 
     def kh_epicsEnvSet(self, arg0, tokens, ref):
         '''symbol assignment'''
         var = strip_quotes( tokens[2]['tokStr'] )       # FIXME: fragile, assumes STRING and quotes and ...
         value = strip_quotes( tokens[4]['tokStr'] )
         self.env.set(var, value)
-        self._parse_command('(env)', tokens, ref)
+        self.kh_shell_command('(env)', tokens, ref)
 
     def _parse_includeCommandFile(self, arg0, tokens, ref):
         pass        # TODO: finish this
@@ -202,9 +210,9 @@ class CommandFile(object):
             msg = str(ref) + reconstruct_line(tokens).strip()
             raise UnhandledTokenPattern, msg
 
-        self._parse_command(arg0, tokens, ref)
+        self.kh_shell_command(arg0, tokens, ref)
 
-    def _parse_command(self, arg0, tokens, ref):
+    def kh_shell_command(self, arg0, tokens, ref):
         linetext = reconstruct_line(tokens).strip()
         cmd = Command(self, arg0, self.pwd, linetext, self.env.getAll(), ref)
         self.commands.append(cmd)
@@ -218,7 +226,7 @@ class CommandFile(object):
         arg = strip_quotes( tokens[2]['tokStr'] )
         obj = Symbol(self, arg0, arg, ref)
         self.symbols.set(arg0, obj)
-        self._parse_command('(symbol)', tokens, ref)
+        self.kh_shell_command('(symbol)', tokens, ref)
 
 
 def main():
@@ -229,14 +237,11 @@ def main():
         try:
             ref = FileRef(__file__, i, 0, 'testing')
             cmdFile_object = CommandFile(None, tf, {}, ref)
-            cmdFile_dict[tf] = cmdFile_object
-        except text_file.FileNotFound, _exc:
-            print 'file not found: ' + _exc[0]
-            continue
-        except NotImplementedError, _exc:
-            print 'Not implemented yet: ' + str(_exc)
+        except Exception:
+            traceback.print_exc()
             continue
         print cmdFile_object
+        cmdFile_dict[tf] = cmdFile_object
         for command in cmdFile_object.commands:
             print str(command.reference), str(command.args)
 
