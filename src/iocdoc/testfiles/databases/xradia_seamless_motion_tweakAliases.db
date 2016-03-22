@@ -1,2 +1,0 @@
-alias("$(P)$(XY)_HYBRID_SP-tweak", "$(PA)$(XYA)_HYBRID_SP-tweak")
-alias("$(P)$(XY)_HYBRID_SP-tweak-d", "$(PA)$(XYA)_HYBRID_SP-tweak-d")
