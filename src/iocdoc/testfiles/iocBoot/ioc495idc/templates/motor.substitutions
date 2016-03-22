@@ -1,4 +1,4 @@
-file "$(MOTOR)/db/motor.db"
+file "$(MOTOR)/databases/motor.db"
 {
 pattern
 {P,      M,     DTYP,        C,  S,  DESC,          EGU, DIR,  VELO,  VBAS,  ACCL,  BDST,  BVEL,  BACC,  MRES,  PREC,  DHLM,  DLLM,  INIT}
@@ -21,28 +21,28 @@ pattern
 {495idc:, "m15", "OMS MAXv",  1,  6,  "motor 15",  mm,  Pos,  1,     .1,    .2,    0,   1,      .2,    0.01,  5,     100,   -100,  "LH"}
 {495idc:, "m16", "OMS MAXv",  1,  7,  "motor 16",  mm,  Pos,  1,     .1,    .2,    0,   1,      .2,    0.01,  5,     100,   -100,  "LH"}
 }
-# DET m9-10
-file "$(TOP)/495idcApp/Db/soft_pzt_motor.db"
-{
-pattern
-{P,      N,  M, DAC}
-{495idc:, 17, m, DAC1_1}
-{495idc:, 18, m, DAC1_2}
-}
+#	# DET m9-10
+#	file "$(TOP)/495idcApp/Db/soft_pzt_motor.db"
+#	{
+#	pattern
+#	{P,      N,  M, DAC}
+#	{495idc:, 17, m, DAC1_1}
+#	{495idc:, 18, m, DAC1_2}
+#	}
 # DET m11-12
-file "$(MOTOR)/motorApp/Db/asyn_motor.db"
+file "$(MOTOR)/databases/asyn_motor.db"
 {
 pattern
 {P,      N,  M,     DTYP,	 PORT,  ADDR,  DESC,		EGU,	DIR,   VELO,	VBAS,	ACCL,	BDST,	BVEL,	BACC,	MRES,	SREV,	UREV,	PREC,	DHLM,	DLLM,	INIT}
 {495idc:, 19, "m19", asynMotor,   IA1,	0,     "motor 19",	mm,	Pos,   1,	0.1,	.2,	0,	1,	.2,	0.001,  1,	.001,	3,	400,	0,	""}
 {495idc:, 20, "m20", asynMotor,   IA1,	2,     "motor 20",	mm,	Pos,   1,	0.1,	.2,	0,	1,	.2,	0.001,  1,	.001,	3,	400,	0,	""}
 }
-# DET m13-14
-file "$(TOP)/495idcApp/Db/asyn_slave_motor.db"
-{
-pattern
-{P,      M,	 F,	DTYP,		PORT,  AXIS,	CMD,	    DESC,		PREC,	EGU,	MSTR}
-{495idc:, m21:,   pos	asynFloat64,	IA1,   1,	POSITION    "slave motor pos",  4	mm	m19}
-{495idc:, m22:,   pos	asynFloat64,	IA1,   3,	POSITION    "slave motor pos",  4	mm	m20}
-}
+#	# DET m13-14
+#	file "$(TOP)/495idcApp/Db/asyn_slave_motor.db"
+#	{
+#	pattern
+#	{P,      M,	 F,	DTYP,		PORT,  AXIS,	CMD,	    DESC,		PREC,	EGU,	MSTR}
+#	{495idc:, m21:,   pos	asynFloat64,	IA1,   1,	POSITION    "slave motor pos",  4	mm	m19}
+#	{495idc:, m22:,   pos	asynFloat64,	IA1,   3,	POSITION    "slave motor pos",  4	mm	m20}
+#	}
 

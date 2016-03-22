@@ -19,6 +19,7 @@ putenv("SSCAN=$(TOP)")
 putenv("STD=$(TOP)")
 putenv("DEVIOCSTATS=$(TOP)")
 putenv("ALIVE=$(TOP)")
+putenv("STARTUP=$(TOP)/iocBoot/ioc495idc")
 
 # How to set and get the clock rate (in Hz.  Default is 60 Hz)
 #sysClkRateSet(100)
@@ -76,9 +77,9 @@ dbLoadRecords("$(TOP)/databases/detBaseAliases.db","P=495idc:,H=base:,PA=495idcD
 dbLoadRecords("$(TOP)/databases/detRobotAliases.db","P=495idc:,H=robot:,PA=495idcDET:,HA=robot:")
 
 # Motors
-dbLoadTemplate("$(TOP)/databases/templates/motor.substitutions")
+dbLoadTemplate("$(STARTUP)/templates/motor.substitutions")
 iocshCmd "epicsThreadSleep(5.0)"
-dbLoadTemplate("$(TOP)/databases/templates/softMotor.substitutions")
+dbLoadTemplate("$(STARTUP)/templates/softMotor.substitutions")
 # Create PV aliases so old medm screens can be used
 dbLoadRecords("$(TOP)/databases/motorAliases.db")
 
@@ -88,7 +89,7 @@ dbLoadRecords("$(TOP)/databases/motorAliases.db")
 dbLoadRecords("$(TOP)/databases/slitAliases.db")
 
 # pf4 filters
-dbLoadTemplate("$(TOP)/databases/templates/filter.substitutions")
+dbLoadTemplate("$(STARTUP)/templates/filter.substitutions")
 
 # digitelPump support - ONLY UNCOMMENT WHEN NES EBRICK IS OFFLINE
 < cmds/digitelPump.cmd
@@ -97,7 +98,7 @@ dbLoadRecords("$(TOP)/databases/digitelPumpAliases.db","P=495idc:,PUMP=IP01,PA=4
 dbLoadRecords("$(TOP)/databases/digitelPumpAliases.db","P=495idc:,PUMP=IP02,PA=495idcNES:,PUMPA=IP02")
 
 # table records
-dbLoadTemplate("$(TOP)/databases/templates/table.substitutions")
+dbLoadTemplate("$(STARTUP)/templates/table.substitutions")
 
 # Load database records for Femto amplifiers/photodiode
 #!dbLoadRecords("$(STD)/stdApp/Db/femto.db","P=495idc:,H=fem01:,F=seq01:")

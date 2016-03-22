@@ -4,7 +4,7 @@ EPICS template (substitutions) file analysis
 
 import os
 
-from command_file import Command
+import command_file
 import database
 import macros
 import text_file
@@ -29,11 +29,13 @@ class Template(object):
     def __init__(self, filename, env={}, reference=None):
         self.filename = filename
         self.macros = macros.Macros(env)
+        self.filename_expanded = self.macros.replace(filename)
+
         self.database_list = []
         self.reference = reference
         self.commands = []
 
-        self.source = text_file.read(self.macros.replace(filename))
+        self.source = text_file.read(self.filename_expanded)
         self.parse()
     
     def parse(self):
@@ -45,7 +47,7 @@ class Template(object):
         such as NAME, OP, COMMENT, NEWLINE.
         '''
         tokenLog = TokenLog()
-        tokenLog.processFile(self.filename)
+        tokenLog.processFile(self.filename_expanded)
         tok = tokenLog.nextActionable()
         actions = {
                    'NAME file': self._parse_file_statement,
@@ -107,7 +109,7 @@ class Template(object):
             
             ref = self._make_ref(tokenLog.getCurrentToken())
             # TODO: work out how to get the path into the next statement
-            cmd = Command(self, '(dbLoadRecords)', 'path unknown', fname, pattern_macros.getAll(), ref)
+            cmd = command_file.Command(self, '(dbLoadRecords)', 'path unknown', fname, pattern_macros.getAll(), ref)
             self.commands.append(cmd)
             dbg = database.Database(self, fname, pattern_macros.getAll(), ref)
             self.database_list.append(dbg)
