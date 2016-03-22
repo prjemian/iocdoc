@@ -81,6 +81,7 @@ class CommandFile(object):
         self.source = text_file.read(filename)
 
         self.knownHandlers = {
+            # '<': self._parse_includeCommandFile,
             'cd': self.kh_cd,
             # 'dbLoadDatabase': self.kh_dbLoadDatabase,
             'dbLoadRecords': self.kh_dbLoadRecords,
@@ -92,6 +93,7 @@ class CommandFile(object):
             # 'nfsMount': self.kh_nfsMount,
             # 'nfs2Mount': self.kh_nfsMount,
             #------ overrides -----------
+            '<': self.kh_shell_command,
             'dbLoadDatabase': self.kh_shell_command,
             'seq': self.kh_shell_command,
             'nfsMount': self.kh_shell_command,
