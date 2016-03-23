@@ -24,7 +24,7 @@ set_savefile_path("/xorApps/epics/synApps_5_7/ioc/495idc/iocBoot/ioc495idc", "au
 #save_restoreSet_UseStatusPVs(1)
 
 save_restoreSet_status_prefix("495idc:")
-dbLoadRecords("$(AUTOSAVE)/asApp/Db/save_restoreStatus.db", "P=495idc:, DEAD_SECONDS=5")
+#!dbLoadRecords("$(AUTOSAVE)/databases/save_restoreStatus.db", "P=495idc:, DEAD_SECONDS=5")
 
 # Ok to save/restore save sets with missing values (no CA connection to PV)?
 save_restoreSet_IncompleteSetsOk(1)

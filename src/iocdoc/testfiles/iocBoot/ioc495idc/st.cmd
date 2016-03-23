@@ -13,14 +13,17 @@ cd ""
 < ../nfsCommands
 < cdCommands
 
-putenv("TOP=./testfiles")
+putenv("TOP=../..")
+putenv("STARTUP=$(TOP)/iocBoot/ioc495idc")
+putenv("ALIVE=$(TOP)")
+putenv("AUTOSAVE=$(TOP)")
+putenv("DEVIOCSTATS=$(TOP)")
+putenv("IP330=$(TOP)")
+putenv("MCA=$(TOP)")
 putenv("MOTOR=$(TOP)")
+putenv("OPTICS=$(TOP)")
 putenv("SSCAN=$(TOP)")
 putenv("STD=$(TOP)")
-putenv("DEVIOCSTATS=$(TOP)")
-putenv("ALIVE=$(TOP)")
-putenv("OPTICS=$(TOP)")
-putenv("STARTUP=$(TOP)/iocBoot/ioc495idc")
 
 # How to set and get the clock rate (in Hz.  Default is 60 Hz)
 #sysClkRateSet(100)
@@ -31,7 +34,6 @@ cd topbin
 
 # If the VxWorks kernel was built using the project facility, the following must
 # be added before any C++ code is loaded (see SPR #28980).
-sysCplusEnable=1
 sysCplusEnable=1
 
 ### Load synApps EPICS software
@@ -71,13 +73,14 @@ ioc495idcVX_registerRecordDeviceDriver(pdbbase)
 < cmds/vme.cmd
 
 # IAI X-Sel support - ONLY UNCOMMENT WHEN DET EBRICK IS OFFLINE
-< cmds/IAI.cmd
-dbLoadRecords("$(TOP)/databases/asynRecordAliases.db","P=495idc:,R=port09,PA=495idcDET:,RA=port09")
-dbLoadRecords("$(TOP)/databases/iai_controlsAliases.db","P=495idc:,R=IAI:,PA=495idcDET:,RA=IAI:")
-dbLoadRecords("$(TOP)/databases/detBaseAliases.db","P=495idc:,H=base:,PA=495idcDET:,HA=base:")
-dbLoadRecords("$(TOP)/databases/detRobotAliases.db","P=495idc:,H=robot:,PA=495idcDET:,HA=robot:")
+#< cmds/IAI.cmd
+#dbLoadRecords("$(TOP)/databases/asynRecordAliases.db","P=495idc:,R=port09,PA=495idcDET:,RA=port09")
+#dbLoadRecords("$(TOP)/databases/iai_controlsAliases.db","P=495idc:,R=IAI:,PA=495idcDET:,RA=IAI:")
+#dbLoadRecords("$(TOP)/databases/detBaseAliases.db","P=495idc:,H=base:,PA=495idcDET:,HA=base:")
+#dbLoadRecords("$(TOP)/databases/detRobotAliases.db","P=495idc:,H=robot:,PA=495idcDET:,HA=robot:")
 
 # Motors
+dbLoadTemplate("templates/omsMotors")
 dbLoadTemplate("$(STARTUP)/templates/motor.substitutions")
 iocshCmd "epicsThreadSleep(5.0)"
 dbLoadTemplate("$(STARTUP)/templates/softMotor.substitutions")
@@ -85,18 +88,18 @@ dbLoadTemplate("$(STARTUP)/templates/softMotor.substitutions")
 dbLoadRecords("$(TOP)/databases/motorAliases.db")
 
 # Slits
-< cmds/slits.cmd
+#< cmds/slits.cmd
 # Create PV aliases so old medm screens can be used
-dbLoadRecords("$(TOP)/databases/slitAliases.db")
+#dbLoadRecords("$(TOP)/databases/slitAliases.db")
 
 # pf4 filters
 dbLoadTemplate("$(STARTUP)/templates/filter.substitutions")
 
 # digitelPump support - ONLY UNCOMMENT WHEN NES EBRICK IS OFFLINE
-< cmds/digitelPump.cmd
+#< cmds/digitelPump.cmd
 # Create PV aliases so old medm screens can be used
-dbLoadRecords("$(TOP)/databases/digitelPumpAliases.db","P=495idc:,PUMP=IP01,PA=495idcNES:,PUMPA=IP01")
-dbLoadRecords("$(TOP)/databases/digitelPumpAliases.db","P=495idc:,PUMP=IP02,PA=495idcNES:,PUMPA=IP02")
+#dbLoadRecords("$(TOP)/databases/digitelPumpAliases.db","P=495idc:,PUMP=IP01,PA=495idcNES:,PUMPA=IP01")
+#dbLoadRecords("$(TOP)/databases/digitelPumpAliases.db","P=495idc:,PUMP=IP02,PA=495idcNES:,PUMPA=IP02")
 
 # table records
 dbLoadTemplate("$(STARTUP)/templates/table.substitutions")
@@ -121,10 +124,10 @@ dbLoadRecords("$(TOP)/databases/scanProgress.db","P=495idc:scanProgress:")
 # Create PV aliases so old medm screens can be used
 dbLoadRecords("$(TOP)/databases/sscanAliases.db")
 
-< cmds/user.cmd
+#< cmds/user.cmd
 # Create PV aliases so old medm screens can be used
-dbLoadRecords("$(TOP)/databases/userAliases.db")
-dbLoadRecords("$(TOP)/databases/placeholderAliases.db")
+#dbLoadRecords("$(TOP)/databases/userAliases.db")
+#dbLoadRecords("$(TOP)/databases/placeholderAliases.db")
 
 # Miscellaneous PV's, such as burtResult
 dbLoadRecords("$(STD)/databases/misc.db","P=495idc:")

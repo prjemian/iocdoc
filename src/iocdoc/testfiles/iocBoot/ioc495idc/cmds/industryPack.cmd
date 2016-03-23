@@ -27,10 +27,10 @@ ipacAddTVME200("302fa0")
 ipacReport(2)
 
 # Analog I/O (Acromag IP330 ADC)
-< cmds/ip330.cmd
+#< cmds/ip330.cmd
 
 # Systran DAC128V
-< cmds/dac128V.cmd
+#< cmds/dac128V.cmd
 
 # SBS IpUnidig digital I/O
 #!< cmds/ipUnidig.cmd

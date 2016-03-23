@@ -26,7 +26,7 @@ MAXvConfig(0, config0, 0x00)
 MAXvConfig(1, config0, 0x00)
 
 # Struck 3820 MCS setup
-iocsh "cmds/st_SIS3820.iocsh"
+#iocsh "cmds/st_SIS3820.iocsh"
 # Create PV aliases so old medm screens can be used
 #!dbLoadRecords("$(TOP)/495idcApp/Db/scalerAliases.db","P=495idc:,S=scaler1,PA=495idcDET:,SA=scaler1")
 
@@ -35,6 +35,6 @@ iocsh "cmds/st_SIS3820.iocsh"
 devAvme9440Config(1,0x0400,0x78)
 
 # Acromag general purpose Digital I/O
-dbLoadRecords("$(VME)/vmeApp/Db/Acromag_16IO.db", "P=495idc:, A=1, C=0")
+#dbLoadRecords("$(VME)/vmeApp/Db/Acromag_16IO.db", "P=495idc:, A=1, C=0")
 
 # END vme.cmd -----------------------------------------------------------------
