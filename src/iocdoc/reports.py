@@ -9,45 +9,46 @@ import text_file
 
 
 def reportCmdFile(obj, ioc_name='Command File'):
-    print title('IOC: ' + ioc_name, '=')
+    '''report what was learned from the command file'''
+    print mk_title('IOC: ' + ioc_name, '=')
     print 'initial startup command script file: ', obj
     print 'absolute path: ', obj.filename_absolute
     
     print '\n'
-    print title('Table: IOC Command sequence')
+    print mk_title('Table: IOC Command sequence')
     print reportCommandSequence(obj.commands)
     
     print '\n'
-    print title('Table: EPICS Records types used')
+    print mk_title('Table: EPICS Records types used')
     print reportRTYP(obj.pv_dict)
     
     print '\n'
-    print title('Table: EPICS IOC shell commands used')
+    print mk_title('Table: EPICS IOC shell commands used')
     print reportCommandCount(obj.commands)
     
     print '\n'
-    print title('Table: EPICS Motor types used')
+    print mk_title('Table: EPICS Motor types used')
     print reportMotorCount(obj.pv_dict)
             
     print '\n'
-    print title('Table: MACROS')
+    print mk_title('Table: MACROS')
     print reportMacros(obj.env.getAll())
     
     print '\n'
-    print title('Table: SYMBOLS')
+    print mk_title('Table: SYMBOLS')
     print reportSymbols(obj.symbols.getAll())
     
     print '\n'
-    print title('Table: EPICS Databases')
+    print mk_title('Table: EPICS Databases')
     # TODO: obj.database_list is not *ALL* the databases
     print reportDatabases(obj.database_list)
     
     print '\n'
-    print title('Table: text file cache')
+    print mk_title('Table: text file cache')
     print reportTextFiles()
 
 
-def title(text='title', symbol='-'):
+def mk_title(text='title', symbol='-'):
     return '\n'.join( [text, symbol*len(text), ''] )
 
 
