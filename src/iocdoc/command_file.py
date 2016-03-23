@@ -167,13 +167,17 @@ class CommandFile(object):
 
     def kh_epicsEnvSet(self, arg0, tokens, ref):
         '''symbol assignment'''
-        text = strip_parentheses(reconstruct_line(tokens).strip())
-        parts = text.split(',')
-        if len(parts) == 1:
-            parts = text.split(' ')
+        if len(tokens) == 7:
+            var = tokens[2]['tokStr']
+            value = tokens[4]['tokStr']
         else:
-            pass
-        var, value = parts
+            text = strip_parentheses(reconstruct_line(tokens).strip())
+            parts = text.split(',')
+            if len(parts) == 1:
+                parts = text.split(' ')
+            if len(parts) != 2:
+                raise UnhandledTokenPattern('epicsEnvSet'+text)
+            var, value = parts
         self.env.set(strip_quotes( var ), strip_quotes( value ))
         self.kh_shell_command(arg0, tokens, ref)
 
