@@ -255,6 +255,26 @@ class CommandFile(object):
         self.kh_shell_command('(symbol)', tokens, ref)
 
 
+def reportRTYP(pv_dict):
+    '''how many of each record type?'''
+    rtyp_dict = {}
+    for k, pv in pv_dict.items():
+        if k != pv.NAME:
+            rtype = 'alias'
+        else:
+            rtype = pv.RTYP
+        if rtype not in rtyp_dict:
+            rtyp_dict[rtype] = 0
+        rtyp_dict[rtype] += 1
+    from pyRestTable import Table
+    tbl = Table()
+    tbl.labels = ['RTYP', 'count']
+    for k, v in sorted(rtyp_dict.items()):
+        tbl.rows.append([k, v])
+    tbl.rows.append(['TOTAL', len(pv_dict)])
+    return tbl.reST()
+
+
 def main():
     owd = os.getcwd()
     cmdFile_dict = {}
@@ -274,23 +294,8 @@ def main():
             print str(command.reference), str(command.args)
         
         # how many of each record type?
-        rtyp_dict = {}
-        for k, pv in cmdFile_object.pv_dict.items():
-            if k != pv.NAME:
-                rtype = 'alias'
-            else:
-                rtype = pv.RTYP
-            if rtype not in rtyp_dict:
-                rtyp_dict[rtype] = 0
-            rtyp_dict[rtype] += 1
-        from pyRestTable import Table
-        tbl = Table()
-        tbl.labels = ['RTYP', 'count']
-        for k, v in sorted(rtyp_dict.items()):
-            tbl.rows.append([k, v])
-        tbl.rows.append(['TOTAL', len(cmdFile_object.pv_dict)])
         print '\nTable: EPICS Records types used'
-        print tbl.reST()
+        print reportRTYP(cmdFile_object.pv_dict)
 
 
 if __name__ == '__main__':
