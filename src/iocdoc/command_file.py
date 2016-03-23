@@ -70,18 +70,22 @@ class CommandFile(object):
         self.filename = filename
         self.reference = reference
         self.pwd = os.getcwd()      # TODO: needs some attention here
+        
+        self.filename_absolute = os.path.abspath(filename)
+        self.dirname_absolute = os.path.dirname(self.filename_absolute)
 
         self.env = macros.Macros(env)
         self.symbols = macros.Macros({})
         self.database_list = []
         self.commands = []
         self.template_list = []
+        self.includedCommandFile_list = []
 
         # filename is a relative or absolute path to command file, no macros in the name
         self.source = text_file.read(filename)
 
         self.knownHandlers = {
-            # '<': self._parse_includeCommandFile,
+            '<': self.kh_loadCommandFile,
             'cd': self.kh_cd,
             # 'dbLoadDatabase': self.kh_dbLoadDatabase,
             'dbLoadRecords': self.kh_dbLoadRecords,
@@ -93,7 +97,6 @@ class CommandFile(object):
             # 'nfsMount': self.kh_nfsMount,
             # 'nfs2Mount': self.kh_nfsMount,
             #------ overrides -----------
-            '<': self.kh_shell_command,
             'dbLoadDatabase': self.kh_shell_command,
             'seq': self.kh_shell_command,
             'nfsMount': self.kh_shell_command,
@@ -115,9 +118,9 @@ class CommandFile(object):
         lines = tokenLog.lineAnalysis()
         del lines['numbers']
         for _lineNumber, line in sorted(lines.items()):
-            if line['pattern'].startswith( 'OP' ):
-                pass
-            elif line['pattern'].startswith( 'NAME' ):
+            isNamePattern = line['pattern'].startswith( 'NAME' )
+            tk = token_key(line['tokens'][0])
+            if isNamePattern or tk == 'OP <':
                 arg0 = line['tokens'][0]['tokStr']
                 ref = self._make_ref(line['tokens'][0], arg0)
                 if line['tokens'][1]['tokStr'] == '=':
@@ -136,9 +139,14 @@ class CommandFile(object):
         raise NotImplementedError()
 
     def kh_cd(self, arg0, tokens, ref):
-        arg = reconstruct_line(tokens).strip()
-        print str(ref), arg     # TODO: finish this
-        self.kh_shell_command(arg0, tokens, ref)
+        path = reconstruct_line(tokens).strip()
+        if self.symbols.exists(path):       # symbol substitution
+            path = self.symbols.get(path).value
+        path = self.env.replace(path)       # macro substitution
+        path = path.strip('"')              # strip double-quotes
+        if len(path) > 0 and os.path.exists(path):
+            os.chdir(path)
+            self.kh_shell_command(arg0, tokens, ref)
 
     def kh_dbLoadRecords(self, arg0, tokens, ref):
         local_macros = macros.Macros(self.env.getAll())
@@ -184,8 +192,15 @@ class CommandFile(object):
         self.env.set(var, value)
         self.kh_shell_command('(env)', tokens, ref)
 
-    def _parse_includeCommandFile(self, arg0, tokens, ref):
-        pass        # TODO: finish this
+    def kh_loadCommandFile(self, arg0, tokens, ref):
+        fname = reconstruct_line(tokens).strip().strip('(').strip(')')
+        # fname is given relative to current working directory
+        obj = CommandFile(self, fname, self.env.getAll(), ref)
+        self.includedCommandFile_list.append(obj)
+        self.kh_shell_command('<', tokens, ref)
+        self.commands += obj.commands
+        self.symbols.setMany(obj.symbols.getAll())
+        self.env.setMany(obj.env.getAll())
 
     def kh_putenv(self, arg0, tokens, ref):
         '''
@@ -232,13 +247,15 @@ class CommandFile(object):
 
 
 def main():
+    owd = os.getcwd()
     cmdFile_dict = {}
     testfiles = []
     testfiles.append(os.path.join('.', 'testfiles', 'iocBoot', 'ioc495idc', 'st.cmd'))
     for i, tf in enumerate(testfiles):
         try:
+            os.chdir(os.path.dirname(os.path.abspath(tf)))
             ref = FileRef(__file__, i, 0, 'testing')
-            cmdFile_object = CommandFile(None, tf, {}, ref)
+            cmdFile_object = CommandFile(None, os.path.split(tf)[-1], {}, ref)
         except Exception:
             traceback.print_exc()
             continue
