@@ -3,16 +3,18 @@ EPICS IOC command file analysis
 '''
 
 import os
+import pyRestTable
 import token
 import tokenize
 import traceback
+
 
 import database
 import macros
 import template
 import text_file
 from token_support import token_key, TokenLog, parse_bracketed_macro_definitions, reconstruct_line
-from utils import logMessage, FileRef, strip_quotes
+from utils import logMessage, FileRef, strip_quotes, strip_parentheses
 
 
 '''
@@ -70,9 +72,6 @@ class CommandFile(object):
         self.filename = filename
         self.reference = reference
         self.pwd = os.getcwd()      # TODO: needs some attention here
-        
-        self.filename_absolute = os.path.abspath(filename)
-        self.dirname_absolute = os.path.dirname(self.filename_absolute)
 
         self.env = macros.Macros(env)
         self.symbols = macros.Macros({})
@@ -83,6 +82,9 @@ class CommandFile(object):
         self.pv_dict = {}
 
         # filename is a relative or absolute path to command file, no macros in the name
+        self.filename_absolute = os.path.abspath(filename)
+        self.dirname_absolute = os.path.dirname(self.filename_absolute)
+        #self.filename_expanded = self.env.replace(filename)
         self.source = text_file.read(filename)
 
         self.knownHandlers = {
@@ -144,7 +146,7 @@ class CommandFile(object):
         if self.symbols.exists(path):       # symbol substitution
             path = self.symbols.get(path).value
         path = self.env.replace(path)       # macro substitution
-        path = path.strip('"')              # strip double-quotes
+        path = strip_quotes(path)           # strip double-quotes
         if len(path) > 0 and os.path.exists(path):
             os.chdir(path)
             self.kh_shell_command(arg0, tokens, ref)
@@ -160,9 +162,9 @@ class CommandFile(object):
             msg = str(ref) + reconstruct_line(tokens).strip()
             raise UnhandledTokenPattern, msg
         if count > 0:
-            dbFileName = parts[0].strip('"')
+            dbFileName = strip_quotes(parts[0])
         if count > 1:
-            for definition in parts[1].strip('"').split(','):
+            for definition in strip_quotes(parts[1]).split(','):
                 k, v = definition.split('=')
                 local_macros.set(k, v)
         if count == 3:
@@ -183,7 +185,7 @@ class CommandFile(object):
 
     def kh_dbLoadTemplate(self, arg0, tokens, ref):
         local_macros = macros.Macros(self.env.getAll())
-        tfile = reconstruct_line(tokens).strip().strip('(').strip(')').strip('"')
+        tfile = strip_quotes(strip_parentheses(reconstruct_line(tokens).strip()))
         obj = template.Template(tfile, local_macros.getAll(), ref)
         self.template_list.append(obj)
         # TODO: anything else to be done?
@@ -193,15 +195,21 @@ class CommandFile(object):
 
     def kh_epicsEnvSet(self, arg0, tokens, ref):
         '''symbol assignment'''
-        var = strip_quotes( tokens[2]['tokStr'] )       # FIXME: fragile, assumes STRING and quotes and ...
-        value = strip_quotes( tokens[4]['tokStr'] )
-        self.env.set(var, value)
+        text = strip_parentheses(reconstruct_line(tokens).strip())
+        parts = text.split(',')
+        if len(parts) == 1:
+            parts = text.split(' ')
+        else:
+            pass
+        var, value = parts
+        self.env.set(strip_quotes( var ), strip_quotes( value ))
         self.kh_shell_command('(env)', tokens, ref)
 
     def kh_loadCommandFile(self, arg0, tokens, ref):
-        fname = reconstruct_line(tokens).strip().strip('(').strip(')')
+        fname = strip_parentheses(reconstruct_line(tokens).strip())
         # fname is given relative to current working directory
-        obj = CommandFile(self, fname, self.env.getAll(), ref)
+        fname_expanded = self.env.replace(fname)
+        obj = CommandFile(self, fname_expanded, self.env.getAll(), ref)
         self.includedCommandFile_list.append(obj)
         self.kh_shell_command('<', tokens, ref)
 
@@ -266,8 +274,7 @@ def reportRTYP(pv_dict):
         if rtype not in rtyp_dict:
             rtyp_dict[rtype] = 0
         rtyp_dict[rtype] += 1
-    from pyRestTable import Table
-    tbl = Table()
+    tbl = pyRestTable.Table()
     tbl.labels = ['RTYP', 'count']
     for k, v in sorted(rtyp_dict.items()):
         tbl.rows.append([k, v])
