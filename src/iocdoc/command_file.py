@@ -80,6 +80,7 @@ class CommandFile(object):
         self.commands = []
         self.template_list = []
         self.includedCommandFile_list = []
+        self.pv_dict = {}
 
         # filename is a relative or absolute path to command file, no macros in the name
         self.source = text_file.read(filename)
@@ -176,6 +177,9 @@ class CommandFile(object):
         except text_file.FileNotFound, _exc:
             # TODO: what to do at this point?  Need report and continue mechanism
             traceback.print_exc()
+            return
+        for k, v in obj.getPVs():
+            self.pv_dict[k] = v
 
     def kh_dbLoadTemplate(self, arg0, tokens, ref):
         local_macros = macros.Macros(self.env.getAll())
@@ -184,6 +188,8 @@ class CommandFile(object):
         self.template_list.append(obj)
         # TODO: anything else to be done?
         self.kh_shell_command(arg0, tokens, ref)
+        for k, v in obj.getPVs():
+            self.pv_dict[k] = v
 
     def kh_epicsEnvSet(self, arg0, tokens, ref):
         '''symbol assignment'''
@@ -198,9 +204,12 @@ class CommandFile(object):
         obj = CommandFile(self, fname, self.env.getAll(), ref)
         self.includedCommandFile_list.append(obj)
         self.kh_shell_command('<', tokens, ref)
+
         self.commands += obj.commands
         self.symbols.setMany(obj.symbols.getAll())
         self.env.setMany(obj.env.getAll())
+        for k, v in obj.pv_dict.items():
+            self.pv_dict[k] = v
 
     def kh_putenv(self, arg0, tokens, ref):
         '''
@@ -263,6 +272,25 @@ def main():
         cmdFile_dict[tf] = cmdFile_object
         for command in cmdFile_object.commands:
             print str(command.reference), str(command.args)
+        
+        # how many of each record type?
+        rtyp_dict = {}
+        for k, pv in cmdFile_object.pv_dict.items():
+            if k != pv.NAME:
+                rtype = 'alias'
+            else:
+                rtype = pv.RTYP
+            if rtype not in rtyp_dict:
+                rtyp_dict[rtype] = 0
+            rtyp_dict[rtype] += 1
+        from pyRestTable import Table
+        tbl = Table()
+        tbl.labels = ['RTYP', 'count']
+        for k, v in sorted(rtyp_dict.items()):
+            tbl.rows.append([k, v])
+        tbl.rows.append(['TOTAL', len(cmdFile_object.pv_dict)])
+        print '\nTable: EPICS Records types used'
+        print tbl.reST()
 
 
 if __name__ == '__main__':

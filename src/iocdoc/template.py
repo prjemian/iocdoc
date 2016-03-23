@@ -38,6 +38,13 @@ class Template(object):
         self.source = text_file.read(self.filename_expanded)
         self.parse()
     
+    def __str__(self):
+        return 'dbLoadTemplate ' + self.filename + '  ' + str(self.macros)
+    
+    def _make_ref(self, tok, item=None):
+        '''make a FileRef() instance for this item'''
+        return FileRef(self.filename, tok['start'][0], tok['start'][1], item or self)
+    
     def parse(self):
         '''
         interpret the template file for database declarations
@@ -58,10 +65,6 @@ class Template(object):
             if tk in actions:
                 actions[tk](tokenLog)
             tok = tokenLog.nextActionable()
-    
-    def _make_ref(self, tok, item=None):
-        '''make a FileRef() instance for this item'''
-        return FileRef(self.filename, tok['start'][0], tok['start'][1], item or self)
 
     
     def _parse_file_statement(self, tokenLog):
@@ -148,7 +151,7 @@ class Template(object):
         for db in self.database_list:
             for k, v in db.getPVs():
                 pv_dict[k] = v
-        return pv_dict
+        return pv_dict.items()
     
     def get_databases(self):
         return self.database_list

@@ -57,6 +57,10 @@ class Database(object):
             ref.object = self
             pv = record.PV(rec, self.macros.getAll(), ref)
             self.pv_dict[pv.NAME] = pv
+            for alias in rec.alias_list:
+                alias_expanded = self.macros.replace(alias)
+                if alias_expanded not in self.pv_dict:
+                    self.pv_dict[alias_expanded] = pv
      
     def parse(self):
         '''interpret records for PV declarations'''
