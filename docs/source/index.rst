@@ -27,10 +27,9 @@ of the IOC and that is the goal of this package.  Reference to well-known
 IOC commands (such as ``dbLoadRecords``), packages (such as ``synApps``), 
 and the chosen EPICS base version will be provided.
 
-Output is in the form of a set of HTML pages for human consumption
-and a set of XML files for machine processing.  Reference to any 
-additional HTML documentation provided in the IOC's directory structure 
-will be included.
+Output is in a set of restructured text files for compilation by Sphinx
+into HTML and/or PDF.  Reference to any additional HTML documentation 
+provided in the IOC's directory structure will be included.
 
 Contents:
 

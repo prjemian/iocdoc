@@ -51,7 +51,7 @@ class PV(object):
     def __str__(self):
         return 'record ' + self.RTYP + '  ' + str(self.macros.getAll())
     
-    def getField(self, field):
+    def getField(self, field, default=None):
         return self.fields[field]
     
     def getFields(self):

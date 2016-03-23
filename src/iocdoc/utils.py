@@ -87,7 +87,10 @@ class FileRef(object):
         self.object = obj
     
     def __str__(self):
-        return '(%s,%d,%d) %s' % (self.filename, self.line_number, self.column_number, str(self.object))
+        # return '(%s,%d,%d) %s' % (self.filename, self.line_number, self.column_number, str(self.object))
+        # TODO: can this be brief yet unambiguous?
+        fname = os.path.split(self.filename)[-1]
+        return '(%s,%d,%d)' % (fname, self.line_number, self.column_number)
 
 
 def logMessage(text):

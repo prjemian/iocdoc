@@ -19,6 +19,7 @@ class Database(object):
     '''
      
     def __init__(self, parent, dbFileName, env={}, reference=None):
+        # TODO: distinguish between environment macros and new macros for this instance
         self.parent = parent
         self.filename = dbFileName
         self.macros = macros.Macros(env)

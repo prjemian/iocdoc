@@ -139,6 +139,37 @@ class Macros(object):
         return _replace_(text, self.db)
 
 
+class Symbol(object):
+    '''
+    one symbol in an EPICS IOC command file
+    '''
+
+    def __init__(self, parent, sym, value, reference=None):
+        self.parent = parent
+        self.symbol = sym
+        self.value = value
+        self.reference = reference
+    
+    def __str__(self):
+        return self.symbol + ' = ' + str(self.value)
+
+
+class Macro(object):
+    '''
+    one macro in an EPICS IOC command file
+    '''
+    # TODO: use this throughout the code
+
+    def __init__(self, parent, mac, value, reference=None):
+        self.parent = parent
+        self.macro = mac
+        self.value = value
+        self.reference = reference
+    
+    def __str__(self):
+        return self.symbol + ' = ' + str(self.value)
+
+
 def _replace_(source, macros):
     '''
     Replace macro parameters in source string.

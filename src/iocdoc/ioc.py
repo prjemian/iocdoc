@@ -22,6 +22,8 @@ import os
 import command_file
 import text_file
 import iocdoc
+from . import __doc__ as iocdoc_doc
+from . import __version__ as iocdoc_version
 
 
 class Ioc(object):
@@ -32,27 +34,12 @@ class Ioc(object):
     def __init__(self, filename):
         self.st_cmd = text_file.read(filename)
         self.ioc_name = None    # TODO: How to determine this?
+        # FIXME: the API has changed since this was written
         self.commands = command_file.CommandFile(self, self.st_cmd, os.environ)
-    
-    def expand_macros(self):
-        '''replace all known macros with their values'''
-        pass
 
     def parse(self):
         '''analyze this IOC'''
         pass
-    
-    def report(self):
-        '''describe what was discovered'''
-        # TODO: this is the development version
-        for key in sorted(text_file.keys()):
-            print key
-        print '-'*20
-        print 'cwd', self.st_cmd.cwd
-        print 'filename', self.st_cmd.filename
-        print '|filename|', self.st_cmd.absolute_filename
-        print '|dir|', self.st_cmd.absolute_directory
-        print 'len(file)[lines, chars]', self.st_cmd.number_of_lines, self.st_cmd.bytes
 
 
 def process_command_line():
@@ -61,8 +48,8 @@ def process_command_line():
     '''
     import argparse
     #import iocdoc
-    version = iocdoc.__version__
-    doc = iocdoc.__doc__
+    version = iocdoc_version
+    doc = iocdoc_doc
     doc = 'v' + version + ', ' + doc.strip()
     parser = argparse.ArgumentParser(description=doc)
     parser.add_argument('command_file', 

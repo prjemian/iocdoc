@@ -3,7 +3,6 @@ EPICS IOC command file analysis
 '''
 
 import os
-import pyRestTable
 import token
 import tokenize
 import traceback
@@ -11,20 +10,11 @@ import traceback
 
 import database
 import macros
+import reports
 import template
 import text_file
 from token_support import token_key, TokenLog, parse_bracketed_macro_definitions, reconstruct_line
 from utils import logMessage, FileRef, strip_quotes, strip_parentheses
-
-
-'''
-TODO: (from topdoc.CmdReader()): refactor this code to:
-   - read the file as-is
-   - render an analyzed version based on current global tables
-   - needs a global cache of .db files
-   - needs to know the pwd for each command
-   - exception handling
-'''
 
 
 class UnhandledTokenPattern(Exception): pass
@@ -45,21 +35,6 @@ class Command(object):
     
     def __str__(self):
         return self.command + ' ' + str(self.args) + ' ' + str(self.env)
-
-
-class Symbol(object):
-    '''
-    one symbol in an EPICS IOC command file
-    '''
-
-    def __init__(self, parent, sym, value, reference=None):
-        self.parent = parent
-        self.symbol = sym
-        self.value = value
-        self.reference = reference
-    
-    def __str__(self):
-        return self.symbol + ' = ' + str(self.value)
 
 
 class CommandFile(object):
@@ -136,10 +111,6 @@ class CommandFile(object):
                     handler(arg0, line['tokens'], ref)
                 else:
                     self.kh_shell_command(arg0, line['tokens'], ref)
-     
-    def report(self):
-        '''describe what was discovered'''
-        raise NotImplementedError()
 
     def kh_cd(self, arg0, tokens, ref):
         path = reconstruct_line(tokens).strip()
@@ -167,6 +138,7 @@ class CommandFile(object):
             for definition in strip_quotes(parts[1]).split(','):
                 k, v = definition.split('=')
                 local_macros.set(k, v)
+        # TODO: distinguish between environment macros and new macros for this instance
         if count == 3:
             path = parts[2]
             msg = str(ref) + reconstruct_line(tokens).strip()
@@ -203,7 +175,7 @@ class CommandFile(object):
             pass
         var, value = parts
         self.env.set(strip_quotes( var ), strip_quotes( value ))
-        self.kh_shell_command('(env)', tokens, ref)
+        self.kh_shell_command(arg0, tokens, ref)
 
     def kh_loadCommandFile(self, arg0, tokens, ref):
         fname = strip_parentheses(reconstruct_line(tokens).strip())
@@ -258,28 +230,9 @@ class CommandFile(object):
     def kh_symbol(self, arg0, tokens, ref):
         '''symbol assignment'''
         arg = strip_quotes( tokens[2]['tokStr'] )
-        obj = Symbol(self, arg0, arg, ref)
+        obj = macros.Symbol(self, arg0, arg, ref)
         self.symbols.set(arg0, obj)
         self.kh_shell_command('(symbol)', tokens, ref)
-
-
-def reportRTYP(pv_dict):
-    '''how many of each record type?'''
-    rtyp_dict = {}
-    for k, pv in pv_dict.items():
-        if k != pv.NAME:
-            rtype = 'alias'
-        else:
-            rtype = pv.RTYP
-        if rtype not in rtyp_dict:
-            rtyp_dict[rtype] = 0
-        rtyp_dict[rtype] += 1
-    tbl = pyRestTable.Table()
-    tbl.labels = ['RTYP', 'count']
-    for k, v in sorted(rtyp_dict.items()):
-        tbl.rows.append([k, v])
-    tbl.rows.append(['TOTAL', len(pv_dict)])
-    return tbl.reST()
 
 
 def main():
@@ -287,6 +240,7 @@ def main():
     cmdFile_dict = {}
     testfiles = []
     testfiles.append(os.path.join('.', 'testfiles', 'iocBoot', 'ioc495idc', 'st.cmd'))
+    IOC_NAME = 'testing'
     for i, tf in enumerate(testfiles):
         try:
             os.chdir(os.path.dirname(os.path.abspath(tf)))
@@ -295,14 +249,10 @@ def main():
         except Exception:
             traceback.print_exc()
             continue
-        print cmdFile_object
         cmdFile_dict[tf] = cmdFile_object
-        for command in cmdFile_object.commands:
-            print str(command.reference), str(command.args)
         
-        # how many of each record type?
-        print '\nTable: EPICS Records types used'
-        print reportRTYP(cmdFile_object.pv_dict)
+        os.chdir(owd)
+        reports.reportCmdFile(cmdFile_object, IOC_NAME)
 
 
 if __name__ == '__main__':
