@@ -164,7 +164,7 @@ class CommandFile(object):
         tfile = strip_quotes(strip_parentheses(reconstruct_line(tokens).strip()))
         obj = template.Template(tfile, ref, **local_macros.db)
         self.template_list.append(obj)
-        # TODO: anything else to be done?
+        self.database_list += obj.database_list
         self.kh_shell_command(arg0, tokens, ref)
         for k, v in obj.getPVs():
             self.pv_dict[k] = v
