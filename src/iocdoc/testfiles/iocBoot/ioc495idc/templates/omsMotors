@@ -1,7 +1,7 @@
 file "$(MOTOR)/databases/motor.db"
   {
     pattern
-    {P,    M,         DTYP,        CARD, SLOT, DESC,            EGU,     PREC, RTRY, DIR, SREV,  UREV,   MRES,       OFF,       FOFF,     DHLM,     DLLM,      VBAS,    VMAX,     VELO,    BVEL,    SBAS,       SMAX,     S,        SBAK,       ACCL, BDST,   BACC, ERES,       UEIP, URIP, INIT, ASG, RDBL}
+    {P,    M,         DTYP,        C, SLOT, DESC,            EGU,     PREC, RTRY, DIR, SREV,  UREV,   MRES,       OFF,       FOFF,     DHLM,     DLLM,      VBAS,    VMAX,     VELO,    BVEL,    SBAS,       SMAX,     S,        SBAK,       ACCL, BDST,   BACC, ERES,       UEIP, URIP, INIT, ASG, RDBL}
 
     {495idc:, m58:c0:m1, "OMS VME58", 0,    0,    "gamma",         degree,  5,    10,   Pos, 400,   -0.1,   -0.00025,   -0.5295,   Variable, 55.1,     -3.01,     0.05,    0.0,      1.0,     1.0,     0.5,        0.0,      10.0,     10.0,       0.9,  0.002,  0.9,  -0.00025,   No,   No,   "",   "",  ""}
     {495idc:, m58:c0:m2, "OMS VME58", 0,    1,    "delta",       degree, 5,    10,   Neg, 400,   0.1,     0.00025,    -40.17,    Variable, 15.0,  -95.0,     0.05,    0.0,  1.0,   1.0,       0.5,        0.0,  10.0, 10.0,       0.8,  -0.001, 0.8,  0.00025,    No,   No,   "",   "",  ""}
