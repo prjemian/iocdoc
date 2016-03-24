@@ -138,7 +138,9 @@ class CommandFile(object):
             for definition in strip_quotes(parts[1]).split(','):
                 if definition.find('=') < 0:
                     # if self.symbols.get(definition, None)
+                    # such as:  iocSubString=asdCreateSubstitutionString("IOC",iocprefix)
                     msg = str(ref) + reconstruct_line(tokens).strip()
+                    # TODO: log this report and move on
                     raise UnhandledTokenPattern, msg
                 k, v = definition.split('=')
                 local_macros.set(k, v, self, ref)
@@ -146,8 +148,14 @@ class CommandFile(object):
         if count == 3:
             path = parts[2]
             msg = str(ref) + reconstruct_line(tokens).strip()
-            # TODO: how to handle this?
-            raise UnhandledTokenPattern, msg
+            owd = os.getcwd()
+            path = self.symbols.get(path, path)
+            if os.path.exists(path):
+                os.chdir(path)
+                obj = database.Database(self, dbFileName, ref, **local_macros.db)
+                self.database_list.append(obj)
+                self.kh_shell_command(arg0, tokens, ref)
+                os.chdir(owd)
         try:
             obj = database.Database(self, dbFileName, ref, **local_macros.db)
             self.database_list.append(obj)
@@ -161,7 +169,20 @@ class CommandFile(object):
 
     def kh_dbLoadTemplate(self, arg0, tokens, ref):
         local_macros = macros.Macros(**self.env.db)
-        tfile = strip_quotes(strip_parentheses(reconstruct_line(tokens).strip()))
+        parts = strip_parentheses(reconstruct_line(tokens).strip()).split(',')
+        if len(parts) in (1, 2):
+            tfile = strip_quotes(parts[0])
+        if len(parts) == 2:
+            # such as:  dbLoadTemplate("aiRegister.substitutions", top)
+            # Not sure this path is actually used.
+            # in the case of 8idi, the file is in $TOP/iocBoot/ioc8idi/, thus not used
+            path = self.symbols.get(strip_quotes(parts[1]).strip(), None)
+            if isinstance(path, macros.KVpair):
+                alternative = os.path.join(path.value, tfile)
+                if os.path.exists(alternative):
+                    tfile = alternative
+            else:
+                pass    # TODO: log this and move on
         obj = template.Template(tfile, ref, **local_macros.db)
         self.template_list.append(obj)
         self.database_list += obj.database_list
@@ -194,6 +215,8 @@ class CommandFile(object):
         self.kh_shell_command('<', tokens, ref)
 
         self.commands += obj.commands
+        self.template_list += obj.template_list
+        self.database_list += obj.database_list
         self.symbols.setMany(**obj.symbols.db)
         self.env.setMany(**obj.env.db)
         for k, v in obj.pv_dict.items():
@@ -240,10 +263,11 @@ class CommandFile(object):
         # TODO: handle this:  sym=func(key,value)
         # create the IOC substitution string 'IOC=<iocname>'
         # iocSubString=asdCreateSubstitutionString("IOC",iocprefix)
+        if arg0 == 'iocSubString':
+            pass
 
         arg = strip_quotes( tokens[2]['tokStr'] )
-        obj = macros.KVpair(self, arg0, arg, ref)
-        self.symbols.set(arg0, obj, self, ref)
+        self.symbols.set(arg0, arg, self, ref)
         self.kh_shell_command('(symbol)', tokens, ref)
 
 
