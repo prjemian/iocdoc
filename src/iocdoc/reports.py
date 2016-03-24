@@ -32,11 +32,12 @@ def reportCmdFile(obj, ioc_name='Command File'):
             
     print '\n'
     print mk_title('Table: MACROS')
-    print reportMacros(obj.env.getAll())
+    # switch reportSymbols() once macros get an object reference
+    print reportMacros(obj.env.db)
     
     print '\n'
     print mk_title('Table: SYMBOLS')
-    print reportSymbols(obj.symbols.getAll())
+    print reportSymbols(obj.symbols.db)
     
     print '\n'
     print mk_title('Table: EPICS Databases')
@@ -149,7 +150,7 @@ def reportSymbols(macro_dict):
     i = 0
     for _k, v in sorted(macro_dict.items()):
         i += 1
-        tbl.rows.append([i+1, v.reference, v.symbol, v.value])
+        tbl.rows.append([i, v.reference, v.key, v.value])
     return tbl.reST()
 
 

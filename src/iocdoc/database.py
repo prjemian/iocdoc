@@ -18,15 +18,15 @@ class Database(object):
     call for one EPICS database file with a given environment
     '''
      
-    def __init__(self, parent, dbFileName, env={}, reference=None):
+    def __init__(self, parent, dbFileName, ref, **env):
         # TODO: distinguish between environment macros and new macros for this instance
         self.parent = parent
         self.filename = dbFileName
-        self.macros = macros.Macros(env)
+        self.macros = macros.Macros(**env)
         self.filename_expanded = self.macros.replace(dbFileName)
         self.record_list = None
         self.pv_dict = {}
-        self.reference = reference
+        self.reference = ref
 
         # read the file (if the first time, parse its content)
         self.source = text_file.read(self.filename_expanded)
@@ -56,7 +56,7 @@ class Database(object):
             ref = rec.reference
             ref.filename = self.filename
             ref.object = self
-            pv = record.PV(rec, self.macros.getAll(), ref)
+            pv = record.PV(rec, ref, **self.macros.db)
             self.pv_dict[pv.NAME] = pv
             for alias in rec.alias_list:
                 alias_expanded = self.macros.replace(alias)
@@ -85,7 +85,7 @@ class Database(object):
         ref = self._make_ref(tok)
         rtype, rname = tokenLog.tokens_to_list()
         # just parsing, no need for macros now
-        record_object = record.Record(self, rtype, rname, {}, ref)
+        record_object = record.Record(self, rtype, rname, ref)
         self.record_list.append(record_object)
 
         tok = tokenLog.nextActionable()
@@ -157,7 +157,7 @@ def main():
     for i, tf in enumerate(testfiles):
         try:
             ref = FileRef(__file__, i, 0, 'testing')
-            db[tf] = Database(None, tf, macros, ref)
+            db[tf] = Database(None, tf, ref, **macros)
         except text_file.FileNotFound, _exc:
             print 'file not found: ' + tf
             continue

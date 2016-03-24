@@ -15,7 +15,7 @@ cmdFile = '/net/s9dserv/xorApps/epics/synApps_5_8/ioc/9idcH1003/iocBoot/ioc9idcH
 owd = os.getcwd()
 os.chdir(os.path.dirname(os.path.abspath(cmdFile)))
 ref = FileRef(__file__, 0, 0, IOC_NAME)
-obj = iocdoc.command_file.CommandFile(None, os.path.split(cmdFile)[-1], {}, ref)
+obj = iocdoc.command_file.CommandFile(None, os.path.split(cmdFile)[-1], ref, {})
 
 os.chdir(owd)
 iocdoc.reports.reportCmdFile(obj, IOC_NAME)
