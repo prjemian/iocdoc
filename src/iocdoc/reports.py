@@ -3,9 +3,58 @@
 generate the standard reports for *iocdoc*
 '''
 
+import datetime
 import os
 import pyRestTable
 import text_file
+
+
+def writeFile(fname, title, text):
+    f =  open(fname, 'w')
+    f.write('.. file - ' + fname)
+    f.write('\n')
+    f.write('\n')
+    f.write(mk_title(title, '='))
+    f.write('\n')
+    f.write(text)
+    f.write('\n')
+    f.close()
+    return fname
+
+
+def writeReports(obj, ioc_name='Command File'):
+    '''report what was learned from the command file'''
+    files = []
+    files.append(writeFile('command_sequence.rst',  'Table: IOC Command sequence',              reportCommandSequence(obj.commands)))
+    files.append(writeFile('rtyp.rst',              'Table: EPICS Records types used',          reportRTYP(obj.pv_dict)))
+    files.append(writeFile('command_list.rst',      'Table: EPICS IOC shell commands used',     reportCommandCount(obj.commands)))
+    files.append(writeFile('motor_types.rst',       'Table: EPICS Motor types used',            reportMotorCount(obj.pv_dict)))
+    files.append(writeFile('pvs.rst',               'Table: Process Variables',                 reportPVs(obj.pv_dict)))
+    files.append(writeFile('macros.rst',            'Table: MACROS',                            reportSymbols(obj.env.db)))
+    files.append(writeFile('symbols.rst',           'Table: SYMBOLS',                           reportSymbols(obj.symbols.db)))
+    # TODO: obj.database_list is not *ALL* the databases
+    files.append(writeFile('databases.rst',         'Table: EPICS Databases',                   reportDatabases(obj.database_list)))
+    files.append(writeFile('text_files.rst',        'Table: text file cache',                   reportTextFiles()))
+
+    indent = ' '*3
+    title = 'IOC: ' + ioc_name
+    text = ':st.cmd file: ' + str(obj)
+    text += '\n'
+    text += ':absolute path: ' + str(obj.filename_absolute)
+    text += '\n'*2
+    text += 'Contents:\n\n'
+    text += '.. toctree::\n'
+    text += indent + ':maxdepth: 1\n'
+    text += indent + ':glob:\n'
+    text += '\n'
+    for f in sorted(files):
+        nm = os.path.splitext(f)[0]
+        text += indent + nm + '\n'
+    text += '\n' + '-'*10 + '\n'*2
+    text += 'written: ' + str(datetime.datetime.now())
+    writeFile('index.rst', title, text)
+
+    # TODO: write a conf.py file
 
 
 def reportCmdFile(obj, ioc_name='Command File'):
@@ -46,6 +95,7 @@ def reportCmdFile(obj, ioc_name='Command File'):
     
     print '\n'
     print mk_title('Table: EPICS Databases')
+    print 'printed in the order they were called'
     # TODO: obj.database_list is not *ALL* the databases
     print reportDatabases(obj.database_list)
     
@@ -172,10 +222,19 @@ def reportSymbols(macro_dict):
 
 def reportTextFiles():
     '''show the text files that were read'''
+    # sort by short file name (no path)
+    xref = {}
+    for k, v in text_file.items():
+        f = os.path.split(k)[-1]
+        if f not in xref:
+            xref[f] = []
+        xref[f].append(v)
+
     tbl = pyRestTable.Table()
     tbl.labels = ['#', 'file_name', 'path']
     i = 0
-    for _k, v in sorted(text_file.items()):
-        i += 1
-        tbl.rows.append([i, os.path.split(v.filename)[-1], v.absolute_filename])
+    for k in sorted(xref.keys()):
+        for v in sorted(xref[k]):
+            i += 1
+            tbl.rows.append([i, k, v.absolute_filename])
     return tbl.reST()
