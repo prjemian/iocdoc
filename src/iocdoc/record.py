@@ -16,7 +16,9 @@ class Record(object):
         self.RTYP = rtype
         self.rname = rname
         self.macros = macros.Macros(**env)
-        self.fields = dict(RTYP=rtype, NAME=rname)
+        self.fields = {}
+        self.addFieldPattern('RTYP', rtype, parent, ref)
+        self.addFieldPattern('NAME', rname, parent, ref)
         self.reference = ref
         self.alias_list = []
         self.info_dict = {}
