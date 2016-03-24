@@ -3,8 +3,14 @@ IOCDOC: Document the configuration of an EPICS IOC
 
 *iocdoc*: Document the configuration of an EPICS IOC
 
-:docs: http://iocdoc.readthedocs.org
-:git:  https://github.com/prjemian/iocdoc/
+:docs:      http://iocdoc.readthedocs.org
+:git:       https://github.com/prjemian/iocdoc.git
+:PyPI:      https://pypi.python.org/pypi/iocdoc
+:TODO list: https://github.com/prjemian/iocdoc/issues
+:author:    Pete R. Jemian
+:email:     jemian@anl.gov
+:copyright: 2016, UChicago Argonne, LLC
+:license:   ANL OPEN SOURCE LICENSE (see *LICENSE*)
 
 The user will provide the directory path (absolute or relative)
 to an EPICS IOC startup command file.  
