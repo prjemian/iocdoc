@@ -1,3 +1,11 @@
+# file: .gitignore
+##################
+
+# Local customizations to be ignored
+####################################
+
+src/out
+
 # Byte-compiled / optimized / DLL files #
 #########################################
 __pycache__/
