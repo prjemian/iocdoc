@@ -26,9 +26,9 @@ class Template(object):
     in the database group header.
     '''
     
-    def __init__(self, filename, ref=None, env={}):
+    def __init__(self, filename, ref, **env):
         self.filename = filename
-        self.macros = macros.Macros(env)
+        self.macros = macros.Macros(**env)
         self.filename_expanded = self.macros.replace(filename)
 
         self.database_list = []
@@ -96,25 +96,25 @@ class Template(object):
         
         while token_key(tok) != 'OP }':
             # define the macros for this set
-            pattern_macros = macros.Macros(self.macros.db)
+            pattern_macros = macros.Macros(**self.macros.db)
             if len(pattern_keys) > 0:
                 # The macro labels were defined in a pattern statement
                 value_list = tokenLog.tokens_to_list()
                 kv = dict(zip(pattern_keys, value_list))
-                pattern_macros.setMany(kv)
+                pattern_macros.setMany(**kv)
                 tok = tokenLog.nextActionable()
             else:
                 # No pattern statement, macro labels are defined with the values
                 tok = tokenLog.getCurrentToken()
                 kv = tokenLog.getKeyValueSet()
-                pattern_macros.setMany(kv)
+                pattern_macros.setMany(**kv)
                 tok = tokenLog.nextActionable()
             
             ref = self._make_ref(tokenLog.getCurrentToken())
             # TODO: work out how to get the path into the next statement
-            cmd = command_file.Command(self, '(dbLoadRecords)', 'path unknown', fname, ref, pattern_macros.db)
+            cmd = command_file.Command(self, '(dbLoadRecords)', 'path unknown', fname, ref, **pattern_macros.db)
             self.commands.append(cmd)
-            dbg = database.Database(self, fname, ref, pattern_macros.db)
+            dbg = database.Database(self, fname, ref, **pattern_macros.db)
             self.database_list.append(dbg)
     
     def _parse_globals_statement(self, tokenLog):
@@ -135,7 +135,7 @@ class Template(object):
             kv = parse_bracketed_macro_definitions(tokenLog)
             ref = self._make_ref(tok, kv)
             # TODO: Do something with ref
-            self.macros.setMany(kv)
+            self.macros.setMany(**kv)
         else:
             msg = '(%s,%d,%d) ' % (self.filename, tok['start'][0], tok['start'][1])
             msg += 'missing "{" in globals statement'
@@ -166,7 +166,7 @@ def main():
     for i, tf in enumerate(testfiles):
         try:
             ref = FileRef(__file__, i+1, 0, 'testing')
-            db[tf] = Template(tf, ref, env)
+            db[tf] = Template(tf, ref, **env)
         except text_file.FileNotFound, _exc:
             print 'file not found: ' + tf
     for k in testfiles:

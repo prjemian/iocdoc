@@ -102,9 +102,9 @@ EPICS_MACRO_SPECIFICATION_BD_PATTERN = re.compile(EPICS_MACRO_SPECIFICATION_BD_R
 class Macros(object):
     '''manage a set of macros (keys, substitutions)'''
      
-    def __init__(self, env):
+    def __init__(self, **env):
         self.db = {}
-        self.setMany(env)
+        self.setMany(**env)
     
     def __str__(self):
         return ', '.join([k+'="'+str(v)+'"' for k, v in sorted(self.items())])
@@ -118,11 +118,11 @@ class Macros(object):
         '''find the *key* macro, if not found, return *missing*'''
         return self.db.get(key, missing)
     
-    def set(self, key, value):
+    def set(self, key, value, ref=None):
         '''define the *key* macro'''
         self.db[key] = value
     
-    def setMany(self, env):
+    def setMany(self, **env):
         '''define several macros'''
         self.db = dict(self.db.items() + env.items())
     
@@ -154,20 +154,25 @@ class Symbol(object):
         return self.symbol + ' = ' + str(self.value)
 
 
-class Macro(object):
+class KVpair(object):
     '''
-    one macro in an EPICS IOC command file
+    any *single* defined key:value pair in an EPICS IOC command file
+    
+    * PV field
+    * Record field
+    * Macro
+    * Symbol
     '''
     # TODO: use this throughout the code
 
-    def __init__(self, parent, mac, value, reference=None):
+    def __init__(self, parent, key, value, reference=None):
         self.parent = parent
-        self.macro = mac
+        self.key = key
         self.value = value
         self.reference = reference
     
     def __str__(self):
-        return self.symbol + ' = ' + str(self.value)
+        return self.key + ' = ' + str(self.value)
 
 
 def _replace_(source, macros):
