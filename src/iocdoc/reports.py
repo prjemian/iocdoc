@@ -32,11 +32,11 @@ def reportCmdFile(obj, ioc_name='Command File'):
             
     print '\n'
     print mk_title('Table: MACROS')
-    print reportMacros(obj.env.getAll())
+    print reportMacros(obj.env.db)
     
     print '\n'
     print mk_title('Table: SYMBOLS')
-    print reportSymbols(obj.symbols.getAll())
+    print reportSymbols(obj.symbols.db)
     
     print '\n'
     print mk_title('Table: EPICS Databases')

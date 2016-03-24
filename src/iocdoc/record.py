@@ -49,7 +49,7 @@ class PV(object):
         self.NAME = self.fields['NAME']
     
     def __str__(self):
-        return 'record ' + self.RTYP + '  ' + str(self.macros.getAll())
+        return 'record ' + self.RTYP + '  ' + str(self.macros.db)
     
     def getField(self, field, default=None):
         return self.fields[field]

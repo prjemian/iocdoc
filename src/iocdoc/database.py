@@ -56,7 +56,7 @@ class Database(object):
             ref = rec.reference
             ref.filename = self.filename
             ref.object = self
-            pv = record.PV(rec, ref, self.macros.getAll())
+            pv = record.PV(rec, ref, self.macros.db)
             self.pv_dict[pv.NAME] = pv
             for alias in rec.alias_list:
                 alias_expanded = self.macros.replace(alias)

@@ -96,7 +96,7 @@ class Template(object):
         
         while token_key(tok) != 'OP }':
             # define the macros for this set
-            pattern_macros = macros.Macros(self.macros.getAll())
+            pattern_macros = macros.Macros(self.macros.db)
             if len(pattern_keys) > 0:
                 # The macro labels were defined in a pattern statement
                 value_list = tokenLog.tokens_to_list()
@@ -112,9 +112,9 @@ class Template(object):
             
             ref = self._make_ref(tokenLog.getCurrentToken())
             # TODO: work out how to get the path into the next statement
-            cmd = command_file.Command(self, '(dbLoadRecords)', 'path unknown', fname, ref, pattern_macros.getAll())
+            cmd = command_file.Command(self, '(dbLoadRecords)', 'path unknown', fname, ref, pattern_macros.db)
             self.commands.append(cmd)
-            dbg = database.Database(self, fname, ref, pattern_macros.getAll())
+            dbg = database.Database(self, fname, ref, pattern_macros.db)
             self.database_list.append(dbg)
     
     def _parse_globals_statement(self, tokenLog):

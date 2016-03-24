@@ -107,7 +107,7 @@ class Macros(object):
         self.setMany(env)
     
     def __str__(self):
-        return ', '.join([k+'="'+str(v)+'"' for k, v in sorted(self.db.items())])
+        return ', '.join([k+'="'+str(v)+'"' for k, v in sorted(self.items())])
             
     
     def exists(self, key):
@@ -133,10 +133,6 @@ class Macros(object):
     def items(self):
         '''get the full database, like dictionary.items()'''
         return self.db.items()
-    
-    def getAll(self):
-        '''return the full database'''
-        return dict(self.items())
     
     def replace(self, text):
         '''Replace macro parameters in source string'''

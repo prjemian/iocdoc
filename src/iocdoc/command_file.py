@@ -42,7 +42,7 @@ class CommandFile(object):
     analysis of an EPICS IOC command file
     '''
 
-    def __init__(self, parent, filename, ref=None, env={}):
+    def __init__(self, parent, filename, ref=None, **env):
         self.parent = parent
         self.filename = filename
         self.reference = ref
@@ -123,7 +123,7 @@ class CommandFile(object):
             self.kh_shell_command(arg0, tokens, ref)
 
     def kh_dbLoadRecords(self, arg0, tokens, ref):
-        local_macros = macros.Macros(self.env.getAll())
+        local_macros = macros.Macros(self.env.db)
         tokenLog = TokenLog()
         tokenLog.tokenList = tokens
         tokenLog.token_pointer = 1
@@ -145,7 +145,7 @@ class CommandFile(object):
             # TODO: how to handle this?
             raise UnhandledTokenPattern, msg
         try:
-            obj = database.Database(self, dbFileName, ref, local_macros.getAll())
+            obj = database.Database(self, dbFileName, ref, local_macros.db)
             self.database_list.append(obj)
             self.kh_shell_command(arg0, tokens, ref)
         except text_file.FileNotFound, _exc:
@@ -156,9 +156,9 @@ class CommandFile(object):
             self.pv_dict[k] = v
 
     def kh_dbLoadTemplate(self, arg0, tokens, ref):
-        local_macros = macros.Macros(self.env.getAll())
+        local_macros = macros.Macros(self.env.db)
         tfile = strip_quotes(strip_parentheses(reconstruct_line(tokens).strip()))
-        obj = template.Template(tfile, ref, local_macros.getAll())
+        obj = template.Template(tfile, ref, local_macros.db)
         self.template_list.append(obj)
         # TODO: anything else to be done?
         self.kh_shell_command(arg0, tokens, ref)
@@ -185,13 +185,13 @@ class CommandFile(object):
         fname = strip_parentheses(reconstruct_line(tokens).strip())
         # fname is given relative to current working directory
         fname_expanded = self.env.replace(fname)
-        obj = CommandFile(self, fname_expanded, ref, self.env.getAll())
+        obj = CommandFile(self, fname_expanded, ref, **dict(self.env.items()))
         self.includedCommandFile_list.append(obj)
         self.kh_shell_command('<', tokens, ref)
 
         self.commands += obj.commands
-        self.symbols.setMany(obj.symbols.getAll())
-        self.env.setMany(obj.env.getAll())
+        self.symbols.setMany(obj.symbols.db)
+        self.env.setMany(obj.env.db)
         for k, v in obj.pv_dict.items():
             self.pv_dict[k] = v
 
@@ -224,7 +224,7 @@ class CommandFile(object):
 
     def kh_shell_command(self, arg0, tokens, ref):
         linetext = reconstruct_line(tokens).strip()
-        cmd = Command(self, arg0, self.pwd, linetext, ref, self.env.getAll())
+        cmd = Command(self, arg0, self.pwd, linetext, ref, self.env.db)
         self.commands.append(cmd)
 
     def kh_strcpy(self, arg0, tokens, ref):
@@ -245,11 +245,12 @@ def main():
     testfiles = []
     testfiles.append(os.path.join('.', 'testfiles', 'iocBoot', 'ioc495idc', 'st.cmd'))
     IOC_NAME = 'testing'
+    env = {}
     for i, tf in enumerate(testfiles):
         try:
             os.chdir(os.path.dirname(os.path.abspath(tf)))
             ref = FileRef(__file__, i, 0, 'testing')
-            cmdFile_object = CommandFile(None, os.path.split(tf)[-1], ref, {})
+            cmdFile_object = CommandFile(None, os.path.split(tf)[-1], ref, **env)
         except Exception:
             traceback.print_exc()
             continue
