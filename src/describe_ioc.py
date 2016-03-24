@@ -60,7 +60,7 @@ def main():
 
 if __name__ == '__main__':
     import sys
-    # sys.argv += '9idcH1003 /net/s9dserv/xorApps/epics/synApps_5_8/ioc/9idcH1003/iocBoot/ioc9idcH1003/st.cmd  ./out'.split()
+    sys.argv += '9idcH1003 /net/s9dserv/xorApps/epics/synApps_5_8/ioc/9idcH1003/iocBoot/ioc9idcH1003/st.cmd  ./out'.split()
     # sys.argv += '33idd /net/s33dserv/xorApps/epics/synApps_5_6/ioc/33idd/iocBoot/ioc33idd/st.cmd ./out'.split()
-    sys.argv += '8idi /net/s8dserv/xorApps/epics/synApps_5_7/ioc/8id/iocBoot/ioc8idi/st.cmd ./out'.split()
+    # sys.argv += '8idi /net/s8dserv/xorApps/epics/synApps_5_7/ioc/8id/iocBoot/ioc8idi/st.cmd ./out'.split()
     main()
