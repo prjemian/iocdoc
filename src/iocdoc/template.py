@@ -26,13 +26,13 @@ class Template(object):
     in the database group header.
     '''
     
-    def __init__(self, filename, env={}, reference=None):
+    def __init__(self, filename, ref=None, env={}):
         self.filename = filename
         self.macros = macros.Macros(env)
         self.filename_expanded = self.macros.replace(filename)
 
         self.database_list = []
-        self.reference = reference
+        self.reference = ref
         self.commands = []
 
         self.source = text_file.read(self.filename_expanded)
@@ -112,9 +112,9 @@ class Template(object):
             
             ref = self._make_ref(tokenLog.getCurrentToken())
             # TODO: work out how to get the path into the next statement
-            cmd = command_file.Command(self, '(dbLoadRecords)', 'path unknown', fname, pattern_macros.getAll(), ref)
+            cmd = command_file.Command(self, '(dbLoadRecords)', 'path unknown', fname, ref, pattern_macros.getAll())
             self.commands.append(cmd)
-            dbg = database.Database(self, fname, pattern_macros.getAll(), ref)
+            dbg = database.Database(self, fname, ref, pattern_macros.getAll())
             self.database_list.append(dbg)
     
     def _parse_globals_statement(self, tokenLog):
@@ -166,7 +166,7 @@ def main():
     for i, tf in enumerate(testfiles):
         try:
             ref = FileRef(__file__, i+1, 0, 'testing')
-            db[tf] = Template(tf, env, ref)
+            db[tf] = Template(tf, ref, env)
         except text_file.FileNotFound, _exc:
             print 'file not found: ' + tf
     for k in testfiles:

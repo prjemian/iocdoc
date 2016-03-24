@@ -127,12 +127,16 @@ class Macros(object):
         self.db = dict(self.db.items() + env.items())
     
     def keys(self):
-        '''get the list of macros'''
+        '''get the list of macros, like dictionary.keys()'''
         return self.db.keys()
+    
+    def items(self):
+        '''get the full database, like dictionary.items()'''
+        return self.db.items()
     
     def getAll(self):
         '''return the full database'''
-        return self.db
+        return dict(self.items())
     
     def replace(self, text):
         '''Replace macro parameters in source string'''

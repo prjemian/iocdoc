@@ -25,13 +25,13 @@ class Command(object):
     one command in an EPICS IOC command file
     '''
 
-    def __init__(self, parent, command, path, args, env={}, reference=None):
+    def __init__(self, parent, command, path, args, ref=None, env={}):
         self.parent = parent
         self.command = command
         self.path = path
         self.args = args
         self.env = macros.Macros(env)
-        self.reference = reference
+        self.reference = ref
     
     def __str__(self):
         return self.command + ' ' + str(self.args) + ' ' + str(self.env)
@@ -42,10 +42,10 @@ class CommandFile(object):
     analysis of an EPICS IOC command file
     '''
 
-    def __init__(self, parent, filename, env={}, reference=None):
+    def __init__(self, parent, filename, ref=None, env={}):
         self.parent = parent
         self.filename = filename
-        self.reference = reference
+        self.reference = ref
         self.pwd = os.getcwd()      # TODO: needs some attention here
 
         self.env = macros.Macros(env)
@@ -145,7 +145,7 @@ class CommandFile(object):
             # TODO: how to handle this?
             raise UnhandledTokenPattern, msg
         try:
-            obj = database.Database(self, dbFileName, local_macros.getAll(), ref)
+            obj = database.Database(self, dbFileName, ref, local_macros.getAll())
             self.database_list.append(obj)
             self.kh_shell_command(arg0, tokens, ref)
         except text_file.FileNotFound, _exc:
@@ -158,7 +158,7 @@ class CommandFile(object):
     def kh_dbLoadTemplate(self, arg0, tokens, ref):
         local_macros = macros.Macros(self.env.getAll())
         tfile = strip_quotes(strip_parentheses(reconstruct_line(tokens).strip()))
-        obj = template.Template(tfile, local_macros.getAll(), ref)
+        obj = template.Template(tfile, ref, local_macros.getAll())
         self.template_list.append(obj)
         # TODO: anything else to be done?
         self.kh_shell_command(arg0, tokens, ref)
@@ -185,7 +185,7 @@ class CommandFile(object):
         fname = strip_parentheses(reconstruct_line(tokens).strip())
         # fname is given relative to current working directory
         fname_expanded = self.env.replace(fname)
-        obj = CommandFile(self, fname_expanded, self.env.getAll(), ref)
+        obj = CommandFile(self, fname_expanded, ref, self.env.getAll())
         self.includedCommandFile_list.append(obj)
         self.kh_shell_command('<', tokens, ref)
 
@@ -224,7 +224,7 @@ class CommandFile(object):
 
     def kh_shell_command(self, arg0, tokens, ref):
         linetext = reconstruct_line(tokens).strip()
-        cmd = Command(self, arg0, self.pwd, linetext, self.env.getAll(), ref)
+        cmd = Command(self, arg0, self.pwd, linetext, ref, self.env.getAll())
         self.commands.append(cmd)
 
     def kh_strcpy(self, arg0, tokens, ref):
@@ -249,7 +249,7 @@ def main():
         try:
             os.chdir(os.path.dirname(os.path.abspath(tf)))
             ref = FileRef(__file__, i, 0, 'testing')
-            cmdFile_object = CommandFile(None, os.path.split(tf)[-1], {}, ref)
+            cmdFile_object = CommandFile(None, os.path.split(tf)[-1], ref, {})
         except Exception:
             traceback.print_exc()
             continue
