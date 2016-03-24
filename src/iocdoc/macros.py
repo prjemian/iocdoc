@@ -107,7 +107,7 @@ class Macros(object):
         self.setMany(**env)
     
     def __str__(self):
-        return ', '.join([k+'="'+str(v)+'"' for k, v in sorted(self.items())])
+        return ', '.join([k+'="'+str(v.value)+'"' for k, v in sorted(self.items())])
             
     
     def exists(self, key):
