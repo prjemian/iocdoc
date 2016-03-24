@@ -118,9 +118,9 @@ class Macros(object):
         '''find the *key* macro, if not found, return *missing*'''
         return self.db.get(key, missing)
     
-    def set(self, key, value, ref=None):
+    def set(self, key, value, parent=None, ref=None):
         '''define the *key* macro'''
-        self.db[key] = value
+        self.db[key] = KVpair(parent, key, value, ref)
     
     def setMany(self, **env):
         '''define several macros'''
@@ -139,21 +139,6 @@ class Macros(object):
         return _replace_(text, self.db)
 
 
-class Symbol(object):
-    '''
-    one symbol in an EPICS IOC command file
-    '''
-
-    def __init__(self, parent, sym, value, reference=None):
-        self.parent = parent
-        self.symbol = sym
-        self.value = value
-        self.reference = reference
-    
-    def __str__(self):
-        return self.symbol + ' = ' + str(self.value)
-
-
 class KVpair(object):
     '''
     any *single* defined key:value pair in an EPICS IOC command file
@@ -163,30 +148,31 @@ class KVpair(object):
     * Macro
     * Symbol
     '''
-    # TODO: use this throughout the code
 
-    def __init__(self, parent, key, value, reference=None):
+    def __init__(self, parent, key, value, ref=None):
         self.parent = parent
         self.key = key
         self.value = value
-        self.reference = reference
+        self.reference = ref
     
     def __str__(self):
         return self.key + ' = ' + str(self.value)
 
 
-def _replace_(source, macros):
+def _replace_(source, macro_dict):
     '''
     Replace macro parameters in source string.
-    Search through the list of macros since there 
+    Search through the dictionary of macros since there 
     may not be enough macros defined for all the 
     substitution patterns given.
 
     :param source: string with possible macro replacements
-    :param macros: dictionary of macro substitutions
+    :param macro_dict: dictionary of macro substitutions
     :return: string with substitutions applied
     :raise Exception: incorrect number of regular expression matches found
     '''
+    if isinstance(source, KVpair):
+        source = source.value   # TODO: is this ALWAYS true?
     last = ''
     while last != source:     # repeat to expand nested macros
         last = source
@@ -197,14 +183,19 @@ def _replace_(source, macros):
                 parts = parts[0].split(',')
             if len(parts) == 1:
                 # substitute the simple macros
-                if parts[0] in macros:
-                    replacement_text = macros[parts[0]]
+                if parts[0] in macro_dict:
+                    replacement_text = macro_dict[parts[0]]
+                    if isinstance(replacement_text, KVpair):
+                        replacement_text = replacement_text.value
                     source = source.replace(subst_marker, replacement_text)
             elif len(parts) == 2:
                 # substitute the macros with default expressions
                 macro_variable, default_substitution = parts
-                if macro_variable in macros:
-                    replacement_text = macros[macro_variable]
+                if macro_variable in macro_dict:
+                    replacement_text = macro_dict[macro_variable]
+                    if isinstance(replacement_text, KVpair):
+                        replacement_text = replacement_text.value
+                    replacement_text = macro_dict[macro_variable].value
                 else:
                     replacement_text = default_substitution
                 source = source.replace(subst_marker, replacement_text)

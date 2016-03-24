@@ -96,9 +96,9 @@ class Database(object):
                 ref = self._make_ref(tok, tok['tokStr'])
                 if token_key(tok) == 'NAME field':
                     tok = tokenLog.nextActionable()
+                    ref = self._make_ref(tok)
                     field, value = parse_bracketed_macro_definitions(tokenLog)
-                    record_object.addFieldPattern(field, value.strip('"'))
-                    # TODO: How to document each defined field by ref?
+                    record_object.addFieldPattern(field, value.strip('"'), self, ref)
                     tok = tokenLog.previous()   # backup before advancing below
                 elif token_key(tok) == 'NAME alias':
                     self._parse_alias(tokenLog, record_object, ref)
@@ -119,8 +119,7 @@ class Database(object):
             raise DatabaseException, msg
         key = parts[0]
         field_list = parts[1].split(' ')
-        record_object.addInfo(key, field_list)
-        # TODO: document this ref
+        record_object.addInfo(key, field_list, self, ref)
     
     def _parse_alias(self, tokenLog, record_object, ref):
         tok = tokenLog.nextActionable()
@@ -130,8 +129,7 @@ class Database(object):
             msg = str(ref) + ' ' + str(parts)
             raise DatabaseException, msg
         alias = parts[0]
-        record_object.addAlias(alias)
-        # TODO: document this ref
+        record_object.addAlias(alias, self, ref)
      
     def getPVList(self):
         return self.pv_dict.keys()

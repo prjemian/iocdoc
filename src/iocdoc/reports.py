@@ -29,11 +29,16 @@ def reportCmdFile(obj, ioc_name='Command File'):
     print '\n'
     print mk_title('Table: EPICS Motor types used')
     print reportMotorCount(obj.pv_dict)
+    
+    # print '\n'
+    # print mk_title('Table: Process Variables')
+    # print reportPVs(obj.pv_dict)
             
     print '\n'
     print mk_title('Table: MACROS')
     # switch reportSymbols() once macros get an object reference
-    print reportMacros(obj.env.db)
+    # old: reportMacros()
+    print reportSymbols(obj.env.db)
     
     print '\n'
     print mk_title('Table: SYMBOLS')
@@ -125,6 +130,17 @@ def reportMotorCount(pv_dict):
     if len(xref) == 0:
         return 'no motors'
     return _makeCountTable(xref, label='motor type')
+
+
+def reportPVs(pv_dict):
+    '''List the defined process variables'''
+    tbl = pyRestTable.Table()
+    tbl.labels = ['#', '(file_name,line,column)', 'record type', 'PV name']
+    i = 0
+    for _k, pv in sorted(pv_dict.items()):
+        i += 1
+        tbl.rows.append([i, pv.reference, pv.RTYP, pv.NAME])
+    return tbl.reST()
 
 
 def reportRTYP(pv_dict):

@@ -2,7 +2,6 @@
 EPICS record
 '''
 
-import os
 import macros
 
 
@@ -25,14 +24,14 @@ class Record(object):
     def __str__(self):
         return 'record ' + self.RTYP + '  ' + self.rname
     
-    def addFieldPattern(self, field, value):
-        self.fields[field] = value
+    def addFieldPattern(self, field, value, parent=None, ref=None):
+        self.fields[field] = macros.KVpair(parent, field, value, ref)
     
-    def addAlias(self, alias):
-        self.alias_list.append(alias)
+    def addAlias(self, alias, parent=None, ref=None):
+        self.alias_list.append(alias)   # TODO: what about a reference?
     
-    def addInfo(self, key, field_list):
-        self.info_dict[key] = field_list
+    def addInfo(self, key, field_list, parent=None, ref=None):
+        self.info_dict[key] = macros.KVpair(parent, key, field_list, ref)
 
 
 class PV(object):

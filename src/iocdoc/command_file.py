@@ -137,7 +137,7 @@ class CommandFile(object):
         if count > 1:
             for definition in strip_quotes(parts[1]).split(','):
                 k, v = definition.split('=')
-                local_macros.set(k, v)
+                local_macros.set(k, v, self, ref)
         # TODO: distinguish between environment macros and new macros for this instance
         if count == 3:
             path = parts[2]
@@ -178,7 +178,7 @@ class CommandFile(object):
             if len(parts) != 2:
                 raise UnhandledTokenPattern('epicsEnvSet'+text)
             var, value = parts
-        self.env.set(strip_quotes( var ), strip_quotes( value ))
+        self.env.set(strip_quotes( var ), strip_quotes( value ), self, ref)
         self.kh_shell_command(arg0, tokens, ref)
 
     def kh_loadCommandFile(self, arg0, tokens, ref):
@@ -211,7 +211,7 @@ class CommandFile(object):
         if len(argument_list) == 1:
             var, arg = strip_quotes( argument_list[0].strip() ).split('=')
             arg = strip_quotes(arg.strip())
-            self.env.set(var, arg)
+            self.env.set(var, arg, self, ref)
         elif len(argument_list) == 2:
             var, arg = argument_list
             arg = strip_quotes(arg.strip())
@@ -235,7 +235,7 @@ class CommandFile(object):
         '''symbol assignment'''
         arg = strip_quotes( tokens[2]['tokStr'] )
         obj = macros.KVpair(self, arg0, arg, ref)
-        self.symbols.set(arg0, obj)
+        self.symbols.set(arg0, obj, self, ref)
         self.kh_shell_command('(symbol)', tokens, ref)
 
 
