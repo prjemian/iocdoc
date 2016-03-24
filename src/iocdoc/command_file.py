@@ -136,6 +136,10 @@ class CommandFile(object):
             dbFileName = strip_quotes(parts[0])
         if count > 1:
             for definition in strip_quotes(parts[1]).split(','):
+                if definition.find('=') < 0:
+                    # if self.symbols.get(definition, None)
+                    msg = str(ref) + reconstruct_line(tokens).strip()
+                    raise UnhandledTokenPattern, msg
                 k, v = definition.split('=')
                 local_macros.set(k, v, self, ref)
         # TODO: distinguish between environment macros and new macros for this instance
@@ -233,6 +237,10 @@ class CommandFile(object):
 
     def kh_symbol(self, arg0, tokens, ref):
         '''symbol assignment'''
+        # TODO: handle this:  sym=func(key,value)
+        # create the IOC substitution string 'IOC=<iocname>'
+        # iocSubString=asdCreateSubstitutionString("IOC",iocprefix)
+
         arg = strip_quotes( tokens[2]['tokStr'] )
         obj = macros.KVpair(self, arg0, arg, ref)
         self.symbols.set(arg0, obj, self, ref)
