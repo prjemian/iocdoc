@@ -174,7 +174,7 @@ def main():
             print db[k].source.number_of_lines, k
             for command in db[k].commands:
                 print str(command)
-            for pvname, pv in sorted(db[k].getPVs().items()):
+            for pvname, pv in sorted(db[k].getPVs()):
                 ref = pv.reference
                 print '\t(%s,%d,%d)\t%015s : %s' % (ref.filename, ref.line_number, ref.column_number, pv.RTYP, pvname)
     pass

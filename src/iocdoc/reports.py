@@ -62,7 +62,7 @@ def _makeCountTable(xref, label='subject'):
         i += 1
         tbl.rows.append([i, k, v])
         count += v
-    tbl.rows.append(['', 'TOTAL', count])
+    tbl.rows.append(['--', 'TOTAL', count])
     return tbl.reST()
 
 
