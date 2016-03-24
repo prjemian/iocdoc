@@ -168,6 +168,7 @@ def reportDatabases(db_list):
     tbl.labels = ['#', '(file_name,line,column)', 'database file']
     for i, db in enumerate(db_list):
         # TODO: distinguish between environment macros and new macros for this instance
+        # TODO: also document each record's definition: db.record_list
         tbl.rows.append([i+1, db.reference, db.filename])
     return tbl.reST()
 
