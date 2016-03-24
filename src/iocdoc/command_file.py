@@ -148,14 +148,9 @@ class CommandFile(object):
         if count == 3:
             path = parts[2]
             msg = str(ref) + reconstruct_line(tokens).strip()
-            owd = os.getcwd()
             path = self.symbols.get(path, path)
             if os.path.exists(path):
-                os.chdir(path)
-                obj = database.Database(self, dbFileName, ref, **local_macros.db)
-                self.database_list.append(obj)
-                self.kh_shell_command(arg0, tokens, ref)
-                os.chdir(owd)
+                dbFileName = os.path.join(path, dbFileName)
         try:
             obj = database.Database(self, dbFileName, ref, **local_macros.db)
             self.database_list.append(obj)
