@@ -18,27 +18,31 @@ def writeFile(fname, title, text):
     f.write('\n')
     f.write(text)
     f.write('\n')
+    f.write('\n' + '-'*10 + '\n'*2)
+    f.write('written: ' + str(datetime.datetime.now()))
+    f.write('\n')
     f.close()
     return fname
 
 
-def writeReports(obj, ioc_name='Command File'):
+def writeReports(obj, ioc_name='IOC'):
     '''report what was learned from the command file'''
     files = []
-    files.append(writeFile('command_sequence.rst',  'Table: IOC Command sequence',              reportCommandSequence(obj.commands)))
-    files.append(writeFile('rtyp.rst',              'Table: EPICS Records types used',          reportRTYP(obj.pv_dict)))
-    files.append(writeFile('command_list.rst',      'Table: EPICS IOC shell commands used',     reportCommandCount(obj.commands)))
-    files.append(writeFile('motor_types.rst',       'Table: EPICS Motor types used',            reportMotorCount(obj.pv_dict)))
-    files.append(writeFile('pvs.rst',               'Table: Process Variables',                 reportPVs(obj.pv_dict)))
-    files.append(writeFile('macros.rst',            'Table: MACROS',                            reportSymbols(obj.env.db)))
-    files.append(writeFile('symbols.rst',           'Table: SYMBOLS',                           reportSymbols(obj.symbols.db)))
-    # TODO: obj.database_list is not *ALL* the databases
-    files.append(writeFile('databases.rst',         'Table: EPICS Databases',                   reportDatabases(obj.database_list)))
-    files.append(writeFile('text_files.rst',        'Table: text file cache',                   reportTextFiles()))
+    files.append(writeFile('command_sequence.rst',  ioc_name+': IOC Command sequence',              reportCommandSequence(obj.commands)))
+    files.append(writeFile('rtyp.rst',              ioc_name+': EPICS Records types used',          reportRTYP(obj.pv_dict)))
+    files.append(writeFile('command_list.rst',      ioc_name+': EPICS IOC shell commands used',     reportCommandCount(obj.commands)))
+    files.append(writeFile('motor_types.rst',       ioc_name+': EPICS Motor types used',            reportMotorCount(obj.pv_dict)))
+    files.append(writeFile('pvs.rst',               ioc_name+': Process Variables',                 reportPVs(obj.pv_dict)))
+    files.append(writeFile('macros.rst',            ioc_name+': Macros',                            reportSymbols(obj.env.db)))
+    files.append(writeFile('symbols.rst',           ioc_name+': Symbols',                           reportSymbols(obj.symbols.db)))
+    files.append(writeFile('databases.rst',         ioc_name+': EPICS Databases',                   reportDatabases(obj.database_list)))
+    files.append(writeFile('templates.rst',         ioc_name+': EPICS Templates/Substitutions',     reportDatabases(obj.template_list)))
+    files.append(writeFile('text_files.rst',        ioc_name+': text file cache',                   reportTextFiles()))
 
+    # write the index.rst that coordinates all this
     indent = ' '*3
     title = 'IOC: ' + ioc_name
-    text = ':st.cmd file: ' + str(obj)
+    text = ':st.cmd file: ' + str(obj.filename)
     text += '\n'
     text += ':absolute path: ' + str(obj.filename_absolute)
     text += '\n'*2
@@ -50,8 +54,6 @@ def writeReports(obj, ioc_name='Command File'):
     for f in sorted(files):
         nm = os.path.splitext(f)[0]
         text += indent + nm + '\n'
-    text += '\n' + '-'*10 + '\n'*2
-    text += 'written: ' + str(datetime.datetime.now())
     writeFile('index.rst', title, text)
 
     # TODO: write a conf.py file
@@ -98,6 +100,12 @@ def reportCmdFile(obj, ioc_name='Command File'):
     print 'printed in the order they were called'
     # TODO: obj.database_list is not *ALL* the databases
     print reportDatabases(obj.database_list)
+    
+    print '\n'
+    print mk_title('Table: EPICS Templates/Substitutions')
+    print 'printed in the order they were called'
+    # TODO: obj.database_list is not *ALL* the databases
+    print reportDatabases(obj.template_list)
     
     print '\n'
     print mk_title('Table: text file cache')
