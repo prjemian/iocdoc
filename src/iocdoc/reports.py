@@ -141,6 +141,20 @@ def _makeCountTable(xref, label='subject'):
     return tbl.reST()
 
 
+# - # - # - # - # - # - # - # - # - # - # - # - # - # - # - # - 
+
+# TODO: document records with stream support
+# list of protocol files and database files from which they were called
+# table of INP and OUT fields
+# ...
+'''
+2 (DCMotorServer.db,20,9) DTYP  stream                              
+3 (DCMotorServer.db,21,9) INP   @DCMotorServer.proto version $(PORT)
+
+2 (DCMotorServer.db,27,9) DTYP  stream                            
+3 (DCMotorServer.db,28,9) OUT   @DCMotorServer.proto debug $(PORT)
+'''
+
 def reportCommandCount(cmd_list):
     '''how many of each command?'''
     xref = {}
@@ -168,9 +182,48 @@ def reportDatabases(db_list):
     tbl.labels = ['#', '(file_name,line,column)', 'database file']
     for i, db in enumerate(db_list):
         # TODO: distinguish between environment macros and new macros for this instance
-        # TODO: also document each record's definition: db.record_list
         tbl.rows.append([i+1, db.reference, db.filename])
-    return tbl.reST()
+    text = tbl.reST()
+    
+    # avoid repeating
+    xref = {db.filename: db for db in db_list}
+    
+    for dbName in sorted(xref.keys()):
+        db = xref[dbName]
+        if not hasattr(db, 'record_list'):
+            continue    # Templates also use this report
+        text += '\n'*2
+        text += mk_title('Database Records: ' + db.filename, '*')
+        text += '\n'
+        if len(db.record_list) == 0:
+            text += 'no records\n'
+            continue
+        i = 0
+        tbl = pyRestTable.Table()
+        tbl.labels = ['#', '(file_name,line,column)', 'RTYP', 'NAME']
+        for record in db.record_list:
+            i += 1
+            tbl.rows.append([i, record.reference, record.RTYP, record.rname])
+        text += tbl.reST()
+
+        # document each record's fields
+        for record in db.record_list:
+            text += '\n'
+            text += mk_title('Record Fields: ' + record.RTYP + ': ' + record.rname, '+')
+            text += '\n'
+            if len(record.fields) < 3:
+                text += 'no fields\n'
+                continue
+            tbl = pyRestTable.Table()
+            tbl.labels = ['#', '(file_name,line,column)', 'field', 'value']
+            i = 0
+            for k, v in sorted(record.fields.items()):
+                if k in ('NAME', 'RTYP'):
+                    continue
+                i += 1
+                tbl.rows.append([i, v.reference, k, v.value])
+            text += tbl.reST()
+    return text
 
 
 def reportMacros(macro_dict):
