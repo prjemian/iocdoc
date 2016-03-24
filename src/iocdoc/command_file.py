@@ -163,14 +163,28 @@ class CommandFile(object):
             self.pv_dict[k] = v
 
     def kh_dbLoadTemplate(self, arg0, tokens, ref):
+        # TODO: Can one template call another?
         local_macros = macros.Macros(**self.env.db)
         parts = strip_parentheses(reconstruct_line(tokens).strip()).split(',')
         if len(parts) in (1, 2):
             tfile = strip_quotes(parts[0])
         if len(parts) == 2:
-            # such as:  dbLoadTemplate("aiRegister.substitutions", top)
-            # Not sure this path is actually used.
-            # in the case of 8idi, the file is in $TOP/iocBoot/ioc8idi/, thus not used
+            # such as in 8idi:  dbLoadTemplate("aiRegister.substitutions", top)
+            # This is an ERROR.  The IOC should be corrected.
+            '''from the EPICS documentation regarding dbLoadTemplate():
+            
+            dbLoadTemplate(char *subfile, char *substitutions)
+            
+            This IOC command reads a template substitutions file which 
+            provides instructions for loading database instance files a
+            nd gives values for the $(xxx) macros they may contain. 
+            This command performs those substitutions while loading the 
+            database instances requested.
+            
+            The subfile parameter gives the name of the template substitution file to be used. 
+            The optional substitutions parameter may contain additional global macro values, 
+            which can be overridden by values given within the substitution file.
+            '''
             path = self.symbols.get(strip_quotes(parts[1]).strip(), None)
             if isinstance(path, macros.KVpair):
                 alternative = os.path.join(path.value, tfile)
