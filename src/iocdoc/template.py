@@ -9,7 +9,7 @@ import database
 import macros
 import text_file
 from token_support import token_key, TokenLog, parse_bracketed_macro_definitions
-from utils import logMessage, FileRef
+import utils
 
 
 class DatabaseTemplateException(Exception): pass
@@ -42,8 +42,8 @@ class Template(object):
         return 'dbLoadTemplate ' + self.filename + '  ' + str(self.macros)
     
     def _make_ref(self, tok, item=None):
-        '''make a FileRef() instance for this item'''
-        return FileRef(self.filename, tok['start'][0], tok['start'][1], item or self)
+        '''make a :func:`FileRef()` instance for this item'''
+        return utils.FileRef(self.filename, tok['start'][0], tok['start'][1], item or self)
     
     def parse(self):
         '''
@@ -165,7 +165,7 @@ def main():
     env = dict(TEST="./testfiles")
     for i, tf in enumerate(testfiles):
         try:
-            ref = FileRef(__file__, i+1, 0, 'testing')
+            ref = utils.FileRef(__file__, i+1, 0, 'testing')
             db[tf] = Template(tf, ref, **env)
         except text_file.FileNotFound, _exc:
             print 'file not found: ' + tf

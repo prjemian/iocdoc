@@ -7,7 +7,7 @@ import macros
 import record
 import text_file
 from token_support import token_key, TokenLog, parse_bracketed_macro_definitions
-from utils import logMessage, FileRef
+import utils
 
 
 class DatabaseException(Exception): pass
@@ -43,8 +43,8 @@ class Database(object):
         return 'dbLoadRecords ' + self.filename + '  ' + str(self.macros)
     
     def _make_ref(self, tok, item=None):
-        '''make a FileRef() instance for this item'''
-        return FileRef(self.filename, tok['start'][0], tok['start'][1], item or self)
+        '''make a :func:`FileRef()` instance for this item'''
+        return utils.FileRef(self.filename, tok['start'][0], tok['start'][1], item or self)
     
     def makeProcessVariables(self):
         '''make the EPICS PVs from the record definitions'''
@@ -154,7 +154,7 @@ def main():
     macros = dict(TEST="./testfiles", P='prj:', M='m11')
     for i, tf in enumerate(testfiles):
         try:
-            ref = FileRef(__file__, i, 0, 'testing')
+            ref = utils.FileRef(__file__, i, 0, 'testing')
             db[tf] = Database(None, tf, ref, **macros)
         except text_file.FileNotFound, _exc:
             print 'file not found: ' + tf

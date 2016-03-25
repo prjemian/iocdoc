@@ -3,8 +3,6 @@ EPICS IOC command file analysis
 '''
 
 import os
-import token
-import tokenize
 import traceback
 
 
@@ -14,7 +12,7 @@ import reports
 import template
 import text_file
 from token_support import token_key, TokenLog, parse_bracketed_macro_definitions, reconstruct_line
-from utils import logMessage, FileRef, strip_quotes, strip_parentheses
+import utils
 
 
 class UnhandledTokenPattern(Exception): pass
@@ -32,6 +30,7 @@ class Command(object):
         self.args = args
         self.env = macros.Macros(**env)
         self.reference = ref
+        utils.logMessage('command: ' + command, utils.LOGGING_DETAIL__NOISY)
     
     def __str__(self):
         return self.command + ' ' + str(self.args) + ' ' + str(self.env)
@@ -46,7 +45,7 @@ class CommandFile(object):
         self.parent = parent
         self.filename = filename
         self.reference = ref
-        self.pwd = os.getcwd()      # TODO: needs some attention here
+        self.pwd = os.getcwd()
 
         self.env = macros.Macros(**env)
         self.symbols = macros.Macros()
@@ -59,8 +58,8 @@ class CommandFile(object):
         # filename is a relative or absolute path to command file, no macros in the name
         self.filename_absolute = os.path.abspath(filename)
         self.dirname_absolute = os.path.dirname(self.filename_absolute)
-        #self.filename_expanded = self.env.replace(filename)
         self.source = text_file.read(filename)
+        utils.logMessage('command file: ' + filename, utils.LOGGING_DETAIL__MEDIUM)
 
         self.knownHandlers = {
             '<': self.kh_loadCommandFile,
@@ -86,8 +85,8 @@ class CommandFile(object):
         return str(self.reference) + ' ' + self.filename
     
     def _make_ref(self, tok, item=None):
-        '''make a FileRef() instance for this item'''
-        return FileRef(self.filename, tok['start'][0], tok['start'][1], item or self)
+        '''make a :func:`FileRef()` instance for this item'''
+        return utils.FileRef(self.filename, tok['start'][0], tok['start'][1], item or self)
     
     def parse(self):
         '''analyze this command file'''
@@ -117,12 +116,15 @@ class CommandFile(object):
         if self.symbols.exists(path):       # symbol substitution
             path = self.symbols.get(path).value
         path = self.env.replace(path)       # macro substitution
-        path = strip_quotes(path)           # strip double-quotes
+        path = utils.strip_quotes(path)           # strip double-quotes
         if len(path) > 0 and os.path.exists(path):
-            os.chdir(path)
-            self.kh_shell_command(arg0, tokens, ref)
+            if os.path.abspath(path) != os.getcwd():    # only cd if it is really different
+                utils.logMessage(arg0 + ' ' + path, utils.LOGGING_DETAIL__MEDIUM)
+                os.chdir(path)
+                self.kh_shell_command(arg0, tokens, ref)
 
     def kh_dbLoadRecords(self, arg0, tokens, ref):
+        # TODO: distinguish between environment macros and new macros for this instance
         local_macros = macros.Macros(**self.env.db)
         tokenLog = TokenLog()
         tokenLog.tokenList = tokens
@@ -133,18 +135,19 @@ class CommandFile(object):
             msg = str(ref) + reconstruct_line(tokens).strip()
             raise UnhandledTokenPattern, msg
         if count > 0:
-            dbFileName = strip_quotes(parts[0])
+            dbFileName = utils.strip_quotes(parts[0])
         if count > 1:
-            for definition in strip_quotes(parts[1]).split(','):
+            for definition in utils.strip_quotes(parts[1]).split(','):
                 if definition.find('=') < 0:
                     # if self.symbols.get(definition, None)
                     # such as:  iocSubString=asdCreateSubstitutionString("IOC",iocprefix)
                     msg = str(ref) + reconstruct_line(tokens).strip()
-                    # TODO: log this report and move on
-                    raise UnhandledTokenPattern, msg
-                k, v = definition.split('=')
-                local_macros.set(k, v, self, ref)
-        # TODO: distinguish between environment macros and new macros for this instance
+                    utils.logMessage(msg, utils.LOGGING_DETAIL__IMPORTANT)
+                    #raise UnhandledTokenPattern, msg
+                else:
+                    k, v = definition.split('=')
+                    local_macros.set(k, v, self, ref)
+        utils.logMessage(arg0 + reconstruct_line(tokens).strip(), utils.LOGGING_DETAIL__NOISY)
         if count == 3:
             path = parts[2]
             msg = str(ref) + reconstruct_line(tokens).strip()
@@ -156,8 +159,8 @@ class CommandFile(object):
             self.database_list.append(obj)
             self.kh_shell_command(arg0, tokens, ref)
         except text_file.FileNotFound, _exc:
-            # TODO: what to do at this point?  Need report and continue mechanism
-            traceback.print_exc()
+            msg = 'Could not find database file'
+            utils.detailedExceptionLog(msg)
             return
         for k, v in obj.getPVs():
             self.pv_dict[k] = v
@@ -165,9 +168,9 @@ class CommandFile(object):
     def kh_dbLoadTemplate(self, arg0, tokens, ref):
         # TODO: Can one template call another?
         local_macros = macros.Macros(**self.env.db)
-        parts = strip_parentheses(reconstruct_line(tokens).strip()).split(',')
+        parts = utils.strip_parentheses(reconstruct_line(tokens).strip()).split(',')
         if len(parts) in (1, 2):
-            tfile = strip_quotes(parts[0])
+            tfile = utils.strip_quotes(parts[0])
         if len(parts) == 2:
             # such as in 8idi:  dbLoadTemplate("aiRegister.substitutions", top)
             # This is an ERROR.  The IOC should be corrected.
@@ -185,13 +188,14 @@ class CommandFile(object):
             The optional substitutions parameter may contain additional global macro values, 
             which can be overridden by values given within the substitution file.
             '''
-            path = self.symbols.get(strip_quotes(parts[1]).strip(), None)
+            path = self.symbols.get(utils.strip_quotes(parts[1]).strip(), None)
             if isinstance(path, macros.KVpair):
                 alternative = os.path.join(path.value, tfile)
                 if os.path.exists(alternative):
                     tfile = alternative
             else:
-                pass    # TODO: log this and move on
+                msg = 'problem parsing: ' + arg0 + reconstruct_line(tokens).strip()
+                utils.logMessage(msg, utils.LOGGING_DETAIL__IMPORTANT)
         obj = template.Template(tfile, ref, **local_macros.db)
         self.template_list.append(obj)
         self.database_list += obj.database_list
@@ -205,18 +209,18 @@ class CommandFile(object):
             var = tokens[2]['tokStr']
             value = tokens[4]['tokStr']
         else:
-            text = strip_parentheses(reconstruct_line(tokens).strip())
+            text = utils.strip_parentheses(reconstruct_line(tokens).strip())
             parts = text.split(',')
             if len(parts) == 1:
                 parts = text.split(' ')
             if len(parts) != 2:
                 raise UnhandledTokenPattern('epicsEnvSet'+text)
             var, value = parts
-        self.env.set(strip_quotes( var ), strip_quotes( value ), self, ref)
+        self.env.set(utils.strip_quotes( var ), utils.strip_quotes( value ), self, ref)
         self.kh_shell_command(arg0, tokens, ref)
 
     def kh_loadCommandFile(self, arg0, tokens, ref):
-        fname = strip_parentheses(reconstruct_line(tokens).strip())
+        fname = utils.strip_parentheses(reconstruct_line(tokens).strip())
         # fname is given relative to current working directory
         fname_expanded = self.env.replace(fname)
         obj = CommandFile(self, fname_expanded, ref, **self.env.db)
@@ -236,7 +240,7 @@ class CommandFile(object):
         process an instance of putenv
 
         :param tokens: token list
-        :param ref: instance of :class:`iocdoc.utils.FileRef`
+        :param ref: instance of :class:`FileRef`
         :raise UnhandledTokenPattern: unhandled token pattern
         '''
         argument_list = []
@@ -245,12 +249,12 @@ class CommandFile(object):
                 argument_list.append( tkn['tokStr'] )
 
         if len(argument_list) == 1:
-            var, arg = strip_quotes( argument_list[0].strip() ).split('=')
-            arg = strip_quotes(arg.strip())
+            var, arg = utils.strip_quotes( argument_list[0].strip() ).split('=')
+            arg = utils.strip_quotes(arg.strip())
             self.env.set(var, arg, self, ref)
         elif len(argument_list) == 2:
             var, arg = argument_list
-            arg = strip_quotes(arg.strip())
+            arg = utils.strip_quotes(arg.strip())
             self.env.set(var, arg)
         else:
             msg = str(ref) + reconstruct_line(tokens).strip()
@@ -270,12 +274,8 @@ class CommandFile(object):
     def kh_symbol(self, arg0, tokens, ref):
         '''symbol assignment'''
         # TODO: handle this:  sym=func(key,value)
-        # create the IOC substitution string 'IOC=<iocname>'
         # iocSubString=asdCreateSubstitutionString("IOC",iocprefix)
-        if arg0 == 'iocSubString':
-            pass
-
-        arg = strip_quotes( tokens[2]['tokStr'] )
+        arg = utils.strip_quotes( tokens[2]['tokStr'] )
         self.symbols.set(arg0, arg, self, ref)
         self.kh_shell_command('(symbol)', tokens, ref)
 
@@ -290,7 +290,7 @@ def main():
     for i, tf in enumerate(testfiles):
         try:
             os.chdir(os.path.dirname(os.path.abspath(tf)))
-            ref = FileRef(__file__, i, 0, 'testing')
+            ref = utils.FileRef(__file__, i, 0, 'testing')
             cmdFile_object = CommandFile(None, os.path.split(tf)[-1], ref, **env)
         except Exception:
             traceback.print_exc()

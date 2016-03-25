@@ -5,7 +5,7 @@ Applies Python :mod:`tokenize` analysis to each line of a text file.
 
 import token
 import tokenize
-from utils import logMessage, strip_quotes
+import utils
 import text_file
 
 
@@ -82,37 +82,37 @@ class TokenLog():
         '''
         return self.xref
 
-    def report(self):
-        '''
-        prints (to stdout) results contained in tokenList list and xref dictionary
-        '''
-        print len(self.tokenList), "tokens were found"
-        print len(self.xref), "different kinds of tokens were found"
-        for k, v in self.xref.items():
-            print k, len(v), "[",
-            for index in v:
-                report_dict = self.tokenList[index]
-                print report_dict['start'][0],
-            print "]"
-        for k in ['OP', 'NAME', 'STRING']:
-            if k in self.xref:
-                for index in self.xref[k]:
-                    report_dict = self.tokenList[index]
-                    print k, report_dict['start'], "|" + report_dict['tokStr'].strip() + "|"
-
-    def summary(self, alsoPrint = False):
-        '''
-        Summarizes the xref dictionary contents.
-        Reports number of each different token name (type).
-
-        :param alsoPrint: boolean to enable print to stdout
-        :return: dictionary of token frequencies
-        '''
-        summary_dict = {k: len(v) for k, v in self.xref.items()}
-        if alsoPrint:
-            for k, v in sorted(summary_dict.items()):
-                print "%s : %d" % (k, v)
-        return summary_dict
+#     def report(self):
+#         '''
+#         prints (to stdout) results contained in tokenList list and xref dictionary
+#         '''
+#         print len(self.tokenList), "tokens were found"
+#         print len(self.xref), "different kinds of tokens were found"
+#         for k, v in self.xref.items():
+#             print k, len(v), "[",
+#             for index in v:
+#                 report_dict = self.tokenList[index]
+#                 print report_dict['start'][0],
+#             print "]"
+#         for k in ['OP', 'NAME', 'STRING']:
+#             if k in self.xref:
+#                 for index in self.xref[k]:
+#                     report_dict = self.tokenList[index]
+#                     print k, report_dict['start'], "|" + report_dict['tokStr'].strip() + "|"
+# 
+#     def summary(self, alsoPrint = False):
+#         '''
+#         Summarizes the xref dictionary contents.
+#         Reports number of each different token name (type).
+# 
+#         :param alsoPrint: boolean to enable print to stdout
+#         :return: dictionary of token frequencies
+#         '''
+#         summary_dict = {k: len(v) for k, v in self.xref.items()}
+#         if alsoPrint:
+#             for k, v in sorted(summary_dict.items()):
+#                 print "%s : %d" % (k, v)
+#         return summary_dict
 
     def processFile(self, filename):
         '''
@@ -122,13 +122,12 @@ class TokenLog():
         try:
             tokenize.tokenize(f.iterator().readline, self.tokenReceiver)
         except Exception, _exc:
-            f.close()   # remember to close the file!
-            msg = 'trouble with: ' + filename
+            msg = 'trouble understanding: ' + f.absolute_filename
             msg += '\n' + str(_exc)
-            logMessage(msg)
+            utils.logMessage(msg, utils.LOGGING_DETAIL__NOISY)
             raise RuntimeError(msg)
         self.token_pointer = None
-        f.close()
+        utils.logMessage('tokenized file: ' + f.filename, utils.LOGGING_DETAIL__NOISY)
 
     def lineAnalysis(self):
         '''
@@ -193,13 +192,6 @@ class TokenLog():
     
     def getCurrentToken(self):
         return self.tokenList[self.token_pointer]
-
-    #def __iter__(self):
-    #    '''
-    #    this class satisfies Python's iterator interface
-    #    http://docs.python.org/reference/datamodel.html
-    #    http://docs.python.org/library/stdtypes.html#typeiter
-    #    '''
         
     def next(self):
         '''
@@ -308,7 +300,7 @@ class TokenLog():
                 end = tok['end'][1]
             else:
                 if len(v) > 0:
-                    v = strip_quotes(v)
+                    v = utils.strip_quotes(v)
                     if len(v) == 0:  v = '""'
                     items.append(v)
                 if key not in (t_end, 'OP ,'):
@@ -318,7 +310,7 @@ class TokenLog():
                 end = tok['end'][1]
     
         if len(v) > 0:      # last chance
-            v = strip_quotes(v)
+            v = utils.strip_quotes(v)
             if len(v) == 0:  v = '""'
             items.append(v)
     
@@ -500,16 +492,19 @@ def _rebuild_text(token_list):
     return text
 
 
-def reconstruct_line(tokens = [], firstIndex = 1):
+def reconstruct_line(tokens = [], firstIndex = 1, no_comments=True):
     '''
     reconstruct the line from the list of tokens presented
     
-    :param tokens: as used throughout this module
-    :param firstIndex: first index in tokens list to use
+    :param [tok_dict] tokens: as used throughout this module
+    :param int firstIndex: first index in tokens list to use
+    :param bool no_comments: True (default) to stop reconstructing at the first comment token
     :return: reconstructed line
     '''
     cmd = ""
     for tkn in tokens[firstIndex:]:
+        if tkn['tokName'] == 'COMMENT' and no_comments:
+            break
         if tkn['tokName'] not in ('NEWLINE'):
             start = tkn['start'][1]
             cmd += " "*(start - len(cmd))

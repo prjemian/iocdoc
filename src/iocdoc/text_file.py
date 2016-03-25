@@ -26,6 +26,8 @@ Example::
 import os
 import StringIO
 
+import utils
+
 
 class FileNotFound(Exception): pass
 
@@ -52,7 +54,6 @@ def read(filename):
     global _file_cache_
     if _file_cache_ is None:
         _setup_file_cache()
-    #filename = os.path.abspath(filename)
     if not _file_cache_.exists(filename):
         _file_cache_.set(filename, _TextFile(filename))
     return _file_cache_.get(filename)
@@ -107,6 +108,8 @@ class _FileCache(object):
         '''
         get a reference to a file from the cache
         '''
+        if self.exists(filename):
+            utils.logMessage('caching file: ' + filename, utils.LOGGING_DETAIL__NOISY)
         return self.cache.get(filename, alternative)
 
 
@@ -133,10 +136,6 @@ class _TextFile(object):
         self._read()
         self.number_of_lines = len(self)
     
-    def close(self):
-        '''some code likes to call this'''
-        pass
-    
     def iterator(self):
         '''iterator interface: provide str.readline for tokenizer'''
         return StringIO.StringIO(self.full_text)
@@ -150,6 +149,7 @@ class _TextFile(object):
         if not os.path.exists(self.absolute_filename):
             raise FileNotFound(self.absolute_filename)
         self.full_text = open(self.absolute_filename, 'r').read()
+        utils.logMessage('caching file: ' + self.absolute_filename, utils.LOGGING_DETAIL__NOISY)
     
     def __str__(self):
         return self.filename

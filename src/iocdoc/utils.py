@@ -5,17 +5,41 @@ common routines for many modules
 support                       description
 ============================= ====================================================
 :func:`chdir`                 change current IOC shell directory
-:func:`datenow`               get a file either from the cache or from storage
+:func:`datenow`               current date/time, as a str
 :func:`detailedExceptionLog`  log the details of an exception
 :class:`FileRef`              associate filename and line number of an object
 :func:`logMessage`            log a message
 :func:`strip_outer_pair`      remove outer symbols from text
 :func:`strip_outer_quotes`    strip outer quotes (either single or double) from text
-:func:`remove_comments`       strip out a C-style comment 
-:const:`LOG_FILE`             default log file name 
+:func:`remove_c_comments`     strip out a C-style comment 
+:const:`LOG_FILE`             default log file name (must be defined *before* logging is started)
+:const:`LOGGING_DETAIL`       maximum level of detail to report in log (default=2, range: 0-5) 
 :func:`strip_parentheses`     remove outer parentheses from text
 :func:`strip_quotes`          strip outer double quotes from text
 ============================= ====================================================
+
+
+..  rubric:: Values for :const:`LOGGING_DETAIL`
+
+    When calling :func:`logMessage`, messages are assigned by the caller 
+    (default value is 2) one of the following constants, describing
+    the detail level of this message.  
+    
+    A message will be logged if it has an assigned level
+    equal to or below :const:`LOGGING_DETAIL`.
+    
+    ===== =====================================
+    value constant
+    ===== =====================================
+    0     :const:`LOGGING_DETAIL__CERTAIN`
+    1     :const:`LOGGING_DETAIL__IMPORTANT`
+    2     :const:`LOGGING_DETAIL__MEDIUM`
+    3     :const:`LOGGING_DETAIL__MINOR`
+    4     :const:`LOGGING_DETAIL__NOISY`
+    5     :const:`LOGGING_DETAIL__TRACEBACK`
+    6     :const:`LOGGING_DETAIL__FULL_TRACEBACK`
+    ===== =====================================
+
 '''
 
 
@@ -34,6 +58,13 @@ C_LANGUAGE_COMMENT_PATTERN = re.compile(
 
 LOG_FILE = 'iocdoc.log'
 logging_started = False
+LOGGING_DETAIL__CERTAIN = 0
+LOGGING_DETAIL__IMPORTANT = 1
+LOGGING_DETAIL__MEDIUM = 2
+LOGGING_DETAIL__MINOR = 3
+LOGGING_DETAIL__NOISY = 4
+LOGGING_DETAIL__TRACEBACK = 5
+LOGGING_DETAIL = LOGGING_DETAIL__MEDIUM
 
 
 def chdir(newDir, nfsMounts={}):
@@ -45,14 +76,14 @@ def chdir(newDir, nfsMounts={}):
     '''
     newDir = strip_quotes(newDir)
     if not os.path.exists(newDir):
-        logMessage("cannot chdir(%s)" % newDir)
+        logMessage("cannot chdir(%s)" % newDir, LOGGING_DETAIL__CERTAIN)
         # FIXME: fails with chdir(''), , needs to know the default to be used
         # FIXME: fails with chdir('/xorApps/...'), need to check the nfsMount dictionary
         return False
     pwd = os.getcwd()
     if pwd != newDir:
-        logMessage("leave: "+ pwd)
-        logMessage("enter: "+ newDir)
+        logMessage("leave: "+ pwd, LOGGING_DETAIL__NOISY)
+        logMessage("enter: "+ newDir, LOGGING_DETAIL__MEDIUM)
     os.chdir(newDir)
     return True
 
@@ -65,16 +96,19 @@ def datenow():
 def detailedExceptionLog(title='', print_traceback=True):
     '''
     enter details of an exception to the log (developer tool)
+    
+    * always log that an exception was reported
+    * the full traceback details are logged at a higher level
     '''
     import traceback
     if len(title) > 0:
-        logMessage(title)
+        logMessage(title, LOGGING_DETAIL__CERTAIN)
     info = sys.exc_info()
-    logMessage(str(info[0]))
-    logMessage(info[1])
+    logMessage(str(info[0]), LOGGING_DETAIL__CERTAIN)
+    logMessage(info[1], LOGGING_DETAIL__CERTAIN)
     if print_traceback:
         #traceback.print_exc()
-        logMessage(traceback.format_exc())
+        logMessage(traceback.format_exc(), LOGGING_DETAIL__TRACEBACK)
 
 
 class FileRef(object):
@@ -87,26 +121,29 @@ class FileRef(object):
         self.object = obj
     
     def __str__(self):
-        # return '(%s,%d,%d) %s' % (self.filename, self.line_number, self.column_number, str(self.object))
-        # TODO: can this be brief yet unambiguous?
+        # brief yet perhaps unambiguous
         fname = os.path.split(self.filename)[-1]
         return '(%s,%d,%d)' % (fname, self.line_number, self.column_number)
 
 
-def logMessage(text):
+def logMessage(text, detail=2):
     '''
     log a message
+    
+    :param obj text: item to be logged, assumed to be a string but will be rendered with ``str(text)``
+    :param int detail: interest level for this logging item, must be <= LOGGING_DETAIL to be logged
     '''
     global logging_started
     if not logging_started:
         logging.basicConfig(filename=LOG_FILE, filemode='w', level=logging.INFO)
         #logging.basicConfig(level=logging.INFO)
         logging_started = True
-    logging.info(' ' + datenow() + ' ' + str(text))
-    print text
-    sys.stdout.flush()
+    if detail <= LOGGING_DETAIL:
+        logging.info(' ' + datenow() + ' ' + str(text))
+        print text
+        sys.stdout.flush()
 
-def remove_comments(text):
+def remove_c_comments(text):
     '''
     strip out a C-style comment
     
@@ -114,6 +151,7 @@ def remove_comments(text):
     
        /* such as this */
     
+    :param str text: text with possible comment
     :see: http://stackoverflow.com/questions/241327/python-snippet-to-remove-c-and-c-comments
     '''
     def replacer(match):

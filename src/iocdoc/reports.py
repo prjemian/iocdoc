@@ -3,10 +3,10 @@
 generate the standard reports for *iocdoc*
 '''
 
-import datetime
 import os
 import pyRestTable
 import text_file
+import utils
 
 
 class writeReports(object):
@@ -64,7 +64,7 @@ class writeReports(object):
         f.write(text)
         f.write('\n')
         f.write('\n' + '-'*10 + '\n'*2)
-        f.write('written: ' + str(datetime.datetime.now()))
+        f.write('written: ' + utils.datenow())
         f.write('\n')
         f.close()
         return fname
