@@ -109,7 +109,7 @@ class _FileCache(object):
         get a reference to a file from the cache
         '''
         if self.exists(filename):
-            utils.logMessage('caching file: ' + filename, utils.LOGGING_DETAIL__NOISY)
+            utils.logMessage('cached file: ' + filename, utils.LOGGING_DETAIL__NOISY)
         return self.cache.get(filename, alternative)
 
 
@@ -149,7 +149,7 @@ class _TextFile(object):
         if not os.path.exists(self.absolute_filename):
             raise FileNotFound(self.absolute_filename)
         self.full_text = open(self.absolute_filename, 'r').read()
-        utils.logMessage('caching file: ' + self.absolute_filename, utils.LOGGING_DETAIL__NOISY)
+        utils.logMessage('read from file: ' + self.absolute_filename, utils.LOGGING_DETAIL__NOISY)
     
     def __str__(self):
         return self.filename

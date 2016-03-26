@@ -27,10 +27,12 @@ support                       description
     
     A message will be logged if it has an assigned level
     equal to or below :const:`LOGGING_DETAIL`.
+    Except, of course if the level is :const:`LOGGING_DETAIL__NONE`.
     
     ===== =====================================
     value constant
     ===== =====================================
+    -1    :const:`LOGGING_DETAIL__NONE`
     0     :const:`LOGGING_DETAIL__CERTAIN`
     1     :const:`LOGGING_DETAIL__IMPORTANT`
     2     :const:`LOGGING_DETAIL__MEDIUM`
@@ -58,12 +60,22 @@ C_LANGUAGE_COMMENT_PATTERN = re.compile(
 
 LOG_FILE = 'iocdoc.log'
 logging_started = False
+LOGGING_DETAIL__NONE = -1
 LOGGING_DETAIL__CERTAIN = 0
 LOGGING_DETAIL__IMPORTANT = 1
 LOGGING_DETAIL__MEDIUM = 2
 LOGGING_DETAIL__MINOR = 3
 LOGGING_DETAIL__NOISY = 4
 LOGGING_DETAIL__TRACEBACK = 5
+LOGGING_DETAIL_LEVELS = (
+    LOGGING_DETAIL__NONE,
+    LOGGING_DETAIL__CERTAIN,
+    LOGGING_DETAIL__IMPORTANT,
+    LOGGING_DETAIL__MEDIUM,
+    LOGGING_DETAIL__MINOR,
+    LOGGING_DETAIL__NOISY,
+    LOGGING_DETAIL__TRACEBACK,
+)
 LOGGING_DETAIL = LOGGING_DETAIL__MEDIUM
 
 
@@ -126,6 +138,33 @@ class FileRef(object):
         return '(%s,%d,%d)' % (fname, self.line_number, self.column_number)
 
 
+def setLogFile(logFile):
+    '''
+    define the log file name
+    
+    :param str logFile: name of log file to be used
+    :raises RuntimeError: if called after logging has started
+    '''
+    global logging_started
+    global LOG_FILE
+    if logging_started:
+        raise RuntimeError('Cannot change log file after logging has started. ' + LOG_FILE)
+    LOG_FILE = logFile
+
+
+def setLogDetailLevel(detail=2):
+    '''
+    define the logging (reporting) detail level
+    
+    :param int detail: interest level for logging items, must be <= LOGGING_DETAIL to be logged
+    '''
+    global LOGGING_DETAIL
+    if detail not in LOGGING_DETAIL_LEVELS:
+        msg = 'detail level must be one of these values: ' + str(LOGGING_DETAIL_LEVELS)
+        raise ValueError(msg)
+    LOGGING_DETAIL = detail
+
+
 def logMessage(text, detail=2):
     '''
     log a message
@@ -134,6 +173,9 @@ def logMessage(text, detail=2):
     :param int detail: interest level for this logging item, must be <= LOGGING_DETAIL to be logged
     '''
     global logging_started
+    global LOGGING_DETAIL
+    if detail == LOGGING_DETAIL__NONE:
+        return
     if not logging_started:
         logging.basicConfig(filename=LOG_FILE, filemode='w', level=logging.INFO)
         #logging.basicConfig(level=logging.INFO)

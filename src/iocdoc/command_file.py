@@ -30,7 +30,7 @@ class Command(object):
         self.args = args
         self.env = macros.Macros(**env)
         self.reference = ref
-        utils.logMessage('command: ' + command, utils.LOGGING_DETAIL__NOISY)
+        utils.logMessage('command: ' + command + args, utils.LOGGING_DETAIL__MEDIUM)
     
     def __str__(self):
         return self.command + ' ' + str(self.args) + ' ' + str(self.env)
@@ -58,8 +58,8 @@ class CommandFile(object):
         # filename is a relative or absolute path to command file, no macros in the name
         self.filename_absolute = os.path.abspath(filename)
         self.dirname_absolute = os.path.dirname(self.filename_absolute)
+        utils.logMessage('command file: ' + filename, utils.LOGGING_DETAIL__IMPORTANT)
         self.source = text_file.read(filename)
-        utils.logMessage('command file: ' + filename, utils.LOGGING_DETAIL__MEDIUM)
 
         self.knownHandlers = {
             '<': self.kh_loadCommandFile,
@@ -223,9 +223,9 @@ class CommandFile(object):
         fname = utils.strip_parentheses(reconstruct_line(tokens).strip())
         # fname is given relative to current working directory
         fname_expanded = self.env.replace(fname)
+        self.kh_shell_command('<', tokens, ref)
         obj = CommandFile(self, fname_expanded, ref, **self.env.db)
         self.includedCommandFile_list.append(obj)
-        self.kh_shell_command('<', tokens, ref)
 
         self.commands += obj.commands
         self.template_list += obj.template_list
