@@ -277,7 +277,7 @@ class CommandFile(object):
         # iocSubString=asdCreateSubstitutionString("IOC",iocprefix)
         arg = utils.strip_quotes( tokens[2]['tokStr'] )
         self.symbols.set(arg0, arg, self, ref)
-        self.kh_shell_command('(symbol)', tokens, ref)
+        self.kh_shell_command(arg0, tokens, ref)
 
 
 def main():

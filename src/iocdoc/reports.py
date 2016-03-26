@@ -168,9 +168,9 @@ def reportCommandCount(cmd_list):
 def reportCommandSequence(cmd_list):
     '''show the order of the commands'''
     tbl = pyRestTable.Table()
-    tbl.labels = ['#', '(file_name,line,column)', 'command', 'arguments']
+    tbl.labels = ['#', '(file_name,line,column)', 'command and arguments']
     for i, command in enumerate(cmd_list):
-        tbl.rows.append([i+1, command.reference, command.command, command.args])
+        tbl.rows.append([i+1, command.reference, command.command + ' ' + command.args])
     return tbl.reST()
 
 
