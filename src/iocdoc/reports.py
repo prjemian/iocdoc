@@ -9,6 +9,13 @@ import text_file
 import utils
 
 
+def pre(text):
+    val = text.strip()
+    if len(val) == 0:
+        val = ' '
+    return '``' + val + '``'
+
+
 class writeReports(object):
     
     def __init__(self, obj, ioc_name='IOC'):
@@ -53,11 +60,12 @@ class writeReports(object):
 
     def writeFile(self, fname, title, text):
         f =  open(fname, 'w')
+        topic = os.path.splitext(fname)[0]
         f.write('.. file - ' + fname)
         f.write('\n'*2)
-        f.write('.. index:: ' + self.ioc_name + ', ' + os.path.splitext(fname)[0])
+        f.write('.. index:: ' + self.ioc_name + ', ' + topic)
         f.write('\n'*2)
-        f.write('.. _IOC_' + self.ioc_name + '_' + os.path.splitext(fname)[0])
+        f.write('.. _IOC.' + self.ioc_name + '_' + topic + ':')
         f.write('\n'*2)
         f.write(mk_title(title, '='))
         f.write('\n')
@@ -170,7 +178,8 @@ def reportCommandSequence(cmd_list):
     tbl = pyRestTable.Table()
     tbl.labels = ['#', '(file_name,line,column)', 'command and arguments']
     for i, command in enumerate(cmd_list):
-        tbl.rows.append([i+1, command.reference, command.command + ' ' + command.args])
+        val = pre(command.command + ' ' + command.args)
+        tbl.rows.append([i+1, command.reference, val])
     return tbl.reST()
 
 
@@ -182,7 +191,7 @@ def reportDatabases(db_list):
     tbl.labels = ['#', '(file_name,line,column)', 'database file']
     for i, db in enumerate(db_list):
         # TODO: distinguish between environment macros and new macros for this instance
-        tbl.rows.append([i+1, db.reference, db.filename])
+        tbl.rows.append([i+1, db.reference, pre(db.filename)])
     text = tbl.reST()
     
     # avoid repeating
@@ -203,7 +212,7 @@ def reportDatabases(db_list):
         tbl.labels = ['#', '(file_name,line,column)', 'RTYP', 'NAME']
         for record in db.record_list:
             i += 1
-            tbl.rows.append([i, record.reference, record.RTYP, record.rname])
+            tbl.rows.append([i, record.reference, record.RTYP, pre(record.rname) ])
         text += tbl.reST()
 
         # document each record's fields
@@ -221,7 +230,7 @@ def reportDatabases(db_list):
                 if k in ('NAME', 'RTYP'):
                     continue
                 i += 1
-                tbl.rows.append([i, v.reference, k, v.value])
+                tbl.rows.append([i, v.reference, k, pre(v.value)])
             text += tbl.reST()
     return text
 
@@ -235,7 +244,7 @@ def reportMacros(macro_dict):
     i = 0
     for k, v in sorted(macro_dict.items()):
         i += 1
-        tbl.rows.append([i, k, v])
+        tbl.rows.append([i, k, pre(v)])
     return tbl.reST()
 
 
@@ -262,7 +271,7 @@ def reportPVs(pv_dict):
     i = 0
     for _k, pv in sorted(pv_dict.items()):
         i += 1
-        tbl.rows.append([i, pv.reference, pv.RTYP, pv.NAME])
+        tbl.rows.append([i, pv.reference, pv.RTYP, pre(pv.NAME)])
     return tbl.reST()
 
 
@@ -289,7 +298,7 @@ def reportSymbols(macro_dict):
     i = 0
     for _k, v in sorted(macro_dict.items()):
         i += 1
-        tbl.rows.append([i, v.reference, v.key, v.value])
+        tbl.rows.append([i, v.reference, v.key, pre(v.value)])
     return tbl.reST()
 
 
