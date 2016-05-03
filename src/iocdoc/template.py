@@ -79,7 +79,7 @@ class Template(object):
         ref = self._make_ref(tokenLog.getCurrentToken(), 'database file')
         # TODO: Do something with ref
         
-        tok = tokenLog.nextActionable()
+        tokenLog.nextActionable()
         dbFileName = tokenLog.getFullWord().strip('"')
         fname = self.macros.replace(dbFileName)
 
@@ -112,7 +112,12 @@ class Template(object):
             
             ref = self._make_ref(tokenLog.getCurrentToken())
             # TODO: work out how to get the path into the next statement
-            cmd = command_file.Command(self, '(dbLoadRecords)', 'path unknown', fname, ref, **pattern_macros.db)
+            cmd = command_file.Command(self, 
+                                       '(dbLoadRecords)', 
+                                       'path unknown', 
+                                       dbFileName, 
+                                       ref, 
+                                       **pattern_macros.db)
             self.commands.append(cmd)
             dbg = database.Database(self, fname, ref, **pattern_macros.db)
             self.database_list.append(dbg)

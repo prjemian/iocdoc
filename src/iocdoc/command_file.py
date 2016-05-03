@@ -59,7 +59,8 @@ class CommandFile(object):
         self.filename_absolute = os.path.abspath(filename)
         self.dirname_absolute = os.path.dirname(self.filename_absolute)
         utils.logMessage('command file: ' + filename, utils.LOGGING_DETAIL__IMPORTANT)
-        self.source = text_file.read(filename)
+        # self.source = text_file.read(filename)
+        self.source = text_file.read(self.filename_absolute)
 
         self.knownHandlers = {
             '<': self.kh_loadCommandFile,
@@ -91,7 +92,7 @@ class CommandFile(object):
     def parse(self):
         '''analyze this command file'''
         tokenLog = TokenLog()
-        tokenLog.processFile(self.filename)
+        tokenLog.processFile(self.filename_absolute)
         lines = tokenLog.lineAnalysis()
         del lines['numbers']
         for _lineNumber, line in sorted(lines.items()):
@@ -154,6 +155,7 @@ class CommandFile(object):
             path = self.symbols.get(path, path)
             if os.path.exists(path):
                 dbFileName = os.path.join(path, dbFileName)
+        dbFileName = self.env.replace(dbFileName)
         try:
             obj = database.Database(self, dbFileName, ref, **local_macros.db)
             self.database_list.append(obj)
@@ -170,7 +172,7 @@ class CommandFile(object):
         local_macros = macros.Macros(**self.env.db)
         parts = utils.strip_parentheses(reconstruct_line(tokens).strip()).split(',')
         if len(parts) in (1, 2):
-            tfile = utils.strip_quotes(parts[0])
+            tfile = os.path.join(self.dirname_absolute, utils.strip_quotes(parts[0]))
         if len(parts) == 2:
             # such as in 8idi:  dbLoadTemplate("aiRegister.substitutions", top)
             # This is an ERROR.  The IOC should be corrected.
