@@ -442,18 +442,21 @@ def _find_sections(tokenLog):
                   }
     
     tok = tokenLog.getCurrentToken()
-    c = tok['tokStr']
-    if c not in terminator:
-        l, c = tok['start']
-        msg = '(%d,%d) ' % (l, c+1)
-        msg += 'token stream not starting with "(" or "{"'
-        raise KeyError, msg
-
     pt_start = tokenLog.token_pointer
-    tk_start = token_key(tok)
-    tk_end = terminator[c]
+    c = tok['tokStr']
+    if c in terminator:
+        tk_start = token_key(tok)
+        tk_end = terminator[c]
+        tok = tokenLog.nextActionable()
+    else:
+        tk_start, tk_end = None, None
+        pt_start -= 1
+        # l, c = tok['start']
+        # msg = '(%d,%d) ' % (l, c+1)
+        # msg += 'token stream not starting with "(" or "{"'
+        # raise KeyError, msg
+
     depth = 1
-    tok = tokenLog.nextActionable()
     commas = []
     equals = []
     while depth > 0:
@@ -464,7 +467,7 @@ def _find_sections(tokenLog):
             equals.append(tokenLog.token_pointer)
         elif tk == tk_start:
             depth += 1
-        elif tk == tk_end:
+        elif tk == tk_end or tok is None:
             depth -= 1
             if depth == 0:
                 pt_end = tokenLog.token_pointer

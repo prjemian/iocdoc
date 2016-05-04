@@ -30,7 +30,7 @@ class Command(object):
         self.args = args
         self.env = macros.Macros(**env)
         self.reference = ref
-        utils.logMessage('command: ' + command + args, utils.LOGGING_DETAIL__MEDIUM)
+        utils.logMessage('command: ' + command + ' ' + args, utils.LOGGING_DETAIL__MEDIUM)
     
     def __str__(self):
         return self.command + ' ' + str(self.args) + ' ' + str(self.env)
@@ -123,39 +123,48 @@ class CommandFile(object):
                 utils.logMessage(arg0 + ' ' + path, utils.LOGGING_DETAIL__MEDIUM)
                 os.chdir(path)
                 self.kh_shell_command(arg0, tokens, ref)
+    
+    def parse_macro_args(self, arg, ref, tokens, parent_macros):
+        local_macros = macros.Macros(**parent_macros.db)
+        for definition in utils.strip_quotes(arg).split(','):
+            if definition.find('=') < 0:
+                # if self.symbols.get(definition, None)
+                # such as:  iocSubString=asdCreateSubstitutionString("IOC",iocprefix)
+                msg = str(ref) + reconstruct_line(tokens).strip()
+                utils.logMessage(msg, utils.LOGGING_DETAIL__IMPORTANT)
+                #raise UnhandledTokenPattern, msg
+            else:
+                k, v = definition.split('=')
+                local_macros.set(k.strip(), v.strip(), self, ref)
+        return local_macros
+
 
     def kh_dbLoadRecords(self, arg0, tokens, ref):
-        # TODO: distinguish between environment macros and new macros for this instance
         local_macros = macros.Macros(**self.env.db)
+        full_line = reconstruct_line(tokens).strip()
         tokenLog = TokenLog()
         tokenLog.tokenList = tokens
         tokenLog.token_pointer = 1
-        parts = parse_bracketed_macro_definitions(tokenLog)
-        count = len(parts)
-        if count == 0 or count > 3:
-            msg = str(ref) + reconstruct_line(tokens).strip()
+        args = parse_bracketed_macro_definitions(tokenLog)
+        nargs = len(args)
+        if nargs not in (1, 2, 3,):
+            msg = str(ref) + full_line
             raise UnhandledTokenPattern, msg
-        if count > 0:
-            dbFileName = utils.strip_quotes(parts[0])
-        if count > 1:
-            for definition in utils.strip_quotes(parts[1]).split(','):
-                if definition.find('=') < 0:
-                    # if self.symbols.get(definition, None)
-                    # such as:  iocSubString=asdCreateSubstitutionString("IOC",iocprefix)
-                    msg = str(ref) + reconstruct_line(tokens).strip()
-                    utils.logMessage(msg, utils.LOGGING_DETAIL__IMPORTANT)
-                    #raise UnhandledTokenPattern, msg
-                else:
-                    k, v = definition.split('=')
-                    local_macros.set(k, v, self, ref)
-        utils.logMessage(arg0 + reconstruct_line(tokens).strip(), utils.LOGGING_DETAIL__NOISY)
-        if count == 3:
-            path = parts[2]
-            msg = str(ref) + reconstruct_line(tokens).strip()
-            path = self.symbols.get(path, path)
+        utils.logMessage(arg0 + full_line, utils.LOGGING_DETAIL__NOISY)
+
+        dbFileName = local_macros.replace(utils.strip_quotes(args[0]))
+
+        if nargs in (2, 3,):    # accumulate additional macro definitions
+            local_macros = self.parse_macro_args(args[1], ref, tokens, local_macros)
+
+        if nargs in (3,):
+            path = args[2]
+            # msg = str(ref) + full_line
+            if self.symbols.exists(path):   # substitute from symbol table
+                path = self.symbols.get(path).value
             if os.path.exists(path):
                 dbFileName = os.path.join(path, dbFileName)
-        dbFileName = self.env.replace(dbFileName)
+
         try:
             obj = database.Database(self, dbFileName, ref, **local_macros.db)
             self.database_list.append(obj)
@@ -170,10 +179,10 @@ class CommandFile(object):
     def kh_dbLoadTemplate(self, arg0, tokens, ref):
         # TODO: Can one template call another?
         local_macros = macros.Macros(**self.env.db)
-        parts = utils.strip_parentheses(reconstruct_line(tokens).strip()).split(',')
-        if len(parts) in (1, 2):
-            tfile = os.path.join(self.dirname_absolute, utils.strip_quotes(parts[0]))
-        if len(parts) == 2:
+        args = utils.strip_parentheses(reconstruct_line(tokens).strip()).split(',')
+        if len(args) in (1, 2):
+            tfile = os.path.join(self.dirname_absolute, utils.strip_quotes(args[0]))
+        if len(args) == 2:
             # such as in 8idi:  dbLoadTemplate("aiRegister.substitutions", top)
             # This is an ERROR.  The IOC should be corrected.
             '''from the EPICS documentation regarding dbLoadTemplate():
@@ -190,7 +199,7 @@ class CommandFile(object):
             The optional substitutions parameter may contain additional global macro values, 
             which can be overridden by values given within the substitution file.
             '''
-            path = self.symbols.get(utils.strip_quotes(parts[1]).strip(), None)
+            path = self.symbols.get(utils.strip_quotes(args[1]).strip(), None)
             if isinstance(path, macros.KVpair):
                 alternative = os.path.join(path.value, tfile)
                 if os.path.exists(alternative):
