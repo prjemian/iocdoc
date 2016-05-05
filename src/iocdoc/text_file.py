@@ -110,6 +110,7 @@ class _FileCache(object):
         '''
         if self.exists(filename):
             utils.logMessage('cached file: ' + filename, utils.LOGGING_DETAIL__NOISY)
+            self.cache[filename].requested()
         return self.cache.get(filename, alternative)
 
 
@@ -132,6 +133,7 @@ class _TextFile(object):
         self.mtime = stats.st_mtime 
         self.bytes = stats.st_size 
         self.cwd = os.getcwd()
+        self.count_requests = 0   # count # times this content was requested
 
         self._read()
         self.number_of_lines = len(self)
@@ -153,3 +155,7 @@ class _TextFile(object):
     
     def __str__(self):
         return self.filename
+    
+    def requested(self):
+	self.count_requests += 1
+	return self.count_requests

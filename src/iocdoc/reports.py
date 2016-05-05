@@ -18,9 +18,10 @@ def pre(text):
 
 class writeReports(object):
     
-    def __init__(self, obj, ioc_name='IOC'):
+    def __init__(self, obj, ioc_name='IOC', report_file_cache=True):
         self.st_cmd_object = obj
         self.ioc_name = ioc_name
+	self.report_file_cache = report_file_cache
         self.writeReports()
 
     def writeReports(self):
@@ -37,8 +38,9 @@ class writeReports(object):
         files.append(self.writeFile('symbols.rst',           ioc_name+': Symbols',                           reportSymbols(obj.symbols.db)))
         files.append(self.writeFile('databases.rst',         ioc_name+': EPICS Databases',                   reportDatabases(obj.database_list)))
         files.append(self.writeFile('templates.rst',         ioc_name+': EPICS Templates/Substitutions',     reportDatabases(obj.template_list)))
-        files.append(self.writeFile('text_files.rst',        ioc_name+': text file cache',                   reportTextFiles()))
-    
+        if self.report_file_cache:
+            files.append(self.writeFile('text_files.rst',        ioc_name+': text file cache',                   reportTextFiles()))
+
         # write the index.rst that coordinates all this
         indent = ' '*3
         title = 'IOC: ' + ioc_name

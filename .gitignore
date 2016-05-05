@@ -115,3 +115,5 @@ coverage.xml
 *.sublime-project
 *.sublime-workspace
 /bcda/
+/bcda/describe_ioc.py
+/bcda/h1003.py
