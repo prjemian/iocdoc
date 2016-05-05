@@ -61,6 +61,11 @@ class CommandFile(object):
         utils.logMessage('command file: ' + filename, utils.LOGGING_DETAIL__IMPORTANT)
         # self.source = text_file.read(filename)
         self.source = text_file.read(self.filename_absolute)
+        
+        if parent is None:
+            self.startup_directory = self.dirname_absolute
+        else:
+            self.startup_directory = parent.startup_directory
 
         self.knownHandlers = {
             '<': self.kh_loadCommandFile,
@@ -114,15 +119,17 @@ class CommandFile(object):
 
     def kh_cd(self, arg0, tokens, ref):
         path = reconstruct_line(tokens).strip()
+        path = utils.strip_quotes(path)           # strip double-quotes
         if self.symbols.exists(path):       # symbol substitution
             path = self.symbols.get(path).value
         path = self.env.replace(path)       # macro substitution
-        path = utils.strip_quotes(path)           # strip double-quotes
+        if len(path) == 0:
+            path = self.startup_directory
         if len(path) > 0 and os.path.exists(path):
             if os.path.abspath(path) != os.getcwd():    # only cd if it is really different
-                utils.logMessage(arg0 + ' ' + path, utils.LOGGING_DETAIL__MEDIUM)
                 os.chdir(path)
                 self.kh_shell_command(arg0, tokens, ref)
+                utils.logMessage(arg0 + ' ' + path, utils.LOGGING_DETAIL__MEDIUM)
     
     def parse_macro_args(self, arg, ref, tokens, parent_macros):
         local_macros = macros.Macros(**parent_macros.db)
@@ -235,6 +242,7 @@ class CommandFile(object):
         # fname is given relative to current working directory
         fname_expanded = self.env.replace(fname)
         self.kh_shell_command('<', tokens, ref)
+        # FIXME: also need to pass self.symbols
         obj = CommandFile(self, fname_expanded, ref, **self.env.db)
         self.includedCommandFile_list.append(obj)
 
