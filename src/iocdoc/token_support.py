@@ -471,6 +471,7 @@ def _find_sections(tokenLog):
             depth -= 1
             if depth == 0:
                 pt_end = tokenLog.token_pointer
+                break
         tok = tokenLog.nextActionable()
     
     return dict(
