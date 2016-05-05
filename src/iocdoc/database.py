@@ -19,7 +19,6 @@ class Database(object):
     '''
      
     def __init__(self, parent, dbFileName, ref, **env):
-        # TODO: distinguish between environment macros and new macros for this instance
         self.parent = parent
         self.filename = dbFileName
         self.macros = macros.Macros(**env)
@@ -94,19 +93,22 @@ class Database(object):
             # get record's field definitions
             while token_key(tok) != 'OP }':
                 ref = self._make_ref(tok, tok['tokStr'])
-                if token_key(tok) == 'NAME field':
+                tk = token_key(tok)
+                if tk == 'NAME field':
                     tok = tokenLog.nextActionable()
                     ref = self._make_ref(tok)
                     field, value = parse_bracketed_macro_definitions(tokenLog)
                     record_object.addFieldPattern(field, value.strip('"'), self, ref)
-                    tok = tokenLog.previous()   # backup before advancing below
-                elif token_key(tok) == 'NAME alias':
+                    #tok = tokenLog.previous()   # backup before advancing below
+                elif tk == 'NAME alias':
                     self._parse_alias(tokenLog, record_object, ref)
-                elif token_key(tok) == 'NAME info':
+                elif tk == 'NAME info':
                     self._parse_info(tokenLog, record_object, ref)
                 else:
                     tok = tokenLog.getCurrentToken()
-                    msg = str(ref) + ' unexpected content: |%s|' % str(tok['tokStr'])
+                    msg = str(ref)
+                    msg += ' unexpected content: |%s|' % str(tok['tokStr'])
+                    msg += ' in file: ' + str(ref)
                     raise RuntimeError(msg)
                 tok = tokenLog.nextActionable()
     
