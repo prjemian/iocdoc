@@ -235,8 +235,9 @@ class TokenLog():
         '''
         # TODO: can this become an iterator?
         if skip_list is None:
-            skip_these_tokens = ('COMMENT', 'NEWLINE', 'ENDMARKER', 
-                                 'ERRORTOKEN', 'INDENT', 'DEDENT')
+            skip_these_tokens = '''
+            COMMENT NEWLINE ENDMARKER ERRORTOKEN INDENT DEDENT
+            '''.strip().split()
         else:
             skip_these_tokens = skip_list
         found = False
@@ -316,7 +317,7 @@ class TokenLog():
     
         return items
     
-    def getFullWord(self):
+    def getFullWord(self, skip_list=None):
         '''
         parse the token stream for a contiguous word and return it as str
         
@@ -333,7 +334,7 @@ class TokenLog():
                 end = tok['end'][1]
             else:
                 break
-            tok = self.nextActionable()
+            tok = self.nextActionable(skip_list)
         if v.endswith('{'):     # moved from template.py
             # watch for patterns such as this: "../../33iddApp/Db/filterDrive.db"{
             v = v[:-1]
