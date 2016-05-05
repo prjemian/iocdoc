@@ -13,6 +13,7 @@ import template
 import text_file
 from token_support import token_key, TokenLog, parse_bracketed_macro_definitions, reconstruct_line
 import utils
+from text_file import FileNotFound
 
 
 class UnhandledTokenPattern(Exception): pass
@@ -86,6 +87,7 @@ class CommandFile(object):
             'nfs2Mount': self.kh_shell_command,
         }
         self.parse()
+        utils.logMessage('end of command file: ' + self.filename, utils.LOGGING_DETAIL__IMPORTANT)
     
     def __str__(self):
         return str(self.reference) + ' ' + self.filename
@@ -180,7 +182,7 @@ class CommandFile(object):
             self.database_list.append(obj)
             self.kh_shell_command(arg0, tokens, ref)
         except text_file.FileNotFound, _exc:
-            msg = 'Could not find database file'
+            msg = 'Could not find database file: ' + dbFileName
             utils.detailedExceptionLog(msg)
             return
         for k, v in obj.getPVs():
@@ -191,7 +193,7 @@ class CommandFile(object):
         local_macros = macros.Macros(**self.env.db)
         args = utils.strip_parentheses(reconstruct_line(tokens).strip()).split(',')
         if len(args) in (1, 2):
-            tfile = os.path.join(self.dirname_absolute, utils.strip_quotes(args[0]))
+            tfile = os.path.join(os.getcwd(), utils.strip_quotes(args[0]))
         if len(args) == 2:
             # such as in 8idi:  dbLoadTemplate("aiRegister.substitutions", top)
             # This is an ERROR.  The IOC should be corrected.
@@ -200,8 +202,8 @@ class CommandFile(object):
             dbLoadTemplate(char *subfile, char *substitutions)
             
             This IOC command reads a template substitutions file which 
-            provides instructions for loading database instance files a
-            nd gives values for the $(xxx) macros they may contain. 
+            provides instructions for loading database instance files 
+            and gives values for the $(xxx) macros they may contain. 
             This command performs those substitutions while loading the 
             database instances requested.
             
@@ -245,8 +247,13 @@ class CommandFile(object):
         # fname is given relative to current working directory
         fname_expanded = self.env.replace(fname)
         self.kh_shell_command('<', tokens, ref)
-        obj = CommandFile(self, fname_expanded, ref, self.env, self.symbols)
-        self.includedCommandFile_list.append(obj)
+        try:
+            obj = CommandFile(self, fname_expanded, ref, self.env, self.symbols)
+            self.includedCommandFile_list.append(obj)
+        except FileNotFound, _exc:
+            msg = 'File not found: ' + fname_expanded
+            utils.detailedExceptionLog(msg)
+            return
 
         self.commands += obj.commands
         self.template_list += obj.template_list
