@@ -128,6 +128,7 @@ class FileRef(object):
     
     def __init__(self, filename, linenumber, colnumber, obj):
         self.filename = filename
+        self.filename_absolute = os.path.abspath(filename)
         self.line_number = linenumber
         self.column_number = colnumber
         self.object = obj
