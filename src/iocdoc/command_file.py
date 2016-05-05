@@ -41,14 +41,14 @@ class CommandFile(object):
     analysis of an EPICS IOC command file
     '''
 
-    def __init__(self, parent, filename, ref, **env):
+    def __init__(self, parent, filename, ref, env=None, symbols=None):
         self.parent = parent
         self.filename = filename
         self.reference = ref
         self.pwd = os.getcwd()
 
-        self.env = macros.Macros(**env)
-        self.symbols = macros.Macros()
+        self.env = env or macros.Macros()
+        self.symbols = symbols or macros.Macros()
         self.database_list = []
         self.commands = []
         self.template_list = []
@@ -58,7 +58,7 @@ class CommandFile(object):
         # filename is a relative or absolute path to command file, no macros in the name
         self.filename_absolute = os.path.abspath(filename)
         self.dirname_absolute = os.path.dirname(self.filename_absolute)
-        utils.logMessage('command file: ' + filename, utils.LOGGING_DETAIL__IMPORTANT)
+        utils.logMessage('command file: ' + self.filename, utils.LOGGING_DETAIL__IMPORTANT)
         # self.source = text_file.read(filename)
         self.source = text_file.read(self.filename_absolute)
         
@@ -242,8 +242,7 @@ class CommandFile(object):
         # fname is given relative to current working directory
         fname_expanded = self.env.replace(fname)
         self.kh_shell_command('<', tokens, ref)
-        # FIXME: also need to pass self.symbols
-        obj = CommandFile(self, fname_expanded, ref, **self.env.db)
+        obj = CommandFile(self, fname_expanded, ref, self.env, self.symbols)
         self.includedCommandFile_list.append(obj)
 
         self.commands += obj.commands
@@ -310,7 +309,7 @@ def main():
         try:
             os.chdir(os.path.dirname(os.path.abspath(tf)))
             ref = utils.FileRef(__file__, i, 0, 'testing')
-            cmdFile_object = CommandFile(None, os.path.split(tf)[-1], ref, **env)
+            cmdFile_object = CommandFile(None, os.path.split(tf)[-1], ref, env)
         except Exception:
             traceback.print_exc()
             continue
