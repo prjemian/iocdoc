@@ -79,8 +79,16 @@ class Template(object):
         ref = self._make_ref(tokenLog.getCurrentToken(), 'database file')
         # TODO: Do something with ref
         
-        tokenLog.nextActionable()
-        dbFileName = tokenLog.getFullWord().strip('"')
+        # if no enclosing quotes, '$" is an ERRORTOKEN
+        skip_list = 'COMMENT NEWLINE ENDMARKER INDENT DEDENT'.split()
+        tok = tokenLog.nextActionable(skip_list)   # move past the "file" command
+        tk = token_key(tok)
+        text = ''
+        while tk != 'OP {':
+            text += tok['tokStr']
+            tok = tokenLog.nextActionable(skip_list)
+            tk = token_key(tok)
+        dbFileName = utils.strip_outer_quotes(text.strip())
         fname = self.macros.replace(dbFileName)
 
         tok = tokenLog.nextActionable()
@@ -96,7 +104,7 @@ class Template(object):
         
         while token_key(tok) != 'OP }':
             # define the macros for this set
-            pattern_macros = macros.Macros(**self.macros.db)
+            pattern_macros = macros.Macros()
             if len(pattern_keys) > 0:
                 # The macro labels were defined in a pattern statement
                 value_list = tokenLog.tokens_to_list()
@@ -112,10 +120,17 @@ class Template(object):
             
             ref = self._make_ref(tokenLog.getCurrentToken())
             # TODO: work out how to get the path into the next statement
+            arg_text = '("' + dbFileName + '")'
+            if len(pattern_macros) > 0:
+                arg_text = '("' + dbFileName
+                arg_text += ', "'
+                arg_text += ','.join([k+'='+v for k, v in sorted(pattern_macros.items())])
+                arg_text += '")'
+            pattern_macros.setMany(**self.macros.db)
             cmd = command_file.Command(self, 
                                        '(dbLoadRecords)', 
                                        'path unknown', 
-                                       dbFileName, 
+                                       arg_text, 
                                        ref, 
                                        **pattern_macros.db)
             self.commands.append(cmd)
