@@ -141,8 +141,11 @@ class CommandFile(object):
                 utils.logMessage(msg, utils.LOGGING_DETAIL__IMPORTANT)
                 #raise UnhandledTokenPattern, msg
             else:
-                k, v = definition.split('=')
-                local_macros.set(k.strip(), v.strip(), self, ref)
+                k, v = [_.strip() for _ in definition.split('=')]
+                # expand macros now to avoid possible infinite loop while replacing
+                # example:   PORT=IP_$(PORT)
+                v = local_macros.replace(v)
+                local_macros.set(k, v, self, ref)
         return local_macros
 
 
