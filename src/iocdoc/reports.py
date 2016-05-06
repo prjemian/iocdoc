@@ -21,7 +21,7 @@ class writeReports(object):
     def __init__(self, obj, ioc_name='IOC', report_file_cache=True):
         self.st_cmd_object = obj
         self.ioc_name = ioc_name
-	self.report_file_cache = report_file_cache
+        self.report_file_cache = report_file_cache
         self.writeReports()
 
     def writeReports(self):
@@ -39,7 +39,7 @@ class writeReports(object):
         files.append(self.writeFile('databases.rst',         ioc_name+': EPICS Databases',                   reportDatabases(obj.database_list)))
         files.append(self.writeFile('templates.rst',         ioc_name+': EPICS Templates/Substitutions',     reportDatabases(obj.template_list)))
         if self.report_file_cache:
-            files.append(self.writeFile('text_files.rst',        ioc_name+': text file cache',                   reportTextFiles()))
+            files.append(self.writeFile('text_files.rst',    ioc_name+': text file cache',                   reportTextFiles()))
 
         # write the index.rst that coordinates all this
         indent = ' '*3
@@ -315,10 +315,10 @@ def reportTextFiles():
         xref[f].append(v)
 
     tbl = pyRestTable.Table()
-    tbl.labels = ['#', 'file_name', 'path']
+    tbl.labels = ['#', 'uses', 'file_name', 'path']
     i = 0
     for k in sorted(xref.keys()):
         for v in sorted(xref[k]):
             i += 1
-            tbl.rows.append([i, k, v.absolute_filename])
+            tbl.rows.append([i, v.count_requests, k, v.absolute_filename])
     return tbl.reST()
