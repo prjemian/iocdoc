@@ -11,8 +11,7 @@ Source code for the iocdoc package
 # # -*- coding: iso-8859-1 -*- 
 # '''
 
-#from ioc import Ioc
-
+from . import describe_ioc
 
 __package_name__        = u'iocdoc'
 __description__         = u'Document the configuration of an EPICS IOC'
