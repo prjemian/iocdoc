@@ -12,6 +12,7 @@ Source code for the iocdoc package
 # '''
 
 from . import describe_ioc
+from . import reports
 
 __package_name__        = u'iocdoc'
 __description__         = u'Document the configuration of an EPICS IOC'
