@@ -306,6 +306,48 @@ class CommandFile(object):
         arg = utils.strip_quotes( tokens[2]['tokStr'] )
         self.symbols.set(arg0, arg, self, ref)
         self.kh_shell_command(arg0, tokens, ref)
+    
+    def getCommandCount(self):
+        '''
+        return a dict of how many of each command were used
+        '''
+        xref = {}
+        for cmd in self.commands:
+            if cmd.command not in xref:
+                xref[cmd.command] = 0
+            xref[cmd.command] += 1
+        return xref
+    
+    def getMotorTypes(self):
+        '''
+        return a dict of how many of each motor support are created
+        '''
+        xref = {}
+        for k, pv in self.pv_dict.items():
+            if pv.RTYP == 'motor' and k == pv.NAME:
+                # TODO: break down the DTYP into families of support
+                dtype = pv.getField('DTYP', 'undefined')
+                if dtype == 'asynMotor':
+                    dtype += ' ' + pv.getField('OUT', '')
+                if dtype not in xref:
+                    xref[dtype] = 0
+                xref[dtype] += 1
+        return xref
+    
+    def getRTYP_count(self):
+        '''
+        return a dict of how many of each record types are created
+        '''
+        xref = {}
+        for k, pv in sorted(self.pv_dict.items()):
+            if k != pv.NAME:
+                rtype = 'alias'
+            else:
+                rtype = pv.RTYP
+            if rtype not in xref:
+                xref[rtype] = 0
+            xref[rtype] += 1
+        return xref
 
 
 def main():

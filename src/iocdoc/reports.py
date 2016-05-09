@@ -29,11 +29,11 @@ class writeReports(object):
         obj = self.st_cmd_object
         ioc_name = self.ioc_name
         files = []
-        files.append(self.writeFile('command_sequence.rst',  ioc_name+': IOC Command sequence',              reportCommandSequence(obj.commands)))
-        files.append(self.writeFile('rtyp.rst',              ioc_name+': EPICS Records types used',          reportRTYP(obj.pv_dict)))
-        files.append(self.writeFile('command_list.rst',      ioc_name+': EPICS IOC shell commands used',     reportCommandCount(obj.commands)))
-        files.append(self.writeFile('motor_types.rst',       ioc_name+': EPICS Motor types used',            reportMotorCount(obj.pv_dict)))
-        files.append(self.writeFile('pvs.rst',               ioc_name+': Process Variables',                 reportPVs(obj.pv_dict)))
+        files.append(self.writeFile('command_sequence.rst',  ioc_name+': IOC Command sequence',              reportCommandSequence(obj)))
+        files.append(self.writeFile('rtyp.rst',              ioc_name+': EPICS Records types used',          reportRTYP(obj)))
+        files.append(self.writeFile('command_list.rst',      ioc_name+': EPICS IOC shell commands used',     reportCommandCount(obj)))
+        files.append(self.writeFile('motor_types.rst',       ioc_name+': EPICS Motor types used',            reportMotorCount(obj)))
+        files.append(self.writeFile('pvs.rst',               ioc_name+': Process Variables',                 reportPVs(obj)))
         files.append(self.writeFile('macros.rst',            ioc_name+': Macros',                            reportSymbols(obj.env.db)))
         files.append(self.writeFile('symbols.rst',           ioc_name+': Symbols',                           reportSymbols(obj.symbols.db)))
         files.append(self.writeFile('databases.rst',         ioc_name+': EPICS Databases',                   reportDatabases(obj.database_list)))
@@ -80,53 +80,53 @@ class writeReports(object):
         return fname
 
 
-def reportCmdFile(obj, ioc_name='Command File'):
+def reportCmdFile(cmd_obj, ioc_name='Command File'):
     '''report what was learned from the command file'''
     print mk_title('IOC: ' + ioc_name, '=')
-    print 'initial startup command script file: ', obj
-    print 'absolute path: ', obj.filename_absolute
+    print 'initial startup command script file: ', cmd_obj
+    print 'absolute path: ', cmd_obj.filename_absolute
     
     print '\n'
     print mk_title('Table: IOC Command sequence')
-    print reportCommandSequence(obj.commands)
+    print reportCommandSequence(cmd_obj)
     
     print '\n'
     print mk_title('Table: EPICS Records types used')
-    print reportRTYP(obj.pv_dict)
+    print reportRTYP(cmd_obj)
     
     print '\n'
     print mk_title('Table: EPICS IOC shell commands used')
-    print reportCommandCount(obj.commands)
+    print reportCommandCount(cmd_obj)
     
     print '\n'
     print mk_title('Table: EPICS Motor types used')
-    print reportMotorCount(obj.pv_dict)
+    print reportMotorCount(cmd_obj)
     
     # print '\n'
     # print mk_title('Table: Process Variables')
-    # print reportPVs(obj.pv_dict)
+    # print reportPVs(cmd_cmd_obj)
             
     print '\n'
     print mk_title('Table: MACROS')
     # switch reportSymbols() once macros get an object reference
     # old: reportMacros()
-    print reportSymbols(obj.env.db)
+    print reportSymbols(cmd_obj.env.db)
     
     print '\n'
     print mk_title('Table: SYMBOLS')
-    print reportSymbols(obj.symbols.db)
+    print reportSymbols(cmd_obj.symbols.db)
     
     print '\n'
     print mk_title('Table: EPICS Databases')
     print 'printed in the order they were called'
-    # TODO: obj.database_list is not *ALL* the databases
-    print reportDatabases(obj.database_list)
+    # TODO: cmd_obj.database_list is not *ALL* the databases
+    print reportDatabases(cmd_obj.database_list)
     
     print '\n'
     print mk_title('Table: EPICS Templates/Substitutions')
     print 'printed in the order they were called'
-    # TODO: obj.database_list is not *ALL* the databases
-    print reportDatabases(obj.template_list)
+    # TODO: cmd_obj.database_list is not *ALL* the databases
+    print reportDatabases(cmd_obj.template_list)
     
     print '\n'
     print mk_title('Table: text file cache')
@@ -165,21 +165,17 @@ def _makeCountTable(xref, label='subject'):
 3 (DCMotorServer.db,28,9) OUT   @DCMotorServer.proto debug $(PORT)
 '''
 
-def reportCommandCount(cmd_list):
+def reportCommandCount(cmd_obj):
     '''how many of each command?'''
-    xref = {}
-    for cmd in cmd_list:
-        if cmd.command not in xref:
-            xref[cmd.command] = 0
-        xref[cmd.command] += 1
+    xref = cmd_obj.getCommandCount()
     return _makeCountTable(xref, label='command')
 
 
-def reportCommandSequence(cmd_list):
+def reportCommandSequence(cmd_obj):
     '''show the order of the commands'''
     tbl = pyRestTable.Table()
     tbl.labels = ['#', '(file_name,line,column)', 'command and arguments']
-    for i, command in enumerate(cmd_list):
+    for i, command in enumerate(cmd_obj.commands):
         val = pre(command.command + ' ' + command.args)
         tbl.rows.append([i+1, command.reference, val])
     return tbl.reST()
@@ -250,44 +246,28 @@ def reportMacros(macro_dict):
     return tbl.reST()
 
 
-def reportMotorCount(pv_dict):
+def reportMotorCount(cmd_obj):
     '''how many of each type of motor?'''
-    xref = {}
-    for k, pv in pv_dict.items():
-        if pv.RTYP == 'motor' and k == pv.NAME:
-            dtype = pv.getField('DTYP', 'undefined')
-            if dtype == 'asynMotor':
-                dtype += ' ' + pv.getField('OUT', '')
-            if dtype not in xref:
-                xref[dtype] = 0
-            xref[dtype] += 1
+    xref = cmd_obj.getMotorTypes()
     if len(xref) == 0:
         return 'no motors'
     return _makeCountTable(xref, label='motor type')
 
 
-def reportPVs(pv_dict):
+def reportPVs(cmd_obj):
     '''List the defined process variables'''
     tbl = pyRestTable.Table()
     tbl.labels = ['#', '(file_name,line,column)', 'record type', 'PV name']
     i = 0
-    for _k, pv in sorted(pv_dict.items()):
+    for _k, pv in sorted(cmd_obj.pv_dict.items()):
         i += 1
         tbl.rows.append([i, pv.reference, pv.RTYP, pre(pv.NAME)])
     return tbl.reST()
 
 
-def reportRTYP(pv_dict):
+def reportRTYP(cmd_obj):
     '''how many of each record type?'''
-    xref = {}
-    for k, pv in pv_dict.items():
-        if k != pv.NAME:
-            rtype = 'alias'
-        else:
-            rtype = pv.RTYP
-        if rtype not in xref:
-            xref[rtype] = 0
-        xref[rtype] += 1
+    xref = cmd_obj.getRTYP_count()
     return _makeCountTable(xref, label='RTYP')
 
 
