@@ -1,4 +1,10 @@
 
+'''
+Example documentation of a Windows IOC from DESY
+
+:see: http://www-csr.bessy.de/control/SoftDist/OPCsupport/
+'''
+
 import os
 import sys
 
