@@ -216,7 +216,7 @@ def reportDatabases(db_list):
         # document each record's fields
         for record in db.record_list:
             text += '\n'
-            text += mk_title('Record Fields: ' + record.RTYP + ': ' + record.rname, '+')
+            text += mk_title('Record Fields: ' + record.RTYP + pre(record.rname), '+')
             text += '\n'
             if len(record.fields) < 3:
                 text += 'no fields\n'
