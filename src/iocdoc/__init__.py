@@ -15,10 +15,14 @@ from . import describe_ioc
 from . import reports
 
 __package_name__        = u'iocdoc'
+
+from _version import git_release
+__version__ = u'0.0.2'
+__release__ = git_release(__package_name__, __version__)
+
 __description__         = u'Document the configuration of an EPICS IOC'
 __long_description__    = __description__
 
-#__version__             = u'2016.0113.0'
 __author__              = u'Pete R. Jemian'
 __email__               = u'jemian@anl.gov'
 __institution__         = u"Advanced Photon Source, Argonne National Laboratory"

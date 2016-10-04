@@ -3,6 +3,10 @@ IOCDOC: Document the configuration of an EPICS IOC
 
 *iocdoc*: Document the configuration of an EPICS IOC
 
+:version:   |version|
+:release:   |release|
+:published: |today|
+
 :docs:      http://iocdoc.readthedocs.org
 :git:       https://github.com/prjemian/iocdoc.git
 :PyPI:      https://pypi.python.org/pypi/iocdoc

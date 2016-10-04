@@ -5,7 +5,8 @@ IOCDOC
 Overview
 ********
 
-:version: |version|
+:version:   |version|
+:release:   |release|
 :published: |today|
 
 IOCDOC: Document the configuration of an EPICS IOC

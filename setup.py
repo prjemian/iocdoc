@@ -8,7 +8,6 @@ from setuptools import setup, find_packages
 import os
 import re
 import sys
-import versioneer
 
 # pull in some definitions from the package's __init__.py file
 sys.path.insert(0, os.path.join('src', ))
@@ -23,8 +22,7 @@ long_description = open('README.rst', 'r').read()
 setup (
     name             = iocdoc.__package_name__,        # iocdoc
     license          = iocdoc.__license__,
-    version          = versioneer.get_version(),
-    cmdclass         = versioneer.get_cmdclass(),
+    version          = iocdoc.__version__,
     description      = iocdoc.__description__,
     long_description = long_description,
     author           = iocdoc.__author_name__,
