@@ -13,8 +13,6 @@ import sys
 sys.path.insert(0, os.path.join('src', ))
 import iocdoc
 
-requires = iocdoc.__requires__
-packages = find_packages()
 verbose=1
 long_description = open('README.rst', 'r').read()
 
@@ -30,7 +28,7 @@ setup (
     url              = iocdoc.__url__,
     download_url     = iocdoc.__download_url__,
     keywords         = iocdoc.__keywords__,
-    install_requires = requires,
+    install_requires = iocdoc.__requires__,
     platforms        = 'any',
     package_dir      = {'': 'src'},
     #packages         = find_packages(),
